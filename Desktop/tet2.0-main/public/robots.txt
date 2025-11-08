@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://supacharge.me
+
+# Sitemaps
+Sitemap: https://supacharge.me/sitemap.xml
