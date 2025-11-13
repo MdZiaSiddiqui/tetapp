@@ -118,7 +118,7 @@ export default function NotesViewer() {
 
         body {
           margin: 0 !important;
-          padding: 16px !important;
+          padding: 24px 16px 16px 16px !important;
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
           line-height: 1.6;
           background-color: #ffffff;
@@ -179,18 +179,12 @@ export default function NotesViewer() {
 
         /* Table of Contents */
         .index {
-          position: sticky;
-          top: 0;
-          z-index: 1000;
-          background: rgba(255, 255, 255, 0.98);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
+          background: #f9fafb;
           border-radius: 12px;
           padding: 16px;
-          margin: 0 0 24px 0;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-          max-height: 60vh;
-          overflow-y: auto;
+          margin: 0 0 32px 0;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e5e7eb;
         }
 
         .index h2 {
@@ -353,7 +347,7 @@ export default function NotesViewer() {
         /* Responsive adjustments */
         @media (max-width: 768px) {
           body {
-            padding: 12px !important;
+            padding: 20px 12px 12px 12px !important;
           }
 
           h1 { font-size: 1.6em !important; }
@@ -383,13 +377,6 @@ export default function NotesViewer() {
     return modifiedHtml.replace('</head>', `${mobileCSS}</head>`);
   };
 
-  const scrollToTop = () => {
-    webViewRef.current?.injectJavaScript(`
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      true;
-    `);
-  };
-
   if (!note) {
     return (
       <SafeAreaView style={styles.container}>
@@ -405,29 +392,6 @@ export default function NotesViewer() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.backIcon}>‹</Text>
-        </TouchableOpacity>
-
-        <View style={styles.headerTitle}>
-          <Text style={styles.headerTitleText} numberOfLines={1}>
-            {note.displayName}
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={scrollToTop}
-        >
-          <Text style={styles.topIcon}>↑</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* WebView */}
       {loading && (
         <View style={styles.loadingContainer}>
@@ -475,44 +439,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  headerButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: '#f3f4f6',
-  },
-  backIcon: {
-    fontSize: 32,
-    color: '#1f2937',
-    fontWeight: '300',
-  },
-  topIcon: {
-    fontSize: 24,
-    color: '#1f2937',
-    fontWeight: '600',
-  },
-  headerTitle: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
-  headerTitleText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
-    textAlign: 'center',
   },
   webview: {
     flex: 1,

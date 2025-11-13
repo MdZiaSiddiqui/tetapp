@@ -34,15 +34,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="analytics"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>📊</Text>
-          ),
-          tabBarLabel: '',
-        }}
-      />
-      <Tabs.Screen
         name="notes"
         options={{
           tabBarIcon: ({ color }) => (

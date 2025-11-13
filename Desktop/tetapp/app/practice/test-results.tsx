@@ -10,6 +10,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import MathText from '../../components/MathText';
+import getQuestionExplanation from '../../lib/utils/getQuestionExplanation';
 
 interface Question {
   id: string;
@@ -17,7 +18,13 @@ interface Question {
   difficulty: string;
   options: string[];
   correct_answer: string;
-  solutions: string;
+  solutions?: string | null;
+  explanation?: string | null;
+  solution?: string | null;
+  answerExplanation?: string | null;
+  answer_explanation?: string | null;
+  detailedSolution?: string | null;
+  detailed_solution?: string | null;
   image_url: string | null;
   tag: string | null;
   question_number?: number;
@@ -252,21 +259,30 @@ export default function TestResults() {
             </View>
 
             {/* Explanation */}
-            {question.solutions && (
-              <View className="bg-blue-50 p-4 rounded-xl border border-blue-200" style={{ minHeight: 80 }}>
-                <Text className="text-xs font-semibold text-blue-900 mb-2">
-                  EXPLANATION
-                </Text>
-                <View style={{ width: '100%' }}>
-                  <MathText
-                    text={question.solutions}
-                    fontSize="small"
-                    color="#111827"
-                    style={{ width: '100%', flex: 1 }}
-                  />
+            {(() => {
+              const resolvedExplanation = getQuestionExplanation(question);
+              const hasExplanation = typeof resolvedExplanation === 'string' && resolvedExplanation.trim().length > 0;
+
+              if (!hasExplanation) {
+                return null;
+              }
+
+              return (
+                <View className="bg-blue-50 p-4 rounded-xl border border-blue-200" style={{ minHeight: 80 }}>
+                  <Text className="text-xs font-semibold text-blue-900 mb-2">
+                    EXPLANATION
+                  </Text>
+                  <View style={{ width: '100%' }}>
+                    <MathText
+                      text={resolvedExplanation}
+                      fontSize="small"
+                      color="#111827"
+                      style={{ width: '100%', flex: 1 }}
+                    />
+                  </View>
                 </View>
-              </View>
-            )}
+              );
+            })()}
           </View>
         )}
       </View>

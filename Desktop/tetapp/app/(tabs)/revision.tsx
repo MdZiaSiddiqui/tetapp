@@ -10,25 +10,27 @@ export default function Revision() {
     console.log(`Selected: ${paperName}`);
   };
 
-  const renderPaperCard = (paperId: string, paperName: string, paperNumber: string) => {
+  const renderPaperCard = (
+    paperId: string,
+    paperName: string,
+    languages: string,
+    bgColor: string = 'bg-blue-500'
+  ) => {
     return (
       <TouchableOpacity
         key={paperId}
-        className="w-full mb-4 bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
+        className="w-full mb-3 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
         onPress={() => handlePaperPress(paperId, paperName)}
       >
-        <View className="bg-gradient-to-br from-blue-500 to-blue-600 h-32 items-center justify-center">
-          <Text className="text-white text-3xl font-bold">
-            {paperNumber}
-          </Text>
-        </View>
-        <View className="p-4">
-          <Text className="text-gray-800 font-semibold text-center text-lg mb-2">
-            {paperName}
-          </Text>
-          <View className="bg-blue-50 px-3 py-2 rounded-full self-center">
-            <Text className="text-blue-600 text-sm font-semibold">
-              Start Practice
+        <View className="flex-row items-center p-4">
+          <View className={`${bgColor} w-12 h-12 rounded-lg items-center justify-center mr-4`}>
+            <Text className="text-white text-lg font-bold">
+              {paperName.includes('Paper-1') ? 'P1' : 'P2'}
+            </Text>
+          </View>
+          <View className="flex-1">
+            <Text className="text-gray-800 font-semibold text-base">
+              {paperName} {languages}
             </Text>
           </View>
         </View>
@@ -48,9 +50,80 @@ export default function Revision() {
           Select a paper to start practicing
         </Text>
 
-        {/* Paper Cards */}
-        {renderPaperCard('paper-1', 'TS-TET Paper-1', 'P1')}
-        {renderPaperCard('paper-2', 'TS-TET Paper-2', 'P2')}
+        {/* Paper 1 - Language Options */}
+        <View className="mb-6">
+          <Text className="text-xl font-bold text-gray-800 mb-4">
+            Paper-1 (Classes I-V)
+          </Text>
+          {renderPaperCard(
+            'paper-1-telugu',
+            'TS-TET Paper-1',
+            'English / Telugu',
+            'bg-blue-500'
+          )}
+          {renderPaperCard(
+            'paper-1-urdu',
+            'TS-TET Paper-1',
+            'English / Urdu',
+            'bg-blue-500'
+          )}
+          {renderPaperCard(
+            'paper-1-hindi',
+            'TS-TET Paper-1',
+            'English / Hindi',
+            'bg-blue-500'
+          )}
+        </View>
+
+        {/* Paper 2 - Math & Science */}
+        <View className="mb-6">
+          <Text className="text-xl font-bold text-gray-800 mb-4">
+            Paper-2 Math & Science (Classes VI-VIII)
+          </Text>
+          {renderPaperCard(
+            'paper-2-math-science-telugu',
+            'TS-TET Paper-2 Math & Science',
+            'English / Telugu',
+            'bg-green-500'
+          )}
+          {renderPaperCard(
+            'paper-2-math-science-urdu',
+            'TS-TET Paper-2 Math & Science',
+            'English / Urdu',
+            'bg-green-500'
+          )}
+          {renderPaperCard(
+            'paper-2-math-science-hindi',
+            'TS-TET Paper-2 Math & Science',
+            'English / Hindi',
+            'bg-green-500'
+          )}
+        </View>
+
+        {/* Paper 2 - Social Studies */}
+        <View className="mb-6">
+          <Text className="text-xl font-bold text-gray-800 mb-4">
+            Paper-2 Social Studies (Classes VI-VIII)
+          </Text>
+          {renderPaperCard(
+            'paper-2-social-telugu',
+            'TS-TET Paper-2 Social Studies',
+            'English / Telugu',
+            'bg-purple-500'
+          )}
+          {renderPaperCard(
+            'paper-2-social-urdu',
+            'TS-TET Paper-2 Social Studies',
+            'English / Urdu',
+            'bg-purple-500'
+          )}
+          {renderPaperCard(
+            'paper-2-social-hindi',
+            'TS-TET Paper-2 Social Studies',
+            'English / Hindi',
+            'bg-purple-500'
+          )}
+        </View>
 
         {/* Bottom Text */}
         <View className="mt-8 mb-6 px-4">

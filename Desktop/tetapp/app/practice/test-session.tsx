@@ -39,7 +39,13 @@ interface Question {
   difficulty: string;
   options: string[];
   correct_answer: string;
-  solutions: string;
+  solutions?: string | null;
+  explanation?: string | null;
+  solution?: string | null;
+  answerExplanation?: string | null;
+  answer_explanation?: string | null;
+  detailedSolution?: string | null;
+  detailed_solution?: string | null;
   image_url: string | null;
   tag: string | null;
   question_number?: number;

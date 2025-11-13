@@ -28,6 +28,7 @@ import Animated, {
 import { HomeShape, InvertedHomeShape } from '../../components/PentagonShapes';
 import { Ionicons } from '@expo/vector-icons';
 import MathText from '../../components/MathText';
+import getQuestionExplanation from '../../lib/utils/getQuestionExplanation';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = 50; // Optimized threshold for smooth gestures
@@ -39,7 +40,13 @@ interface Question {
   difficulty: string;
   options: string[];
   correct_answer: string;
-  solutions: string;
+  solutions?: string | null;
+  explanation?: string | null;  // Added: Some data sources use 'explanation' instead of 'solutions'
+  solution?: string | null;
+  answerExplanation?: string | null;
+  answer_explanation?: string | null;
+  detailedSolution?: string | null;
+  detailed_solution?: string | null;
   image_url: string | null;
   tag: string | null;
   question_number?: number;
@@ -678,16 +685,28 @@ export default function PracticeSession() {
           </View>
 
           {/* Explanation */}
-          {showExplanation && currentQuestion.solutions && (
-            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md" style={{ minHeight: 80 }}>
+          {showExplanation && (
+            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md">
               <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
               <View style={{ width: '100%' }}>
-                <MathText
-                  text={currentQuestion.solutions}
-                  fontSize={fontSize}
-                  color="#111827"
-                  style={{ width: '100%', flex: 1 }}
-                />
+                {(() => {
+                  // Check for both 'solutions' and 'explanation' fields (data sources use different names)
+                  const explanationText = getQuestionExplanation(currentQuestion);
+                  const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
+
+                  return hasExplanation ? (
+                    <MathText
+                      text={explanationText}
+                      fontSize={fontSize}
+                      color="#111827"
+                      style={{ width: '100%' }}
+                    />
+                  ) : (
+                    <Text className="text-gray-500 italic text-sm">
+                      No explanation available for this question.
+                    </Text>
+                  );
+                })()}
               </View>
             </View>
           )}

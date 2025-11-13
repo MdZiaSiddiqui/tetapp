@@ -251,14 +251,14 @@ USING ( bucket_id = 'question-images' );
 -- ============================================
 
 INSERT INTO subjects (id, name, description) VALUES
-  ('child-development', 'Child Development', 'Child Development and Pedagogy - TET Paper 1 & 2'),
-  ('mathematics', 'Mathematics', 'Mathematics - TET Paper 1 & 2'),
-  ('science', 'Science', 'Physical Science - TET Paper 2'),
-  ('social', 'Social Studies', 'Social Studies - TET Paper 2'),
-  ('english', 'English', 'English Language - TET Paper 1 & 2'),
-  ('environmental', 'Environmental Studies', 'Environmental Studies - TET Paper 1'),
-  ('hindi', 'Hindi', 'Hindi Language - TET Paper 1 & 2'),
-  ('urdu', 'Urdu', 'Urdu Language - TET Paper 1 & 2')
+  ('child-development', 'Child Development & Pedagogy', 'Child Development and Pedagogy - TET Paper 1 & 2'),
+  ('mathematics', 'Mathematics & Pedagogy', 'Mathematics - TET Paper 1 & 2'),
+  ('science', 'Science & Pedagogy', 'Physical Science - TET Paper 2'),
+  ('social', 'Social Studies & Pedagogy', 'Social Studies - TET Paper 2'),
+  ('english', 'English & Pedagogy', 'English Language - TET Paper 1 & 2'),
+  ('environmental', 'Environmental Studies & Pedagogy', 'Environmental Studies - TET Paper 1'),
+  ('hindi', 'Hindi & Pedagogy', 'Hindi Language - TET Paper 1 & 2'),
+  ('urdu', 'Urdu & Pedagogy', 'Urdu Language - TET Paper 1 & 2')
 ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,

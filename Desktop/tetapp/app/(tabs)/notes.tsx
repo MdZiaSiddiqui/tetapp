@@ -7,9 +7,10 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getNotesBySubject, LANGUAGE_LABELS, type Language } from '@/lib/notes-data';
+import { getNotesBySubject, LANGUAGE_LABELS, getBookCover, type Language } from '@/lib/notes-data';
 
 export default function NotesScreen() {
   const router = useRouter();
@@ -100,33 +101,48 @@ export default function NotesScreen() {
         style={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {Object.entries(filteredNotes).map(([subject, notes]) => (
-          <View key={subject} style={styles.subjectSection}>
-            <Text style={styles.subjectTitle}>{subject}</Text>
+        {Object.entries(filteredNotes).map(([subject, notes]) => {
+          const bookCover = getBookCover(subject);
+          return (
+            <View key={subject} style={styles.subjectSection}>
+              <Text style={styles.subjectTitle}>{subject}</Text>
 
-            {notes.map((note) => (
-              <TouchableOpacity
-                key={note.id}
-                style={styles.noteCard}
-                onPress={() => router.push({
-                  pathname: '/notes/viewer',
-                  params: { noteId: note.id }
-                })}
-              >
-                <View style={styles.noteIcon}>
-                  <Text style={styles.noteIconText}>{note.icon}</Text>
+              {/* Book Cover Card */}
+              {bookCover && (
+                <View style={styles.bookCoverCard}>
+                  <Image
+                    source={bookCover}
+                    style={styles.bookCoverImage}
+                    resizeMode="cover"
+                  />
                 </View>
-                <View style={styles.noteInfo}>
-                  <Text style={styles.noteName}>{note.displayName}</Text>
-                  <Text style={styles.noteLanguage}>
-                    {LANGUAGE_LABELS[note.language]}
-                  </Text>
-                </View>
-                <Text style={styles.arrow}>›</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        ))}
+              )}
+
+              {/* Note Cards */}
+              {notes.map((note) => (
+                <TouchableOpacity
+                  key={note.id}
+                  style={styles.noteCard}
+                  onPress={() => router.push({
+                    pathname: '/notes/viewer',
+                    params: { noteId: note.id }
+                  })}
+                >
+                  <View style={styles.noteIcon}>
+                    <Text style={styles.noteIconText}>{note.icon}</Text>
+                  </View>
+                  <View style={styles.noteInfo}>
+                    <Text style={styles.noteName}>{note.displayName}</Text>
+                    <Text style={styles.noteLanguage}>
+                      {LANGUAGE_LABELS[note.language]}
+                    </Text>
+                  </View>
+                  <Text style={styles.arrow}>›</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          );
+        })}
 
         {Object.keys(filteredNotes).length === 0 && (
           <View style={styles.emptyState}>
@@ -227,6 +243,25 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1f2937',
     marginBottom: 12,
+  },
+  bookCoverCard: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  bookCoverImage: {
+    width: 140,
+    height: 180,
+    borderRadius: 8,
   },
   noteCard: {
     flexDirection: 'row',

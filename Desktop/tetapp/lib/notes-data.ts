@@ -12,7 +12,21 @@ export interface NoteFile {
   fileName: string;
   displayName: string;
   icon: string;
+  bookCover?: any;
 }
+
+/**
+ * Book cover images mapping
+ */
+export const BOOK_COVERS = {
+  'Child Development & Pedagogy': require('../imgs/development.webp'),
+  'Mathematics': require('../imgs/math.webp'),
+  'Physical Science': require('../imgs/physics.webp'),
+  'Biological Science': require('../imgs/bio.webp'),
+  'Environmental Studies': require('../imgs/evs.webp'),
+  'Social Studies': require('../imgs/social.webp'),
+  'English': require('../imgs/eng.webp'),
+};
 
 export const NOTES_DATA: NoteFile[] = [
   // Child Development
@@ -225,4 +239,11 @@ export const LANGUAGE_LABELS: Record<Language, string> = {
   english: 'English',
   telugu: 'తెలుగు',
   urdu: 'اردو',
+};
+
+/**
+ * Get book cover image for a subject
+ */
+export const getBookCover = (subject: string) => {
+  return BOOK_COVERS[subject as keyof typeof BOOK_COVERS];
 };
