@@ -41,9 +41,58 @@ const MathText: React.FC<MathTextProps> = ({
       .replace(/'/g, '&#039;');
   };
 
+  // Clean and validate math expressions
+  const cleanMathExpression = (math: string): string => {
+    // Remove delimiters to get the inner content
+    let content = math;
+    if (math.startsWith('$$') && math.endsWith('$$')) {
+      content = math.slice(2, -2);
+    } else if (math.startsWith('$') && math.endsWith('$')) {
+      content = math.slice(1, -1);
+    } else if (math.startsWith('\\[') && math.endsWith('\\]')) {
+      content = math.slice(2, -2);
+    } else if (math.startsWith('\\(') && math.endsWith('\\)')) {
+      content = math.slice(2, -2);
+    }
+
+    // Clean common issues
+    content = content.trim();
+
+    // If content is empty or just whitespace, return empty string
+    if (!content || content.length === 0) {
+      return '';
+    }
+
+    // Just normalize whitespace, don't mess with backslashes
+    content = content.replace(/\s+/g, ' ');
+
+    // Return with original delimiters
+    if (math.startsWith('$$')) {
+      return `$$${content}$$`;
+    } else if (math.startsWith('$')) {
+      return `$${content}$`;
+    } else if (math.startsWith('\\[')) {
+      return `\\[${content}\\]`;
+    } else if (math.startsWith('\\(')) {
+      return `\\(${content}\\)`;
+    }
+
+    return math;
+  };
+
   // Process text to handle LaTeX and markdown
   const processedText = useMemo(() => {
     let result = text.trim();
+
+    // First, validate and fix unbalanced dollar signs
+    const dollarCount = (result.match(/\$/g) || []).length;
+    if (dollarCount % 2 !== 0) {
+      // Remove the last unmatched dollar sign
+      const lastDollarIndex = result.lastIndexOf('$');
+      if (lastDollarIndex !== -1) {
+        result = result.slice(0, lastDollarIndex) + result.slice(lastDollarIndex + 1);
+      }
+    }
 
     // Extract math expressions to protect them from markdown processing
     const mathExpressions: string[] = [];
@@ -52,10 +101,34 @@ const MathText: React.FC<MathTextProps> = ({
     // Using Unicode private use area characters that won't appear in normal text
     const createPlaceholder = (index: number) => `\uE000MATH${index}\uE001`;
 
-    // Replace math expressions with placeholders
-    result = result.replace(/\$\$[\s\S]*?\$\$|\$.*?\$|\\\[[\s\S]*?\\\]|\\\(.*?\\\)/g, (match) => {
+    // Replace math expressions with placeholders (display math first, then inline)
+    // Process $$ before $ to avoid conflicts
+    result = result.replace(/\$\$[\s\S]*?\$\$/g, (match) => {
+      const cleaned = cleanMathExpression(match);
+      if (!cleaned) return ''; // Remove empty math expressions
+
       const index = mathExpressions.length;
-      mathExpressions.push(match);
+      mathExpressions.push(cleaned);
+      return createPlaceholder(index);
+    });
+
+    // Then process single $ for inline math
+    result = result.replace(/\$[^$]+?\$/g, (match) => {
+      const cleaned = cleanMathExpression(match);
+      if (!cleaned) return ''; // Remove empty math expressions
+
+      const index = mathExpressions.length;
+      mathExpressions.push(cleaned);
+      return createPlaceholder(index);
+    });
+
+    // Process \[ \] and \( \) style delimiters
+    result = result.replace(/\\\[[\s\S]*?\\\]|\\\(.*?\\\)/g, (match) => {
+      const cleaned = cleanMathExpression(match);
+      if (!cleaned) return '';
+
+      const index = mathExpressions.length;
+      mathExpressions.push(cleaned);
       return createPlaceholder(index);
     });
 
@@ -99,7 +172,7 @@ const MathText: React.FC<MathTextProps> = ({
             body {
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
               font-size: ${fontSizeValue}px;
-              line-height: 1.8;
+              line-height: 1.5;
               color: ${color};
               padding: 0;
               margin: 0;
@@ -115,7 +188,7 @@ const MathText: React.FC<MathTextProps> = ({
               white-space: normal;
               direction: auto;
               unicode-bidi: plaintext;
-              min-height: 40px;
+              display: inline-block;
             }
             /* Markdown styling */
             strong {
@@ -131,10 +204,22 @@ const MathText: React.FC<MathTextProps> = ({
             mjx-container {
               display: inline-block;
               margin: 0 2px;
+              vertical-align: middle;
             }
             mjx-container[display="true"] {
               display: block;
-              margin: 8px 0;
+              margin: 4px 0;
+            }
+            /* Compact math rendering */
+            mjx-math {
+              line-height: 1.2;
+            }
+            /* Hide or style MathJax error messages */
+            .mjx-merror {
+              display: none !important;
+            }
+            merror {
+              display: none !important;
             }
             /* Prevent text selection issues */
             * {
@@ -150,19 +235,38 @@ const MathText: React.FC<MathTextProps> = ({
                 inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
                 displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
                 processEscapes: true,
-                processEnvironments: true
+                processEnvironments: true,
+                formatError: (jax, err) => {
+                  // Instead of showing error, show the original source
+                  return jax.math.math;
+                }
               },
               svg: {
                 fontCache: 'global',
-                scale: 1,
+                scale: 0.95,
                 minScale: 0.5,
                 matchFontHeight: true
+              },
+              options: {
+                ignoreHtmlClass: 'no-mathjax',
+                processHtmlClass: 'mathjax',
+                renderActions: {
+                  addMenu: [],
+                  checkLoading: []
+                },
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
               },
               startup: {
                 typeset: true,
                 pageReady: () => {
                   return MathJax.startup.defaultPageReady().then(() => {
                     // Send height to React Native after rendering
+                    setTimeout(() => {
+                      const height = document.body.scrollHeight;
+                      window.ReactNativeWebView.postMessage(JSON.stringify({ height }));
+                    }, 100);
+                  }).catch((err) => {
+                    // Silently handle errors and still send height
                     setTimeout(() => {
                       const height = document.body.scrollHeight;
                       window.ReactNativeWebView.postMessage(JSON.stringify({ height }));
@@ -183,15 +287,15 @@ const MathText: React.FC<MathTextProps> = ({
     `;
   }, [processedText, fontSizeValue, color]);
 
-  // Dynamic height based on content - start with larger initial height
-  const [webViewHeight, setWebViewHeight] = React.useState(200);
+  // Dynamic height based on content - start with smaller initial height
+  const [webViewHeight, setWebViewHeight] = React.useState(60);
 
   const handleMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
       if (data.height) {
-        // Add more padding for better spacing, especially for RTL text
-        setWebViewHeight(Math.max(data.height + 20, 200));
+        // Add moderate padding for better spacing
+        setWebViewHeight(Math.max(data.height + 10, 40));
       }
     } catch (e) {
       console.error('Error parsing WebView message:', e);

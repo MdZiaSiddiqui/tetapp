@@ -43,7 +43,26 @@ export default function SubjectDetail() {
       setFetchingQuestions(false);
 
       if (error || !questions || questions.length === 0) {
-        alert(`No questions available for ${subjectName} ${paper} in ${language}`);
+        // Enhanced error message with more debug info
+        console.log('❌ No questions found:', {
+          subjectId,
+          subjectName,
+          language,
+          paper,
+          questionsCount: questions?.length,
+          error: error?.message
+        });
+
+        alert(
+          `No questions available\n\n` +
+          `Subject: ${subjectName}\n` +
+          `Paper: ${paper}\n` +
+          `Language: ${language}\n\n` +
+          `Please check:\n` +
+          `1. Questions exist in database for this subject\n` +
+          `2. Subject ID matches: ${subjectId}\n` +
+          `3. Paper and language values are correct`
+        );
         return;
       }
 
