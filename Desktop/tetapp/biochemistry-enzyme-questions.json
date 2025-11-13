@@ -1,0 +1,278 @@
+[
+  {
+    "question_number": 1,
+    "question_text": "A drug that competes with the substrate for the active site of an enzyme will show which pattern of inhibition on a Lineweaver-Burk plot?",
+    "options": [
+      "1. Increased Km, unchanged Vmax",
+      "2. Decreased Km, unchanged Vmax",
+      "3. Unchanged Km, decreased Vmax",
+      "4. Increased Km, decreased Vmax"
+    ],
+    "correct_answer": "1. Increased Km, unchanged Vmax",
+    "explanation": "Competitive inhibition occurs when an inhibitor competes with the substrate for the enzyme's active site. This increases the apparent Km (reduced affinity for substrate) but does not change Vmax because with sufficient substrate concentration, the inhibitor can be outcompeted. On a Lineweaver-Burk plot, competitive inhibition shows lines intersecting on the y-axis (same Vmax) with different x-intercepts (different Km).",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "medium",
+    "tag": "enzyme-kinetics",
+    "reference": "Harper's Illustrated Biochemistry, 31st Ed, Ch. 8, p. 68-72; Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 58-62",
+    "filters": {
+      "topics": ["competitive-inhibition", "lineweaver-burk-plot", "km-vmax", "enzyme-kinetics"],
+      "clinical_relevance": true,
+      "requires_calculation": false,
+      "image_beneficial": true,
+      "exam_focus": ["neet-pg", "usmle-step-1", "plab"],
+      "pharmacology_relevant": true
+    }
+  },
+  {
+    "question_number": 2,
+    "question_text": "Which of the following is TRUE regarding non-competitive inhibition?",
+    "options": [
+      "1. Inhibitor binds to the active site",
+      "2. Vmax decreases, Km remains unchanged",
+      "3. Can be overcome by increasing substrate concentration",
+      "4. Km decreases, Vmax remains unchanged"
+    ],
+    "correct_answer": "2. Vmax decreases, Km remains unchanged",
+    "explanation": "Non-competitive inhibitors bind to a site other than the active site (allosteric site) and can bind to either the free enzyme or the enzyme-substrate complex. This binding decreases the enzyme's catalytic efficiency, reducing Vmax. However, since the inhibitor doesn't compete with substrate binding, Km remains unchanged. The inhibition cannot be overcome by increasing substrate concentration.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "medium",
+    "tag": "enzyme-kinetics",
+    "reference": "Harper's Illustrated Biochemistry, 31st Ed, Ch. 8, p. 72-75; Marks' Basic Medical Biochemistry, 5th Ed, Ch. 9, p. 123-127",
+    "filters": {
+      "topics": ["non-competitive-inhibition", "allosteric-regulation", "km-vmax", "enzyme-kinetics"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": true,
+      "exam_focus": ["neet-pg", "usmle-step-1"],
+      "pharmacology_relevant": true
+    }
+  },
+  {
+    "question_number": 3,
+    "question_text": "The Michaelis constant (Km) represents:",
+    "options": [
+      "1. The maximum velocity of an enzyme-catalyzed reaction",
+      "2. The substrate concentration at which the reaction velocity is half of Vmax",
+      "3. The rate constant for enzyme-substrate complex formation",
+      "4. The total enzyme concentration in the reaction"
+    ],
+    "correct_answer": "2. The substrate concentration at which the reaction velocity is half of Vmax",
+    "explanation": "Km (Michaelis constant) is defined as the substrate concentration at which the reaction velocity is exactly half of the maximum velocity (Vmax). It is an inverse measure of the enzyme's affinity for its substrate: a lower Km indicates higher affinity (less substrate needed to reach half-maximal velocity), while a higher Km indicates lower affinity.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "easy",
+    "tag": "enzyme-kinetics",
+    "reference": "Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 55-58; Textbook of Biochemistry with Clinical Correlations, 8th Ed, Ch. 10, p. 387-390",
+    "filters": {
+      "topics": ["michaelis-menten-equation", "km-definition", "enzyme-kinetics", "enzyme-substrate-affinity"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1", "basic-science"],
+      "fundamental_concept": true
+    }
+  },
+  {
+    "question_number": 4,
+    "question_text": "A 45-year-old patient presents with muscle weakness and fatigue. Laboratory investigation reveals elevated lactate levels even at rest. Enzyme analysis shows normal enzyme concentration but significantly reduced Vmax. Which of the following is the most likely explanation?",
+    "options": [
+      "1. Competitive enzyme inhibition",
+      "2. Cofactor deficiency affecting enzyme function",
+      "3. Increased Km due to genetic mutation",
+      "4. Allosteric activation of the enzyme"
+    ],
+    "correct_answer": "2. Cofactor deficiency affecting enzyme function",
+    "explanation": "A reduced Vmax with normal enzyme concentration suggests that the enzyme's catalytic efficiency is impaired. Cofactor deficiency (such as thiamine, riboflavin, or other B vitamins required for metabolic enzymes) can cause this pattern. The elevated lactate suggests impaired aerobic metabolism, consistent with deficiencies in cofactors required for the citric acid cycle or electron transport chain. Competitive inhibition would increase Km, not decrease Vmax.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "difficult",
+    "tag": "clinical-enzymology",
+    "reference": "Harrison's Principles of Internal Medicine, 21st Ed, Ch. 96; Harper's Illustrated Biochemistry, 31st Ed, Ch. 8 & 44",
+    "filters": {
+      "topics": ["cofactor-deficiency", "vitamin-deficiency", "lactic-acidosis", "enzyme-kinetics", "clinical-case"],
+      "clinical_relevance": true,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1", "usmle-step-2"],
+      "case_based": true,
+      "metabolic_disorder": true
+    }
+  },
+  {
+    "question_number": 5,
+    "question_text": "Which coenzyme is derived from vitamin B3 (niacin) and serves as an electron carrier in oxidation-reduction reactions?",
+    "options": [
+      "1. Coenzyme A (CoA)",
+      "2. Flavin adenine dinucleotide (FAD)",
+      "3. Nicotinamide adenine dinucleotide (NAD+)",
+      "4. Tetrahydrofolate (THF)"
+    ],
+    "correct_answer": "3. Nicotinamide adenine dinucleotide (NAD+)",
+    "explanation": "NAD+ (Nicotinamide adenine dinucleotide) and its phosphorylated form NADP+ are derived from niacin (vitamin B3). They serve as crucial electron carriers in cellular metabolism, accepting hydride ions (H-) during oxidation reactions. NAD+ is primarily involved in catabolic reactions (glycolysis, citric acid cycle), while NADP+ is mainly used in anabolic reactions (fatty acid synthesis). FAD is derived from riboflavin (B2), CoA from pantothenic acid (B5), and THF from folic acid (B9).",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "easy",
+    "tag": "coenzymes",
+    "reference": "Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 101-105; Harper's Illustrated Biochemistry, 31st Ed, Ch. 44, p. 481-485",
+    "filters": {
+      "topics": ["coenzymes", "vitamins", "electron-carriers", "nad-nadp", "oxidation-reduction"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1", "basic-science"],
+      "nutrition_relevant": true,
+      "fundamental_concept": true
+    }
+  },
+  {
+    "question_number": 6,
+    "question_text": "Phosphorylation of which amino acid residue is MOST commonly involved in enzyme regulation?",
+    "options": [
+      "1. Serine, threonine, and tyrosine",
+      "2. Aspartate and glutamate",
+      "3. Histidine and lysine",
+      "4. Cysteine and methionine"
+    ],
+    "correct_answer": "1. Serine, threonine, and tyrosine",
+    "explanation": "Reversible phosphorylation is a key mechanism of enzyme regulation. Protein kinases add phosphate groups to hydroxyl (-OH) groups on serine, threonine, and tyrosine residues. Serine is the most common phosphorylation site (~90%), followed by threonine (~10%) and tyrosine (~0.05%). This covalent modification can activate or inactivate enzymes, providing rapid regulation of metabolic pathways. Phosphatases remove these phosphate groups, reversing the modification.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "easy",
+    "tag": "enzyme-regulation",
+    "reference": "Marks' Basic Medical Biochemistry, 5th Ed, Ch. 9, p. 134-138; Harper's Illustrated Biochemistry, 31st Ed, Ch. 9, p. 78-82",
+    "filters": {
+      "topics": ["phosphorylation", "enzyme-regulation", "protein-kinases", "post-translational-modification", "signal-transduction"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1"],
+      "signal_transduction": true,
+      "fundamental_concept": true
+    }
+  },
+  {
+    "question_number": 7,
+    "question_text": "An enzyme exhibits sigmoidal (S-shaped) kinetics rather than hyperbolic Michaelis-Menten kinetics. This enzyme most likely:",
+    "options": [
+      "1. Is inhibited by its product",
+      "2. Has multiple substrate binding sites showing cooperativity",
+      "3. Requires a cofactor for activity",
+      "4. Follows zero-order kinetics"
+    ],
+    "correct_answer": "2. Has multiple substrate binding sites showing cooperativity",
+    "explanation": "Sigmoidal kinetics indicate cooperative binding, typically seen in allosteric enzymes with multiple subunits. When the first substrate molecule binds, it induces conformational changes that increase the affinity of remaining subunits for substrate (positive cooperativity). This is characteristic of regulatory enzymes like hemoglobin (oxygen binding) and phosphofructokinase. The sigmoidal curve contrasts with the hyperbolic curve of standard Michaelis-Menten enzymes, which have a single active site and show no cooperativity.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "medium",
+    "tag": "allosteric-enzymes",
+    "reference": "Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 62-66; Berg's Biochemistry, 9th Ed, Ch. 10, p. 291-295",
+    "filters": {
+      "topics": ["allosteric-enzymes", "cooperativity", "sigmoidal-kinetics", "regulatory-enzymes", "positive-cooperativity"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": true,
+      "exam_focus": ["neet-pg", "usmle-step-1"],
+      "regulatory_mechanism": true
+    }
+  },
+  {
+    "question_number": 8,
+    "question_text": "A researcher discovers that aspirin irreversibly inhibits cyclooxygenase (COX) by acetylating a serine residue in its active site. This is an example of:",
+    "options": [
+      "1. Competitive inhibition",
+      "2. Non-competitive inhibition",
+      "3. Suicide inhibition (mechanism-based inactivation)",
+      "4. Feedback inhibition"
+    ],
+    "correct_answer": "3. Suicide inhibition (mechanism-based inactivation)",
+    "explanation": "Suicide inhibition (also called mechanism-based inactivation) occurs when an inhibitor undergoes partial enzymatic processing and forms a covalent bond with the enzyme, permanently inactivating it. Aspirin acetylates a serine residue (Ser530 in COX-1) in the active site, irreversibly blocking prostaglandin synthesis. The enzyme cannot be reactivated; new enzyme synthesis is required for activity to return. This differs from competitive inhibition, which is reversible and can be overcome by increasing substrate concentration.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "difficult",
+    "tag": "enzyme-inhibition",
+    "reference": "Goodman & Gilman's Pharmacological Basis of Therapeutics, 13th Ed, Ch. 38; Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 60-62",
+    "filters": {
+      "topics": ["suicide-inhibition", "irreversible-inhibition", "aspirin-mechanism", "cox-inhibition", "covalent-modification"],
+      "clinical_relevance": true,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1", "pharmacology"],
+      "pharmacology_relevant": true,
+      "drug_mechanism": true
+    }
+  },
+  {
+    "question_number": 9,
+    "question_text": "Which of the following enzyme classes catalyzes the transfer of functional groups between molecules?",
+    "options": [
+      "1. Oxidoreductases",
+      "2. Transferases",
+      "3. Hydrolases",
+      "4. Lyases"
+    ],
+    "correct_answer": "2. Transferases",
+    "explanation": "Enzymes are classified into six major classes based on the reactions they catalyze. Transferases (EC 2) catalyze the transfer of functional groups (such as methyl, amino, phosphate, or acyl groups) from one molecule to another. Examples include kinases (transfer phosphate groups), transaminases (transfer amino groups), and methyltransferases (transfer methyl groups). Oxidoreductases catalyze redox reactions, hydrolases catalyze hydrolysis reactions, and lyases catalyze the addition or removal of groups to form double bonds.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "easy",
+    "tag": "enzyme-classification",
+    "reference": "Enzyme Nomenclature 1992 (IUBMB); Harper's Illustrated Biochemistry, 31st Ed, Ch. 7, p. 51-54",
+    "filters": {
+      "topics": ["enzyme-classification", "transferases", "ec-nomenclature", "enzyme-function"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": false,
+      "exam_focus": ["neet-pg", "usmle-step-1", "basic-science"],
+      "fundamental_concept": true,
+      "nomenclature": true
+    }
+  },
+  {
+    "question_number": 10,
+    "question_text": "In an enzyme-catalyzed reaction, the activation energy is lowered by:",
+    "options": [
+      "1. Increasing the temperature of the reaction",
+      "2. Stabilizing the transition state of the reaction",
+      "3. Increasing the concentration of products",
+      "4. Changing the equilibrium constant of the reaction"
+    ],
+    "correct_answer": "2. Stabilizing the transition state of the reaction",
+    "explanation": "Enzymes accelerate reactions by lowering the activation energy (Ea), which is the energy barrier that must be overcome for a reaction to proceed. They achieve this primarily by stabilizing the transition state - the high-energy intermediate state between reactants and products. By binding preferentially to the transition state, enzymes reduce the energy required to reach it. Importantly, enzymes do NOT change the equilibrium constant (Keq) or the overall free energy change (ΔG) of the reaction; they only affect the rate at which equilibrium is reached.",
+    "classification": {
+      "subject": "Biochemistry",
+      "chapter": "Enzymes"
+    },
+    "difficulty": "medium",
+    "tag": "enzyme-mechanism",
+    "reference": "Berg's Biochemistry, 9th Ed, Ch. 8, p. 215-220; Lippincott's Illustrated Reviews: Biochemistry, 7th Ed, p. 53-55",
+    "filters": {
+      "topics": ["activation-energy", "transition-state-theory", "enzyme-mechanism", "catalysis", "thermodynamics"],
+      "clinical_relevance": false,
+      "requires_calculation": false,
+      "image_beneficial": true,
+      "exam_focus": ["neet-pg", "usmle-step-1", "basic-science"],
+      "fundamental_concept": true,
+      "thermodynamics": true
+    }
+  }
+]
