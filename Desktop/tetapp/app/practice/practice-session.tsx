@@ -27,6 +27,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { HomeShape, InvertedHomeShape } from '../../components/PentagonShapes';
 import { Ionicons } from '@expo/vector-icons';
+import MathText from '../../components/MathText';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = 50; // Optimized threshold for smooth gestures
@@ -613,9 +614,12 @@ export default function PracticeSession() {
                 resizeMode="contain"
               />
             )}
-            <Text className={`${getQuestionFontSizeClass()} font-bold text-gray-900 leading-relaxed`}>
-              {currentQuestion.question}
-            </Text>
+            <MathText
+              text={currentQuestion.question}
+              fontSize={fontSize}
+              color="#111827"
+              style={{ fontWeight: 'bold' }}
+            />
           </View>
 
           {/* Options */}
@@ -661,7 +665,12 @@ export default function PracticeSession() {
                   activeOpacity={0.7}
                 >
                   <View className="flex-row items-center">
-                    <Text className={`flex-1 ${getOptionFontSizeClass()} ${textStyle}`}>{value}</Text>
+                    <MathText
+                      text={value}
+                      fontSize={fontSize}
+                      color={showCorrect ? '#111827' : showWrong ? '#111827' : isSelected ? '#ffffff' : '#000000'}
+                      style={{ flex: 1, fontWeight: '600' }}
+                    />
                   </View>
                 </TouchableOpacity>
               );
@@ -669,11 +678,17 @@ export default function PracticeSession() {
           </View>
 
           {/* Explanation */}
-          {showExplanation && (
-            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md">
-              <Text className={`${getOptionFontSizeClass()} text-gray-900 leading-relaxed`}>
-                {currentQuestion.solutions}
-              </Text>
+          {showExplanation && currentQuestion.solutions && (
+            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md" style={{ minHeight: 80 }}>
+              <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
+              <View style={{ width: '100%' }}>
+                <MathText
+                  text={currentQuestion.solutions}
+                  fontSize={fontSize}
+                  color="#111827"
+                  style={{ width: '100%', flex: 1 }}
+                />
+              </View>
             </View>
           )}
 
@@ -693,7 +708,12 @@ export default function PracticeSession() {
                       className="p-4 rounded-2xl mb-3 bg-red-100 border border-gray-100 shadow-md"
                     >
                       <View className="flex-row items-center">
-                        <Text className={`flex-1 ${getOptionFontSizeClass()} text-black font-semibold`}>{value}</Text>
+                        <MathText
+                          text={value}
+                          fontSize={fontSize}
+                          color="#111827"
+                          style={{ flex: 1, fontWeight: '600' }}
+                        />
                       </View>
                     </View>
                   );
@@ -705,7 +725,12 @@ export default function PracticeSession() {
                       className="p-4 rounded-2xl mb-3 bg-red-100 border border-gray-100 shadow-md"
                     >
                       <View className="flex-row items-center">
-                        <Text className={`flex-1 ${getOptionFontSizeClass()} text-black font-semibold`}>{value}</Text>
+                        <MathText
+                          text={value}
+                          fontSize={fontSize}
+                          color="#111827"
+                          style={{ flex: 1, fontWeight: '600' }}
+                        />
                       </View>
                     </View>
                   );

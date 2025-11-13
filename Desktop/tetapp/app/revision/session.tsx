@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
+import MathText from '../../components/MathText';
 
 interface Question {
   id: string;
@@ -346,9 +347,12 @@ export default function RevisionSession() {
               />
             )}
 
-            <Text className="text-xl font-semibold text-gray-800">
-              {currentQuestion.question_text}
-            </Text>
+            <MathText
+              text={currentQuestion.question_text}
+              fontSize="large"
+              color="#1f2937"
+              style={{ fontWeight: '600' }}
+            />
           </View>
 
           {/* Options */}
@@ -396,15 +400,14 @@ export default function RevisionSession() {
                         {key}
                       </Text>
                     </View>
-                    <Text
-                      className={`flex-1 ${
-                        showCorrect || showWrong
-                          ? 'font-semibold'
-                          : 'text-gray-800'
-                      }`}
-                    >
-                      {value}
-                    </Text>
+                    <View className="flex-1">
+                      <MathText
+                        text={value}
+                        fontSize="medium"
+                        color={showCorrect || showWrong ? '#1f2937' : '#1f2937'}
+                        style={{ fontWeight: showCorrect || showWrong ? '600' : 'normal' }}
+                      />
+                    </View>
                     {showCorrect && <Text className="text-xl">✓</Text>}
                     {showWrong && <Text className="text-xl">✗</Text>}
                   </View>
@@ -417,7 +420,12 @@ export default function RevisionSession() {
           {showExplanation && (
             <View className="mt-6 bg-purple-50 p-4 rounded-xl">
               <Text className="font-bold text-gray-800 mb-2">Explanation:</Text>
-              <Text className="text-gray-700">{currentQuestion.explanation}</Text>
+              <MathText
+                text={currentQuestion.explanation}
+                fontSize="medium"
+                color="#374151"
+                style={{ lineHeight: 1.6 }}
+              />
             </View>
           )}
         </View>

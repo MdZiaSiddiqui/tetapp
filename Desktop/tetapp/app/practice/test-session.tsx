@@ -21,6 +21,7 @@ import { TestActions } from '../../components/test-session/TestActions';
 import { OptionButton } from '../../components/test-session/OptionButton';
 import { QuestionStats } from '../../components/test-session/QuestionStats';
 import { QuestionGrid } from '../../components/test-session/QuestionGrid';
+import MathText from '../../components/MathText';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -473,9 +474,12 @@ export default function TestSession() {
                   resizeMode="contain"
                 />
               )}
-              <Text className={`${getQuestionFontSizeClass()} font-bold text-gray-900 leading-relaxed`}>
-                {currentQuestion?.question}
-              </Text>
+              <MathText
+                text={currentQuestion?.question || ''}
+                fontSize={fontSize}
+                color="#111827"
+                style={{ fontWeight: 'bold' }}
+              />
             </View>
 
             {/* Options - pointerEvents="box-none" prevents gesture conflicts */}

@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Converted Document with Math Support</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        h1 { color: #2E86AB; font-size: 2.5em; border-bottom: 3px solid #2E86AB; padding-bottom: 10px; }
+        h2 { color: #A23B72; font-size: 2em; border-bottom: 2px solid #A23B72; padding-bottom: 8px; }
+        h3 { color: #F18F01; font-size: 1.5em; border-bottom: 1px solid #F18F01; padding-bottom: 5px; }
+        h4 { color: #C73E1D; font-size: 1.2em; }
+        h5 { color: #6B4C7A; font-size: 1.1em; }
+        h6 { color: #4A90A4; font-size: 1em; }
+        p { margin-bottom: 1em; }
+        .bold { font-weight: bold; }
+        .italic { font-style: italic; }
+        .underline { text-decoration: underline; }
+        .math-display { 
+            display: block; 
+            text-align: center; 
+            margin: 1em 0; 
+            padding: 0.5em; 
+            background-color: #f9f9f9; 
+            border-radius: 4px; 
+        }
+        .math-inline { 
+            font-style: italic; 
+        }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+    </style>
+    <style>
+        /* Compact Index styles */
+        .index {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .index h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .index ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        .index .level-1 {
+            margin-bottom: 8px;
+            font-weight: bold;
+            background: #e9ecef;
+            border-radius: 5px;
+            padding: 8px;
+            transition: all 0.2s ease;
+        }
+        .index .level-1:nth-child(odd) {
+            background: #e3f2fd;
+        }
+        .index .level-2 {
+            margin-left: 20px;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+            background: #f1f8e9;
+            border-radius: 4px;
+            padding: 6px;
+            transition: all 0.2s ease;
+        }
+        .index .level-2:nth-child(odd) {
+            background: #fff3e0;
+        }
+        .index a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 1em;
+            display: block;
+            padding: 2px;
+            transition: all 0.2s ease;
+        }
+        .index .level-1 a {
+            font-size: 1.05em;
+        }
+        .index .level-2 a {
+            font-size: 0.95em;
+        }
+        .index .level-1:hover {
+            background: #d1ecf1;
+        }
+        .index .level-2:hover {
+            background: #ffeaa7;
+        }
+        .index a:hover {
+            color: #e74c3c;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2E86AB;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+        }
+        .back-to-top:hover {
+            background-color: #1a5276;
+        }
+    </style>
+</head>
+<body>
+<div class="index">
+    <h2>🧬 Table of Contents</h2>
+    <ul>
+        <li class="level-1"><a href="#section1">🌱 XII. Biology: Importance in Everyday Life</a></li>
+        <li class="level-1"><a href="#section2">🔬 12. Living World - Characteristics & Classification</a></li>
+        <li class="level-2"><a href="#section2a">🦠 a) Cell: Concept, theory, Plant vs Animal cell, divisions, organelles</a></li>
+        <li class="level-2"><a href="#section2b">🧫 b) Tissues - Animal and plant tissues</a></li>
+        <li class="level-1"><a href="#section3">🌿 13. Plant World</a></li>
+        <li class="level-1"><a href="#section4">🦁 14. Animal World: Movements & Organ systems</a></li>
+        <li class="level-1"><a href="#section5">🦠 15. Microbes: Bacteria, Viruses, Fungi, Protozoan</a></li>
+        <li class="level-1"><a href="#section6">🌍 16. Our Environment</a></li>
+        <li class="level-1"><a href="#section7">🧪 17. Recent trends in Biology</a></li>
+    </ul>
+</div>
+
+<h2 id="section1">XII. Biology: Its Importance in Everyday Life</h2>
+<p><span class="bold">Connecting Biology to Personal Experience</span></p>
+<p>Biology is not merely a subject confined to textbooks and laboratories—it is the very fabric of our daily existence. From the moment we wake up to the time we go to sleep, biological principles govern every aspect of our lives. Understanding these connections transforms how we perceive ourselves and the world around us, making biology an essential lens through which to view our personal experiences.</p>
+
+<p><span class="bold">Health and Medicine:</span> Biology is the foundation of modern medicine. It provides the framework for understanding:</p>
+<p><span class="bold">Human Physiology:</span> How our bodies function, from the cellular level to organ systems. This knowledge empowers students to make informed decisions about their health. For example, understanding how your heart works as a double pump helps explain why regular cardiovascular exercise strengthens this muscle and reduces the risk of heart disease. When you feel your pulse racing during exercise, you're experiencing your body's biological response to increased oxygen demand.</p>
+<p><span class="bold">Disease:</span> The nature of pathogens (bacteria, viruses), genetic disorders, and lifestyle-related illnesses. When you catch a cold, you're witnessing a battle between your immune system and invading viruses. Understanding this biological process explains why rest, hydration, and proper nutrition help your body fight infections more effectively. Similarly, knowing that cancer cells are essentially your own cells that have lost control of their division process provides insight into both prevention strategies and treatment approaches.</p>
+<p><span class="bold">Treatments and Prevention:</span> How vaccines stimulate the immune system, how antibiotics target bacteria, and the importance of personal hygiene in preventing the spread of germs. The COVID-19 pandemic provided a real-time lesson in immunology, showing how vaccines work by training our immune system to recognize specific pathogens. When you wash your hands with soap, you're leveraging biology to disrupt the lipid membranes of viruses and bacteria—a simple act with profound biological implications.</p>
+<p><span class="bold">Nutrition:</span> The biological processes that convert food into energy and building materials for the body. It explains why a balanced diet is essential for growth and health. When you feel hungry, your body is signaling low glucose levels; when you eat, your digestive system breaks down complex molecules into simpler ones that cells can use. Understanding metabolism helps explain why different people may respond differently to the same foods and why nutritional needs change throughout life.</p>
+<p><span class="bold">Food and Drink:</span> Many everyday food products are the result of biological processes.</p>
+<p><span class="bold">Agriculture:</span> The principles of plant and animal biology are used to grow crops and raise livestock, forming the basis of our food supply. When you bite into an apple, you're enjoying the product of photosynthesis, where the tree converted sunlight into chemical energy stored in sugars. The ripening process itself is a biological phenomenon involving ethylene gas production that transforms starches into sweeter compounds.</p>
+<p><span class="bold">Fermentation:</span> Microscopic fungi (yeast) are used in baking to make bread rise, and various microbes are essential for producing cheese, yogurt, and fermented beverages. The bubbles in your soda or beer are carbon dioxide produced by yeast through anaerobic respiration. The distinctive flavors in cheese come from specific bacteria that break down proteins and fats into simpler compounds. Even the sour taste of yogurt results from bacteria converting lactose into lactic acid—a process that also preserves the milk.</p>
+<p><span class="bold">Physiological Understanding:</span> Biology explains our own bodily experiences.</p>
+<p><span class="bold">Circadian Rhythms:</span> Phenomena like jet lag are explained by our internal biological clocks, which regulate sleep-wake cycles. When you travel across time zones, your body's internal clock, located in the suprachiasmatic nucleus of your brain, needs time to adjust to the new light-dark cycle. This explains why you feel tired at odd hours and why exposure to natural light can help reset your biological clock more quickly.</p>
+<p><span class="bold">Physical Activity:</span> Understanding muscle physiology, respiration, and energy metabolism helps explain the effects of exercise on the body. When you exercise and feel your muscles burn, you're experiencing the buildup of lactic acid from anaerobic respiration when oxygen demand exceeds supply. The muscle soreness you feel a day or two after intense exercise results from microscopic tears in muscle fibers that trigger an inflammatory response—part of the biological process that ultimately makes muscles stronger.</p>
+<p><span class="bold">Sensory Experiences:</span> Our daily interactions with the world are mediated by biological systems. The pleasure you derive from music involves specialized hair cells in your inner ear converting sound waves into electrical signals that your brain interprets. The experience of taste depends on taste buds detecting different molecules, while smell relies on olfactory receptors that can distinguish thousands of different scents. Even the feeling of pain is a protective biological mechanism that alerts you to potential tissue damage.</p>
+<p><span class="bold">Emotional and Mental Health:</span> Our moods and emotions have biological bases. The feeling of happiness involves neurotransmitters like dopamine and serotonin, while stress triggers the release of cortisol and adrenaline. Understanding these biological processes helps explain why exercise can improve mood (by releasing endorphins), why sleep deprivation affects emotional regulation, and how mindfulness practices can change brain structure over time.</p>
+<p><span class="bold">Connecting Biology to Societal and Global Issues</span></p>
+<p><span class="bold">Environmental Stewardship:</span> An understanding of biology is critical for addressing global challenges.</p>
+<p><span class="bold">Ecology and Conservation:</span> Biology helps us understand the delicate balance of ecosystems, the importance of biodiversity, and the impact of human activities on the environment. When you see news about coral reef bleaching, you're witnessing the breakdown of a symbiotic relationship between coral polyps and algae that provide them with food and color. The decline of bee populations affects not only honey production but also the pollination of approximately one-third of the food we eat, demonstrating how biological interconnections have direct implications for food security.</p>
+<p><span class="bold">Resource Management:</span> It provides the scientific basis for sustainably managing natural resources like forests, fisheries, and fresh water to ensure they are available for future generations. Understanding fish population dynamics helps set fishing quotas that prevent overexploitation. Knowledge of forest ecology informs sustainable logging practices that maintain ecosystem health while providing timber resources. Even water management relies on understanding aquatic ecosystems and the biological processes that affect water quality.</p>
+<p><span class="bold">Pollution:</span> Biological knowledge is used to study the effects of pollutants on organisms and ecosystems and to develop bioremediation strategies. When oil spills occur, scientists use specific bacteria that can digest petroleum compounds to clean affected areas. The presence of certain indicator species like lichens can help monitor air quality, as they are sensitive to sulfur dioxide and other pollutants. Understanding bioaccumulation explains why mercury in small fish becomes concentrated in larger predatory fish, ultimately affecting human health.</p>
+<p><span class="bold">Climate Change:</span> Biological systems are both affected by and contribute to climate change. The melting of polar ice affects habitats for species like polar bears and penguins, while changing temperature patterns alter plant flowering times and animal migration behaviors. At the same time, photosynthetic organisms act as carbon sinks, removing CO2 from the atmosphere. Understanding these biological connections is essential for developing effective climate solutions.</p>
+<p><span class="bold">Forensic Science:</span> Biology plays a vital role in the justice system.</p>
+<p><span class="bold">DNA Analysis:</span> Genetic fingerprinting is a powerful tool for identifying individuals at crime scenes. The technique relies on the fact that except for identical twins, every person's DNA is unique. Even tiny samples of blood, hair, or skin cells left at a crime scene can be used to create a DNA profile that can match suspects with high accuracy. This biological tool has both helped convict guilty parties and exonerate innocent people who were wrongfully convicted.</p>
+<p><span class="bold">Trace Evidence:</span> Analysis of hair, skin cells, and other biological materials can provide crucial evidence in investigations. The structure of hair can reveal information about a person's ethnicity and even whether they've been exposed to certain toxins. Pollen grains found on clothing can indicate where a person has been, as different regions have characteristic pollen profiles. Even the life cycle of insects on a corpse can help determine time of death, a field known as forensic entomology.</p>
+<p><span class="bold">Biotechnology in Daily Life:</span> Biological principles are applied in many industries.</p>
+<p><span class="bold">Household Products:</span> Enzymes derived from microbes are used in laundry detergents to break down protein- and fat-based stains. The proteases in your laundry detergent work similarly to digestive enzymes in your stomach, breaking down complex molecules into simpler ones that can be washed away. Biological understanding has also led to the development of biodegradable cleaning products that break down naturally without harming ecosystems.</p>
+<p><span class="bold">Textiles:</span> Many clothing fibers, such as cotton and linen, are derived from plants. The cotton in your t-shirt comes from seed hairs of the cotton plant, while linen comes from fibers in the flax plant stem. Even synthetic fibers like rayon are produced from cellulose derived from wood pulp. Understanding the biological structure of these materials helps develop better fabrics and more sustainable production methods.</p>
+<p><span class="bold">Personal Care Products:</span> Many cosmetics and personal care items rely on biological ingredients or principles. The probiotics in some skincare products help maintain healthy skin microbiomes. Sunscreens work by either absorbing or reflecting UV radiation to prevent biological damage to skin cells that can lead to cancer. Even the process of skin aging is fundamentally biological, involving changes in collagen production, cell turnover rates, and DNA damage accumulation.</p>
+<p><span class="bold">Career Pathways in Biological Sciences</span></p>
+<p>Biology is a gateway to a vast range of professions that directly impact human life and the planet.</p>
+<p><span class="bold">Healthcare:</span> Doctors, nurses, pharmacists, dentists, physical therapists, veterinarians. These professions apply biological knowledge to diagnose, treat, and prevent diseases in humans and animals. A pharmacist must understand how drugs interact with biological systems, while a physical therapist uses knowledge of anatomy and physiology to help patients recover from injuries. Even emerging fields like genetic counseling require deep understanding of how genetic variations affect health.</p>
+<p><span class="bold">Research and Academia:</span> Microbiologists, geneticists, botanists, zoologists, ecologists, university professors. These scientists expand our understanding of life and its processes. A microbiologist might study bacteria that could produce new antibiotics, while a botanist could research plants with medicinal properties. University professors not only conduct research but also train the next generation of biologists, creating a ripple effect of knowledge and discovery.</p>
+<p><span class="bold">Applied Sciences:</span> Agricultural scientists, food scientists, forensic scientists, environmental consultants. These professionals apply biological principles to solve practical problems. An agricultural scientist might develop drought-resistant crops to address food security, while a forensic scientist uses DNA evidence to help solve crimes. Environmental consultants assess the impact of development projects on local ecosystems and recommend mitigation strategies.</p>
+<p><span class="bold">Communication and Education:</span> Science teachers, science writers, museum curators, zookeepers. These careers focus on sharing biological knowledge with the public. A science writer might explain complex research findings in accessible language, while a museum curator designs exhibits that make biology engaging for visitors. Zookeepers not only care for animals but also educate the public about conservation and biodiversity.</p>
+<p><span class="bold">Emerging Fields:</span> Bioinformatics, synthetic biology, conservation technology, personalized medicine. These cutting-edge areas combine biology with technology and data science. A bioinformatician might analyze genetic data to identify disease patterns, while someone in synthetic biology could design organisms that produce biofuels or break down pollutants. These fields represent the future of biology and offer exciting opportunities for innovation.</p>
+<p><span class="bold">Pedagogical Approaches for Teachers</span></p>
+<p><span class="bold">Emphasize Real-World Connections:</span> The most effective way to engage students is to make biology relevant to their lives. Frame lessons around questions they can relate to, such as "How does my body fight off a cold?" or "Where does my food come from?" When teaching about cellular respiration, connect it to why students feel out of breath during exercise. When discussing genetics, use examples of inherited traits they can observe in their own families. These connections transform abstract concepts into tangible knowledge.</p>
+<p><span class="bold">Promote Inquiry-Based Learning:</span> Move beyond rote memorization. Encourage students to ask questions, conduct experiments, and analyze data.</p>
+<p>Use hands-on activities, such as growing plants, observing microbes under a microscope, or simulating natural processes. When teaching about plant growth, have students design experiments to test how different factors affect seed germination. When studying ecosystems, take students outside to observe biodiversity in their own schoolyard.</p>
+<p>Employ virtual labs and simulations as powerful tools to visualize complex concepts (e.g., DNA replication, cellular processes) and as ethical alternatives to dissection. These tools allow students to manipulate variables and see immediate results, helping them understand cause-and-effect relationships in biological systems.</p>
+<p><span class="bold">Utilize the "Claim, Evidence, Reasoning" (CER) Framework:</span> Teach students to think like scientists by having them make a claim, support it with evidence from their observations or experiments, and explain their reasoning. This approach develops critical thinking skills and helps students understand how scientific knowledge is constructed. For example, when studying evolution, students might claim that environmental pressures drive natural selection, provide evidence from fossil records or observations of living organisms, and explain their reasoning based on principles of genetics and ecology.</p>
+<p><span class="bold">Connect Biology to Civic Responsibility:</span> Frame biological topics within the context of societal issues. A lesson on genetics can lead to a discussion on the ethics of genetic engineering. A unit on ecology can empower students to make informed decisions about environmental policies. When teaching about infectious diseases, discuss public health policies and vaccination programs. When covering human reproduction, address demographic trends and their social implications. This approach transforms biology education from simple content acquisition into a tool for creating informed and responsible citizens.</p>
+<p><span class="bold">Cultivate wonder and curiosity:</span> Biology is filled with fascinating phenomena that can inspire awe and curiosity. Share stories of scientific discovery, highlight the diversity of life on Earth, and encourage students to ask "why" and "how." When students see biology as a way to understand the world around them rather than just a subject to be studied, they develop a lifelong interest in learning about life and its processes.</p>
+<h2 id="section2">12. Living World - Characteristics: Classification of Plants and Animals and their characteristics</h2>
+<h3 id="section2a">a) Cell: Concept, Cell theory, differences between Plant cell and Animal cell, Cell divisions, Cell organelles</h3>
+<p><span class="bold">Defining Life: Core Characteristics of Living Organisms</span></p>
+<p>To be classified as a living organism, a thing must exhibit all of the following characteristics.</p>
+<p><span class="bold">Cellular Organization:</span> All living things are composed of one or more cells. The cell is the basic, fundamental unit of life.</p>
+<p><span class="bold">Reproduction:</span> Living things produce offspring. This can be:</p>
+<p><span class="bold">Asexual Reproduction:</span> A single parent produces genetically identical offspring.</p>
+<p><span class="bold">Sexual Reproduction:</span> Two parents contribute genetic information to produce unique offspring.</p>
+<p><span class="bold">Metabolism (Energy Use):</span> Living things acquire and use energy to power all life processes. This includes:</p>
+<p><span class="bold">Nutrition:</span> Taking in nutrients. Autotrophs (e.g., plants) make their own food, while heterotrophs (e.g., animals) consume other organisms.</p>
+<p><span class="bold">Respiration:</span> A set of chemical reactions that release energy from nutrients.</p>
+<p><span class="bold">Homeostasis:</span> The ability to maintain a stable, constant internal environment despite changes in the external environment (e.g., regulating body temperature, water balance).</p>
+<p><span class="bold">Heredity:</span> Living things pass genetic traits to their offspring through DNA.</p>
+<p><span class="bold">Responsiveness (Sensitivity):</span> Organisms react to stimuli (changes) in their environment.</p>
+<p><span class="bold">Growth and Development:</span> Organisms increase in size and complexity over their lifespan, following a pattern encoded in their DNA.</p>
+<p><span class="bold">Adaptation through Evolution:</span> Populations of organisms evolve over time to become better suited to their environment.</p>
+<p><span class="bold">Teaching Point - Addressing Misconceptions:</span> Students often equate "living" with "moving." Use examples like dormant seeds, hibernating animals, or trees in winter to show that living things are not always in motion. Emphasize that non-living things like fire or crystals might show one or two characteristics (e.g., growth), but only living things exhibit all of them.</p>
+<p><span class="bold">Systems of Classification</span></p>
+<p><span class="bold">Taxonomy:</span> The science of naming, describing, and classifying organisms into groups based on shared characteristics and evolutionary relationships.</p>
+<p><span class="bold">The Linnaean Hierarchy:</span> A system that organizes organisms into a series of nested ranks, from broadest to most specific.</p>
+<p>Kingdom</p>
+<p>Phylum (called Division in plants)</p>
+<p>Class</p>
+<p>Order</p>
+<p>Family</p>
+<p>Genus</p>
+<p>Species</p>
+<p><span class="bold">Binomial Nomenclature:</span> The universal, two-part scientific naming system for every species.</p>
+<p>It consists of the <span class="italic">Genus</span> name (always capitalized) followed by the <span class="italic">species</span> name (always lowercase).</p>
+<p>The entire name is written in <span class="italic">italics</span> or is underlined.</p>
+<p>Example: The scientific name for humans is <span class="italic">Homo sapiens</span>.</p>
+<p><span class="bold">The Major Kingdoms:</span></p>
+<p><span class="bold">Animalia (Animals):</span> Multicellular, heterotrophic (ingest food), eukaryotic, no cell walls, typically mobile.</p>
+<p><span class="bold">Plantae (Plants):</span> Multicellular, autotrophic (photosynthesis), eukaryotic, have cell walls made of cellulose, typically non-mobile.</p>
+<p><span class="bold">Fungi:</span> Mostly multicellular (except yeast), heterotrophic (absorb nutrients after external digestion), eukaryotic, have cell walls made of chitin.</p>
+<p><span class="bold">Protista:</span> A diverse group of mostly single-celled eukaryotes. Includes algae, amoebas, and slime molds.</p>
+<p><span class="bold">Monera (Bacteria and Archaea):</span> Unicellular, prokaryotic (lack a nucleus and other membrane-bound organelles).</p>
+<p><span class="bold">The Cell: The Fundamental Unit of Life</span></p>
+<p><span class="bold">The Cell Concept and Cell Theory:</span></p>
+<p><span class="bold">Concept:</span> The cell is the smallest unit of life capable of carrying out all life processes.</p>
+<p><span class="bold">Postulates of the Cell Theory:</span></p>
+<p>All living organisms are composed of one or more cells.</p>
+<p>The cell is the basic unit of structure and function in all living things.</p>
+<p>All cells arise from pre-existing cells.</p>
+<p><span class="bold">Modern Additions:</span></p>
+<p>Cells contain hereditary information (DNA) that is passed on during cell division.</p>
+<p>Energy flow (metabolism) occurs within cells.</p>
+<p>All cells have a similar basic chemical composition.</p>
+<p><span class="bold">Key Differences Between Plant and Animal Cells:</span></p>
+<p>The core differences between plant and animal cells reflect their distinct lifestyles. Plants are stationary autotrophs, requiring rigidity and the ability to make their own food. Animals are mobile heterotrophs, requiring flexibility and the ability to move to find food. This fundamental evolutionary divergence is visible at the cellular level.</p>
+<table>
+<tr>
+<td>Feature</td>
+<td>Plant Cell</td>
+<td>Animal Cell</td>
+</tr>
+<tr>
+<td>Cell Wall</td>
+<td>Present; a rigid outer layer of cellulose</td>
+<td>Absent</td>
+</tr>
+<tr>
+<td>Shape</td>
+<td>Fixed, often rectangular or cuboidal</td>
+<td>Variable, often round or irregular</td>
+</tr>
+<tr>
+<td>Chloroplasts</td>
+<td>Present; site of photosynthesis</td>
+<td>Absent</td>
+</tr>
+<tr>
+<td>Vacuole</td>
+<td>One large, central vacuole</td>
+<td>Many small vacuoles, if any</td>
+</tr>
+<tr>
+<td>Lysosomes</td>
+<td>Generally absent or rare</td>
+<td>Present</td>
+</tr>
+<tr>
+<td>Centrioles</td>
+<td>Absent in most higher plants</td>
+<td>Present</td>
+</tr>
+<tr>
+<td>Energy Storage</td>
+<td>Stores energy as starch</td>
+<td>Stores energy as glycogen</td>
+</tr>
+</table>
+<p><span class="bold">Cell Division: Mitosis and Meiosis</span>
+ </p>
+<p>Cell division is the process by which a parent cell divides into two or more daughter cells. It is essential for growth, repair, and reproduction.
+</p>
+<table>
+<tr>
+<td>Feature</td>
+<td>Mitosis</td>
+<td>Meiosis</td>
+</tr>
+<tr>
+<td>Purpose</td>
+<td>Growth, repair, cell replacement, asexual reproduction</td>
+<td>Production of gametes (sperm and eggs) for sexual reproduction</td>
+</tr>
+<tr>
+<td>Type of Cells</td>
+<td>Somatic (body) cells</td>
+<td>Germline cells (in reproductive organs)</td>
+</tr>
+<tr>
+<td>Number of Divisions</td>
+<td>One</td>
+<td>Two (Meiosis I and Meiosis II)</td>
+</tr>
+<tr>
+<td>Number of Daughter Cells</td>
+<td>Two</td>
+<td>Four</td>
+</tr>
+<tr>
+<td>Chromosome Number</td>
+<td>Daughter cells are diploid (2n), same as parent cell</td>
+<td>Daughter cells are haploid (n), half of parent cell</td>
+</tr>
+<tr>
+<td>Genetic Composition</td>
+<td>Daughter cells are genetically identical to the parent cell</td>
+<td>Daughter cells are genetically different from the parent and each other</td>
+</tr>
+<tr>
+<td>Key Event</td>
+<td>None</td>
+<td>Crossing Over in Prophase I creates genetic variation</td>
+</tr>
+</table>
+<p><span class="bold">Cell Organelles:</span>  Organelles are specialized structures within a eukaryotic cell that perform specific jobs. This division of labor makes the cell more efficient. The principle that a component's structure is elegantly suited to its job is a central theme in biology, evident from organelles up to entire organisms.
+</p>
+<table>
+<tr>
+<td>Organelle</td>
+<td>Primary Function</td>
+<td>Found In</td>
+</tr>
+<tr>
+<td>Nucleus</td>
+<td>Contains and protects the cell's genetic material (DNA); controls cell activities</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Cell Membrane</td>
+<td>Controls the passage of materials into and out of the cell</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Cell Wall</td>
+<td>Provides rigid structural support and protection to the cell</td>
+<td>Plant</td>
+</tr>
+<tr>
+<td>Cytoplasm</td>
+<td>Jelly-like substance that fills the cell and holds organelles in place</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Mitochondrion</td>
+<td>"Powerhouse"; generates most of the cell's energy (ATP) through cellular respiration</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Chloroplast</td>
+<td>"Food factory"; site of photosynthesis, converting light energy into chemical energy (glucose)</td>
+<td>Plant</td>
+</tr>
+<tr>
+<td>Ribosome</td>
+<td>"Protein factory"; synthesizes proteins</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Endoplasmic Reticulum (ER)</td>
+<td>Rough ER: Modifies and transports proteins. Smooth ER: Synthesizes lipids, detoxifies substances</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Golgi Apparatus</td>
+<td>"Post office"; modifies, sorts, and packages proteins and lipids for transport</td>
+<td>Both</td>
+</tr>
+<tr>
+<td>Large Central Vacuole</td>
+<td>Stores water, nutrients, and waste; maintains turgor pressure</td>
+<td>Plant</td>
+</tr>
+<tr>
+<td>Lysosome</td>
+<td>"Recycling center"; contains digestive enzymes to break down waste and old cell parts</td>
+<td>Animal</td>
+</tr>
+</table>
+<h3 id="section2b">b) Tissues - Animal tissues, plant tissues</h3>
+<p><span class="bold">Concept of a Tissue</span></p>
+<p>A tissue is a group of similar cells, along with their extracellular matrix, that are specialized to work together to perform a specific function. Tissues represent the level of biological organization between cells and organs.</p>
+<p><span class="bold">Animal Tissues</span></p>
+<p>There are four fundamental types of tissues in animals, each with a structure that is highly adapted to its function.</p>
+<table>
+<tr>
+<td>Tissue Type</td>
+<td>Primary Function(s)</td>
+<td>Examples and Key Features</td>
+</tr>
+<tr>
+<td>Epithelial Tissue</td>
+<td>Covering, protection, secretion, absorption</td>
+<td>- Forms the outer layer of skin. - Lines internal organs and cavities (e.g., digestive tract, lungs). - Cells are tightly packed in sheets, creating a strong barrier.</td>
+</tr>
+<tr>
+<td>Connective Tissue</td>
+<td>Support, connection, binding, transport</td>
+<td>- Most abundant and diverse tissue type. - Includes bone, cartilage, fat (adipose tissue), blood, tendons, and ligaments. - Characterized by cells scattered within an extracellular matrix.</td>
+</tr>
+<tr>
+<td>Muscle Tissue</td>
+<td>Movement</td>
+<td>- Composed of cells that can contract. - Skeletal Muscle: Voluntary, attached to bones. - Smooth Muscle: Involuntary, found in walls of internal organs. - Cardiac Muscle: Involuntary, found only in the heart.</td>
+</tr>
+<tr>
+<td>Nervous Tissue</td>
+<td>Communication, coordination, control</td>
+<td>- Transmits electrical signals (nerve impulses). - Composed of neurons (nerve cells) and glial cells (support cells). - Found in the brain, spinal cord, and nerves.</td>
+</tr>
+</table>
+<p><span class="bold">Plant Tissues</span></p>
+<p>Plant tissues are categorized into two main groups based on their ability to divide. These are then organized into three major tissue systems that run throughout the plant.</p>
+<table>
+<tr>
+<td>Tissue Type/System</td>
+<td>Component Cells</td>
+<td>Primary Function(s)</td>
+</tr>
+<tr>
+<td>Meristematic Tissue</td>
+<td>Undifferentiated, actively dividing cells</td>
+<td>Plant growth (increase in length and girth)</td>
+</tr>
+<tr>
+<td>Dermal Tissue System</td>
+<td>Epidermal cells, guard cells, trichomes</td>
+<td>- Outer protective layer (epidermis). - Prevents water loss (cuticle). - Regulates gas exchange (stomata).</td>
+</tr>
+<tr>
+<td>Vascular Tissue System</td>
+<td>Xylem: Tracheids, vessel elements. Phloem: Sieve-tube elements, companion cells</td>
+<td>- Transport system ("plumbing"). - Xylem: Transports water and minerals from roots upwards. - Phloem: Transports sugars (food) from leaves to the rest of the plant.</td>
+</tr>
+<tr>
+<td>Ground Tissue System</td>
+<td>Parenchyma: Thin-walled, versatile cells. Collenchyma: Unevenly thickened walls. Sclerenchyma: Thick, lignified walls</td>
+<td>- Fills the space between dermal and vascular tissue. - Parenchyma: Photosynthesis, storage, secretion. - Collenchyma: Flexible support for growing parts. - Sclerenchyma: Rigid support and protection (often dead at maturity).</td>
+</tr>
+</table>
+<h2 id="section3">13. Plant World</h2>
+<p><span class="bold">Types of Plants: An Overview of Diversity</span></p>
+<p>The plant kingdom is broadly divided based on the presence or absence of vascular tissue and the method of reproduction.</p>
+<p><span class="bold">Non-Vascular Plants (Bryophytes):</span> Lack true roots, stems, and leaves (e.g., mosses, liverworts). They are small and require moist environments to reproduce.</p>
+<p><span class="bold">Vascular Plants (Tracheophytes):</span> Have a vascular system (xylem and phloem) for transport.</p>
+<p><span class="bold">Seedless Vascular Plants:</span> Reproduce with spores, not seeds (e.g., ferns, horsetails).</p>
+<p><span class="bold">Seed Plants:</span> Reproduce with seeds, which provide protection and nourishment for the embryo.</p>
+<p><span class="bold">Gymnosperms:</span> "Naked seed" plants; seeds are not enclosed in a fruit, often produced in cones (e.g., conifers like pines and spruces).</p>
+<p><span class="bold">Angiosperms:</span> Flowering plants; seeds are enclosed within a fruit that develops from the ovary of a flower. This is the most diverse and widespread group of plants.</p>
+<p><span class="bold">Parts of a Plant and Their Functions</span></p>
+<p><span class="bold">Roots:</span></p>
+<p><span class="bold">Anchorage:</span> Securely hold the plant in the soil.</p>
+<p><span class="bold">Absorption:</span> Absorb water and dissolved minerals from the soil.</p>
+<p><span class="bold">Storage:</span> Store food reserves, especially in taproots like carrots and beets.</p>
+<p><span class="bold">Stems:</span></p>
+<p><span class="bold">Support:</span> Hold the leaves, flowers, and fruits up towards the sunlight.</p>
+<p><span class="bold">Transport:</span> Contain vascular tissues (xylem and phloem) that move water, minerals, and food throughout the plant.</p>
+<p><span class="bold">Storage:</span> Some stems store food (e.g., potato tubers) or water (e.g., cacti).</p>
+<p><span class="bold">Leaves:</span></p>
+<p><span class="bold">Photosynthesis:</span> The primary site where plants use sunlight, water, and carbon dioxide to create their own food (glucose).</p>
+<p><span class="bold">Gas Exchange:</span> Pores on the leaf surface, called stomata, allow for the intake of carbon dioxide and the release of oxygen and water vapor.</p>
+<p><span class="bold">Flowers:</span></p>
+<p><span class="bold">Reproduction:</span> The reproductive structure of angiosperms, designed to attract pollinators and facilitate fertilization.</p>
+<p><span class="bold">Fruits:</span></p>
+<p><span class="bold">Seed Protection:</span> The mature ovary of a flower that encloses and protects the seed(s).</p>
+<p><span class="bold">Seed Dispersal:</span> Often fleshy and colorful to attract animals, which eat the fruit and disperse the seeds.</p>
+<p><span class="bold">Seeds:</span></p>
+<p><span class="bold">Reproduction and Dispersal:</span> Contain a plant embryo, a food supply (cotyledon or endosperm), and a protective coat. They allow the new plant to be dispersed to a new location.</p>
+<p><span class="bold">Reproduction in Plants</span></p>
+<p><span class="bold">Asexual Reproduction:</span> Produces offspring that are genetically identical to the parent plant (clones). Does not involve flowers, pollen, or seeds.</p>
+<p><span class="bold">Vegetative Propagation:</span> A common form of asexual reproduction.</p>
+<p><span class="bold">Natural Methods:</span></p>
+<p><span class="bold">Runners (Stolons):</span> Horizontal stems that grow along the ground, producing new plants at nodes (e.g., strawberry).</p>
+<p><span class="bold">Rhizomes:</span> Horizontal underground stems from which new shoots and roots can grow (e.g., ginger, iris).</p>
+<p><span class="bold">Bulbs and Corms:</span> Underground storage organs that can produce new plants (e.g., onions, tulips, gladiolus).</p>
+<p><span class="bold">Artificial Methods (Horticulture):</span></p>
+<p><span class="bold">Cuttings:</span> A piece of stem or leaf is cut from a parent plant and placed in soil or water to grow new roots.</p>
+<p><span class="bold">Grafting:</span> A stem piece (scion) from one plant is attached to the root system (rootstock) of another.</p>
+<p><span class="bold">Sexual Reproduction:</span> Involves the fusion of male gametes (from pollen) and female gametes (in the ovule) to produce a seed. This process creates genetic variation.</p>
+<p><span class="bold">Pollination:</span> The transfer of pollen from the anther (male part) to the stigma (female part) of a flower.</p>
+<p><span class="bold">Fertilization:</span> The fusion of the male and female gametes, leading to the development of an embryo within a seed.</p>
+<p><span class="bold">Key Plant Processes</span></p>
+<p><span class="bold">Nutrition:</span> Plants require essential nutrients from the soil, water, and air.</p>
+<p><span class="bold">Macronutrients:</span> Needed in large amounts (e.g., Nitrogen (N), Phosphorus (P), Potassium (K), Calcium (Ca)).</p>
+<p><span class="bold">Micronutrients:</span> Needed in small amounts (e.g., Iron (Fe), Manganese (Mn), Zinc (Zn)).</p>
+<p><span class="bold">Photosynthesis:</span> The process by which green plants use sunlight, water, and carbon dioxide to create their own food (glucose) and release oxygen as a byproduct.</p>
+<p>Chemical Equation: 6CO2​+6H2​O+Light Energy→C6​H12​O6​+6O2​</p>
+<p><span class="bold">Respiration:</span> The process by which plants (and all living cells) break down glucose to release energy for life functions. It consumes oxygen and releases carbon dioxide and water. Respiration occurs 24 hours a day.</p>
+<p><span class="bold">Excretion:</span> Plants excrete waste products, primarily through the stomata.</p>
+<p><span class="bold">Oxygen:</span> A waste product of photosynthesis, released during the day.</p>
+<p><span class="bold">Carbon Dioxide:</span> A waste product of respiration, released primarily at night (during the day, it is used for photosynthesis).</p>
+<p><span class="bold">Water Vapor:</span> Released through transpiration, the process of water movement through a plant and its evaporation from leaves.</p>
+<p>Other wastes can be stored in leaves, bark, or fruits that are eventually shed.</p>
+<p><span class="bold">Seed Dispersal</span></p>
+<p>The movement of seeds away from the parent plant, which reduces competition and increases the chance of survival.</p>
+<p><span class="bold">Wind:</span> Seeds are small, light, and may have wing-like or parachute-like structures (e.g., dandelion, maple).</p>
+<p><span class="bold">Water:</span> Seeds can float and have waterproof coverings (e.g., coconut, kōwhai).</p>
+<p><span class="bold">Animal:</span></p>
+<p><span class="bold">Ingestion:</span> Seeds are encased in fleshy, edible fruits. Animals eat the fruit and excrete the seeds elsewhere (e.g., berries, cherries).</p>
+<p><span class="bold">Attachment:</span> Seeds have hooks or barbs that cling to fur or feathers (e.g., burdock).</p>
+<p><span class="bold">Explosion (Ballistic Dispersal):</span> Seed pods dry out and burst open, forcefully ejecting the seeds (e.g., peas, gorse).</p>
+<p><span class="bold">Fire:</span> Some plants, particularly in fire-prone ecosystems, have cones that only open to release seeds after being exposed to the heat of a fire (e.g., some pine species).</p>
+<p><span class="bold">Economic Importance of Plants and Agriculture</span></p>
+<p><span class="bold">Food Source:</span> Plants are the primary producers in most terrestrial ecosystems, forming the base of the food chain. All major staple foods (rice, wheat, corn) are plants.</p>
+<p><span class="bold">Fibers:</span> Plants provide raw materials for textiles and other products.</p>
+<p><span class="bold">Cotton:</span> From the cotton plant boll, used for clothing.</p>
+<p><span class="bold">Jute:</span> From the jute plant stem, used for sacks and rope.</p>
+<p><span class="bold">Linen:</span> From the flax plant stem, used for high-quality fabric.</p>
+<p><span class="bold">Wood:</span> From trees, used for paper and building materials.</p>
+<p><span class="bold">Medicines and Other Products:</span> Many modern medicines are derived from plant compounds (e.g., aspirin from willow bark). Plants also provide oils, rubber, dyes, and spices.</p>
+<p><span class="bold">Agriculture:</span> The science and practice of farming, including the cultivation of soil for growing crops.</p>
+<p><span class="bold">Crop Diseases and Pest Control:</span></p>
+<p><span class="bold">Pests:</span> Organisms that cause damage to crops (insects, weeds, rodents).</p>
+<p><span class="bold">Diseases:</span> Caused by pathogens like fungi, bacteria, and viruses, leading to reduced yield or crop failure.</p>
+<p><span class="bold">Integrated Pest Management (IPM):</span> An ecosystem-based strategy that focuses on long-term prevention of pests or their damage through a combination of techniques.</p>
+<p><span class="bold">Mechanical Control:</span> Using physical methods like tilling, mowing, or hand-picking pests.</p>
+<p><span class="bold">Cultural Control:</span> Using farming practices that disrupt pest life cycles, such as crop rotation and sanitation.</p>
+<p><span class="bold">Biological Control:</span> Using natural enemies (predators, parasites) to control pest populations.</p>
+<p><span class="bold">Chemical Control:</span> Using pesticides as a last resort, applied judiciously to minimize harm to non-target organisms and the environment.</p>
+<h2 id="section4">14. Animal World: Movements, Organ systems and their functions including man</h2>
+<p><span class="bold">Human Organ Systems: An Integrated Overview</span></p>
+<p>The human body is organized into several organ systems that work together in a coordinated fashion to maintain life.</p>
+<table>
+<tr>
+<td>Organ System</td>
+<td>Primary Function(s)</td>
+<td>Key Organs/Components</td>
+</tr>
+<tr>
+<td>Digestive</td>
+<td>Breaks down food, absorbs nutrients, eliminates solid waste</td>
+<td>Mouth, esophagus, stomach, small intestine, large intestine, liver, pancreas</td>
+</tr>
+<tr>
+<td>Respiratory</td>
+<td>Takes in oxygen and removes carbon dioxide (gas exchange)</td>
+<td>Nose, pharynx, larynx, trachea, bronchi, lungs</td>
+</tr>
+<tr>
+<td>Circulatory</td>
+<td>Transports oxygen, nutrients, hormones, and wastes; fights infection</td>
+<td>Heart, blood vessels (arteries, veins, capillaries), blood</td>
+</tr>
+<tr>
+<td>Excretory (Urinary)</td>
+<td>Filters waste from the blood; maintains water and electrolyte balance</td>
+<td>Kidneys, ureters, bladder, urethra</td>
+</tr>
+<tr>
+<td>Nervous</td>
+<td>Fast-acting control system; detects stimuli and coordinates responses</td>
+<td>Brain, spinal cord, nerves, sense organs</td>
+</tr>
+<tr>
+<td>Endocrine</td>
+<td>Slow-acting control system; secretes hormones to regulate body processes</td>
+<td>Glands (pituitary, thyroid, adrenal), pancreas, ovaries, testes</td>
+</tr>
+<tr>
+<td>Skeletal</td>
+<td>Provides framework, support, and protection; stores minerals; forms blood cells</td>
+<td>Bones, cartilage, ligaments</td>
+</tr>
+<tr>
+<td>Muscular</td>
+<td>Allows for movement, maintains posture, produces heat</td>
+<td>Skeletal muscles, smooth muscles, cardiac muscle</td>
+</tr>
+<tr>
+<td>Reproductive</td>
+<td>Produces offspring</td>
+<td>Male: Testes, penis. Female: Ovaries, uterus, vagina</td>
+</tr>
+<tr>
+<td>Integumentary</td>
+<td>Forms the external body covering; protects deeper tissues; regulates temperature</td>
+<td>Skin, hair, nails, sweat glands</td>
+</tr>
+<tr>
+<td>Lymphatic/Immune</td>
+<td>Returns fluid to blood; defends against pathogens</td>
+<td>Lymph nodes, spleen, thymus, white blood cells</td>
+</tr>
+</table>
+<p><span class="bold">Sense Organs in Man</span></p>
+<p>Sense organs are specialized structures that detect stimuli from the internal or external environment and convert them into nerve impulses.</p>
+<p><span class="bold">Eyes (Sight):</span> Detect light. The retina contains photoreceptor cells (rods and cones) that respond to light intensity and color.</p>
+<p><span class="bold">Ears (Hearing and Balance):</span></p>
+<p><span class="bold">Hearing:</span> The cochlea in the inner ear detects vibrations (sound waves) in the air.</p>
+<p><span class="bold">Balance:</span> The vestibular system in the inner ear senses changes in head position and movement.</p>
+<p><span class="bold">Nose (Smell):</span> Olfactory receptors in the nasal cavity detect airborne chemical molecules.</p>
+<p><span class="bold">Tongue (Taste):</span> Taste buds on the tongue contain chemoreceptors that detect dissolved chemicals, sensing sweet, sour, salty, bitter, and umami tastes.</p>
+<p><span class="bold">Skin (Touch):</span> The largest sense organ, containing millions of receptors that detect pressure, vibration, temperature (hot and cold), and pain.</p>
+<p><span class="bold">Nutrition and Deficiency Diseases in Man</span></p>
+<p><span class="bold">Nutrition:</span> The process of providing or obtaining the food necessary for health and growth.</p>
+<p><span class="bold">Macronutrients:</span> Nutrients needed in large amounts; provide energy (calories).</p>
+<p><span class="bold">Carbohydrates:</span> The body's main source of energy.</p>
+<p><span class="bold">Proteins:</span> Essential for building and repairing tissues (muscles, skin, enzymes).</p>
+<p><span class="bold">Fats:</span> Provide concentrated energy, insulation, and are necessary for absorbing certain vitamins.</p>
+<p><span class="bold">Micronutrients:</span> Nutrients needed in small amounts; do not provide energy but are crucial for various body functions.</p>
+<p><span class="bold">Vitamins:</span> Organic compounds that help regulate body processes (e.g., Vitamin C for tissue repair, Vitamin D for calcium absorption).</p>
+<p><span class="bold">Minerals:</span> Inorganic elements essential for health (e.g., Calcium for bones, Iron for blood).</p>
+<p><span class="bold">Deficiency Diseases:</span> Conditions that arise from a prolonged lack of specific nutrients in the diet.</p>
+<table>
+<tr>
+<td>Nutrient</td>
+<td>Deficiency Disease</td>
+<td>Key Symptoms</td>
+</tr>
+<tr>
+<td>Vitamin A</td>
+<td>Night Blindness, Xerophthalmia</td>
+<td>Difficulty seeing in low light, dry eyes</td>
+</tr>
+<tr>
+<td>Vitamin B1 (Thiamine)</td>
+<td>Beriberi</td>
+<td>Weak muscles, nerve damage, weight loss</td>
+</tr>
+<tr>
+<td>Vitamin B12</td>
+<td>Pernicious Anemia</td>
+<td>Fatigue, nerve damage, dementia</td>
+</tr>
+<tr>
+<td>Vitamin C</td>
+<td>Scurvy</td>
+<td>Bleeding gums, joint pain, poor wound healing</td>
+</tr>
+<tr>
+<td>Vitamin D</td>
+<td>Rickets (in children), Osteomalacia (in adults)</td>
+<td>Soft, weak, and deformed bones</td>
+</tr>
+<tr>
+<td>Vitamin K</td>
+<td>Impaired Blood Clotting</td>
+<td>Excessive bleeding from injuries</td>
+</tr>
+<tr>
+<td>Iron</td>
+<td>Iron-Deficiency Anemia</td>
+<td>Fatigue, weakness, pale skin, shortness of breath</td>
+</tr>
+<tr>
+<td>Iodine</td>
+<td>Goiter, Hypothyroidism</td>
+<td>Swelling of the thyroid gland in the neck, fatigue</td>
+</tr>
+<tr>
+<td>Calcium</td>
+<td>Osteoporosis</td>
+<td>Brittle, fragile bones that break easily</td>
+</tr>
+<tr>
+<td>Protein & Calories</td>
+<td>Kwashiorkor (protein deficiency), Marasmus (calorie deficiency)</td>
+<td>Swollen abdomen, muscle wasting, stunted growth</td>
+</tr>
+</table>
+<p><span class="bold">First Aid</span></p>
+<p>First aid is the immediate assistance given to any person suffering a sudden illness or injury, with care provided to preserve life, prevent the condition from worsening, and promote recovery.</p>
+<p><span class="bold">Basic Steps (CHECK, CALL, CARE):</span></p>
+<p><span class="bold">CHECK</span> the scene for safety and the person for responsiveness and life-threatening conditions.</p>
+<p><span class="bold">CALL</span> for emergency medical help (e.g., 911) if needed.</p>
+<p><span class="bold">CARE</span> for the person based on your level of training until professional help arrives.</p>
+<p><span class="bold">Common Classroom Emergencies:</span></p>
+<p><span class="bold">Minor Bleeding (Cuts and Scrapes):</span> Wash the area with soap and water, apply direct pressure with a clean cloth or gauze, and cover with a sterile bandage.</p>
+<p><span class="bold">Choking (Conscious Person):</span> Encourage coughing. If unsuccessful, perform abdominal thrusts (Heimlich maneuver).</p>
+<p><span class="bold">Minor Burns:</span> Cool the burn with cool (not ice-cold) running water for at least 10 minutes. Cover loosely with a sterile dressing.</p>
+<p><span class="bold">Fractures/Sprains:</span> Do not move the injured part. Keep the person still and comfortable. Apply a cold pack to reduce swelling.</p>
+<p><span class="bold">HIV/AIDS</span></p>
+<p><span class="bold">HIV (Human Immunodeficiency Virus):</span> A virus that attacks the body's immune system, specifically the CD4 cells (a type of T cell), which help the immune system fight off infections.</p>
+<p><span class="bold">AIDS (Acquired Immunodeficiency Syndrome):</span> The most advanced stage of HIV infection. A person is diagnosed with AIDS when their immune system is severely damaged (very low number of CD4 cells) or they develop certain opportunistic infections or cancers.</p>
+<p><span class="bold">Transmission:</span> HIV is transmitted through specific bodily fluids:</p>
+<p>Blood, semen, pre-seminal fluid, rectal fluids, vaginal fluids, and breast milk.</p>
+<p>Main modes of transmission are unprotected sexual contact and sharing injection drug equipment (needles, syringes).</p>
+<p>It can also be transmitted from mother to child during pregnancy, birth, or breastfeeding.</p>
+<p><span class="bold">Non-Transmission:</span> HIV is <span class="bold">NOT</span> spread through:</p>
+<p>Air, water, saliva, sweat, tears, or closed-mouth kissing.</p>
+<p>Insects or pets.</p>
+<p>Sharing toilets, food, or drinks.</p>
+<p>Casual contact like hugging or shaking hands.</p>
+<p><span class="bold">Prevention:</span></p>
+<p>Abstinence from sexual activity or using condoms correctly and consistently.</p>
+<p>Not sharing needles or syringes.</p>
+<p>Antiretroviral therapy (ART) for people with HIV can reduce the amount of virus in the body to undetectable levels, which prevents transmission to others.</p>
+<p><span class="bold">Animal Behavior</span></p>
+<p>Animal behavior includes all the ways animals interact with each other and their environment. Behaviors are adaptations that help animals survive and reproduce.</p>
+<p><span class="bold">Innate Behavior (Instinct):</span> Genetically determined, inherited behavior that does not require learning or experience.</p>
+<p><span class="bold">Reflex:</span> A simple, automatic response to a stimulus (e.g., blinking).</p>
+<p><span class="bold">Fixed Action Pattern:</span> A sequence of unchangeable acts, usually carried to completion once initiated (e.g., a goose rolling an egg back to its nest).</p>
+<p><span class="bold">Learned Behavior:</span> Behavior that develops or changes as a result of experience.</p>
+<p><span class="bold">Imprinting:</span> Learning that occurs during a critical period early in life and is generally irreversible (e.g., young geese following the first moving object they see).</p>
+<p><span class="bold">Habituation:</span> A loss of responsiveness to stimuli that convey little or no new information (e.g., a city bird ignoring traffic).</p>
+<p><span class="bold">Conditioning:</span> Learning to associate a stimulus with a consequence.</p>
+<p><span class="bold">Economic Importance of Animals</span></p>
+<p><span class="bold">Animal Husbandry:</span> The branch of agriculture concerned with the breeding, care, and management of livestock (e.g., cattle, sheep, goats, poultry).</p>
+<p>Provides essential food products like meat, milk, and eggs.</p>
+<p>Provides other materials like wool and leather.</p>
+<p>Provides manure for fertilizer and labor for farming in many parts of the world.</p>
+<p><span class="bold">Pisciculture (Aquaculture/Fish Farming):</span> The controlled breeding and rearing of fish in ponds, tanks, or enclosures.</p>
+<p>Provides a reliable source of fish for food, reducing pressure on wild fish populations.</p>
+<p>Can be done in various scales, from small family ponds to large commercial operations.</p>
+<p><span class="bold">Sericulture:</span> The cultivation of silkworms to produce silk.</p>
+<p>Involves rearing silkworms (larvae of the silk moth) on mulberry leaves.</p>
+<p>The silkworms spin cocoons of a single, continuous silk filament.</p>
+<p>These cocoons are harvested and processed to produce silk thread, a valuable textile fiber.</p>
+<h2 id="section5">15. Microbes: Bacteria, Viruses, Fungi, Protozoan</h2>
+<p><span class="bold">The Major Groups of Microbes</span></p>
+<p>Microbes (or microorganisms) are living organisms that are too small to be seen with the naked eye. They are found everywhere on Earth.</p>
+<table>
+<tr>
+<td>Feature</td>
+<td>Bacteria</td>
+<td>Viruses</td>
+<td>Fungi</td>
+<td>Protozoa</td>
+</tr>
+<tr>
+<td>Cell Type</td>
+<td>Prokaryotic (single-celled, no nucleus)</td>
+<td>Acellular (not a cell)</td>
+<td>Eukaryotic (have a nucleus)</td>
+<td>Eukaryotic (single-celled, have a nucleus)</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Cell wall, cell membrane, cytoplasm, DNA (in nucleoid)</td>
+<td>Genetic material (DNA or RNA) inside a protein coat (capsid)</td>
+<td>Cell wall (chitin), nucleus, organelles; can be unicellular (yeast) or multicellular (molds)</td>
+<td>Cell membrane, nucleus, organelles; more complex than bacteria</td>
+</tr>
+<tr>
+<td>Reproduction</td>
+<td>Asexual (binary fission)</td>
+<td>Must infect a host cell to replicate</td>
+<td>Asexual (budding, spores) or Sexual</td>
+<td>Asexual or Sexual</td>
+</tr>
+<tr>
+<td>Living Status</td>
+<td>Living</td>
+<td>Considered non-living outside a host</td>
+<td>Living</td>
+<td>Living</td>
+</tr>
+<tr>
+<td>Example</td>
+<td>E. coli, Streptococcus</td>
+<td>Influenza virus, HIV, Coronavirus</td>
+<td>Yeast, mold, mushrooms</td>
+<td>Amoeba, Paramecium, Plasmodium</td>
+</tr>
+</table>
+<p><span class="bold">Useful and Harmful Microbes</span></p>
+<p>The vast majority of microbes are not harmful to humans; many are essential for life on Earth.</p>
+<table>
+<tr>
+<td>Useful Roles of Microbes</td>
+<td>Harmful Roles of Microbes</td>
+</tr>
+<tr>
+<td>Decomposition: Bacteria and fungi are primary decomposers, breaking down dead organic matter and recycling nutrients in ecosystems.</td>
+<td>Disease (Pathogens): Cause infectious diseases in plants, animals, and humans (e.g., strep throat, flu, malaria).</td>
+</tr>
+<tr>
+<td>Food Production: Used in fermentation to make bread (yeast), cheese and yogurt (bacteria), and alcoholic beverages (yeast).</td>
+<td>Food Spoilage: Cause food to rot, sour, or become moldy, making it inedible and unsafe.</td>
+</tr>
+<tr>
+<td>Medicine: Production of antibiotics (e.g., Penicillin from Penicillium fungus) and vaccines.</td>
+<td>Toxin Production: Some bacteria produce powerful toxins that cause severe illness (e.g., botulism, tetanus).</td>
+</tr>
+<tr>
+<td>Digestion: Bacteria in the gut of humans and other animals help digest food and produce essential vitamins.</td>
+<td>Crop Damage: Fungi, bacteria, and viruses can cause widespread diseases in agricultural crops, leading to significant economic losses.</td>
+</tr>
+<tr>
+<td>Nitrogen Fixation: Certain bacteria convert atmospheric nitrogen into a form that plants can use, enriching the soil.</td>
+<td>Allergies: Mold spores can trigger allergic reactions and asthma in sensitive individuals.</td>
+</tr>
+<tr>
+<td>Biotechnology: Used in sewage treatment, cleaning up oil spills (bioremediation), and genetic engineering.</td>
+<td>Biofouling: Microbes can grow on surfaces like ship hulls or water pipes, causing damage and reducing efficiency.</td>
+</tr>
+</table>
+<p><span class="bold">Microbial Diseases in Plants and Animals</span></p>
+<p><span class="bold">In Plants:</span></p>
+<p><span class="bold">Fungal Diseases:</span> The most common cause of plant disease. Examples include rusts (affecting wheat), powdery mildew, and blights (like potato late blight).</p>
+<p><span class="bold">Bacterial Diseases:</span> Cause symptoms like leaf spots, wilts, and soft rots. An example is citrus canker.</p>
+<p><span class="bold">Viral Diseases:</span> Often cause mosaic patterns on leaves, yellowing, and stunted growth. An example is the Tobacco mosaic virus.</p>
+<p><span class="bold">In Animals (including Humans):</span></p>
+<p><span class="bold">Bacterial Diseases:</span> Examples include strep throat (<span class="italic">Streptococcus</span>), tuberculosis (<span class="italic">Mycobacterium tuberculosis</span>), and food poisoning (<span class="italic">Salmonella</span>, <span class="italic">E. coli</span>). Treatable with antibiotics.</p>
+<p><span class="bold">Viral Diseases:</span> Examples include the common cold, influenza (flu), chickenpox, and HIV/AIDS. Cannot be treated with antibiotics; some can be prevented with vaccines or treated with antiviral drugs.</p>
+<p><span class="bold">Fungal Diseases:</span> Examples include athlete's foot, ringworm, and yeast infections.</p>
+<p><span class="bold">Protozoan Diseases:</span> Often spread by contaminated water or insect vectors. Examples include malaria (spread by mosquitoes) and giardiasis (from contaminated water).</p>
+<h2 id="section6">16. Our Environment</h2>
+<p><span class="bold">Biotic and Abiotic Factors</span></p>
+<p>An ecosystem includes all the living and non-living things in a particular area interacting with each other.</p>
+<p><span class="bold">Biotic Factors:</span> The living or once-living components of an ecosystem.</p>
+<p>Examples: Plants, animals, fungi, bacteria, and dead organic matter.</p>
+<p>Interactions include predation, competition, and symbiosis.</p>
+<p><span class="bold">Abiotic Factors:</span> The non-living physical and chemical components of an ecosystem.</p>
+<p>Examples: Sunlight, temperature, water, soil composition, air, minerals, and pH.</p>
+<p>These factors determine which organisms can live in a particular ecosystem.</p>
+<p><span class="bold">Biodiversity</span></p>
+<p><span class="bold">Definition:</span> The variety of life on Earth, from the smallest bacteria to the largest whales. It can be considered at three levels:</p>
+<p><span class="bold">Genetic Diversity:</span> The variety of genes within a single species.</p>
+<p><span class="bold">Species Diversity:</span> The variety of different species in an ecosystem.</p>
+<p><span class="bold">Ecosystem Diversity:</span> The variety of habitats, communities, and ecological processes in the biosphere.</p>
+<p><span class="bold">Importance:</span></p>
+<p><span class="bold">Ecosystem Stability:</span> High biodiversity makes ecosystems more resilient to disturbances like climate change or disease.</p>
+<p><span class="bold">Ecosystem Services:</span> Biodiversity provides essential benefits to humans, such as clean air and water, pollination of crops, soil fertility, and sources for new medicines.</p>
+<p><span class="bold">Economic and Cultural Value:</span> Provides resources for food, tourism, and recreation, and holds cultural and aesthetic significance.</p>
+<p><span class="bold">Natural Resources and Different Ecosystems</span></p>
+<p><span class="bold">Natural Resources:</span> Materials or substances occurring in nature which can be exploited for economic gain (e.g., minerals, forests, water, fertile land).</p>
+<p><span class="bold">Ecosystems:</span> A biological community of interacting organisms and their physical environment.</p>
+<p><span class="bold">Terrestrial (Land-based):</span> Forests, grasslands, deserts, tundra.</p>
+<p><span class="bold">Aquatic (Water-based):</span></p>
+<p><span class="bold">Freshwater:</span> Lakes, ponds, rivers, streams, wetlands.</p>
+<p><span class="bold">Marine:</span> Oceans, coral reefs, estuaries.</p>
+<p><span class="bold">Environmental Pollution</span></p>
+<p><span class="bold">Definition:</span> The introduction of harmful materials (pollutants) into the environment.</p>
+<p><span class="bold">Air Pollution:</span></p>
+<p><span class="bold">Sources:</span> Burning of fossil fuels (vehicles, power plants), industrial emissions, wildfires.</p>
+<p><span class="bold">Effects:</span> Respiratory problems, acid rain, smog, global climate change (due to greenhouse gases like CO2​).</p>
+<p><span class="bold">Water Pollution:</span></p>
+<p><span class="bold">Sources:</span> Industrial waste, agricultural runoff (fertilizers, pesticides), sewage, oil spills, plastic waste.</p>
+<p><span class="bold">Effects:</span> Harms aquatic life, contaminates drinking water sources, leads to eutrophication (algal blooms from excess nutrients).</p>
+<p><span class="bold">Soil Pollution:</span></p>
+<p><span class="bold">Sources:</span> Industrial waste, improper disposal of garbage, agricultural chemicals, oil spills.</p>
+<p><span class="bold">Effects:</span> Reduces soil fertility, contaminates crops, can leach into groundwater.</p>
+<p><span class="bold">Biogeochemical Cycles</span></p>
+<p>The pathways by which chemical substances move through the biotic (living) and abiotic (non-living) components of Earth.</p>
+<p><span class="bold">Carbon Cycle:</span></p>
+<p><span class="bold">Key Processes:</span></p>
+<p><span class="bold">Photosynthesis:</span> Plants take CO2​ from the atmosphere to make organic compounds.</p>
+<p><span class="bold">Respiration:</span> Organisms release CO2​ back into the atmosphere.</p>
+<p><span class="bold">Decomposition:</span> Decomposers break down dead organic matter, releasing carbon.</p>
+<p><span class="bold">Combustion:</span> Burning of fossil fuels and wood releases large amounts of CO2​ into the atmosphere.</p>
+<p><span class="bold">Nitrogen Cycle:</span></p>
+<p><span class="bold">Key Processes:</span></p>
+<p><span class="bold">Nitrogen Fixation:</span> Bacteria convert atmospheric nitrogen gas (N2​), which is unusable by most organisms, into usable forms like ammonia (NH3​).</p>
+<p><span class="bold">Nitrification:</span> Bacteria convert ammonia into nitrates (NO3−​), which plants can absorb.</p>
+<p><span class="bold">Assimilation:</span> Plants take up nitrogen compounds from the soil.</p>
+<p><span class="bold">Denitrification:</span> Bacteria convert nitrates back into atmospheric nitrogen gas.</p>
+<p><span class="bold">Oxygen Cycle:</span></p>
+<p><span class="bold">Key Processes:</span></p>
+<p><span class="bold">Photosynthesis:</span> The main source of atmospheric oxygen, released by plants and phytoplankton.</p>
+<p><span class="bold">Respiration:</span> The main process that removes oxygen from the atmosphere, used by most living organisms.</p>
+<h2 id="section7">17. Recent trends in Biology</h2>
+<p><span class="bold">Hybridization</span></p>
+<p><span class="bold">Definition:</span> The process of interbreeding individuals from two different populations, which are genetically distinct. This can be between different varieties, subspecies, or species.</p>
+<p><span class="bold">Purpose:</span> To combine desirable traits from both parents into a single offspring.</p>
+<p><span class="bold">Hybrid Vigor (Heterosis):</span> Hybrid offspring often show enhanced characteristics, such as increased size, growth rate, or fertility, compared to their parents.</p>
+<p><span class="bold">Applications:</span></p>
+<p><span class="bold">In Plants:</span> A cornerstone of modern agriculture. Hybrid corn, for example, produces significantly higher yields than its parent varieties. Many fruits and vegetables are hybrids developed for better flavor, disease resistance, or shelf life.</p>
+<p><span class="bold">In Animals:</span> Used in livestock breeding to improve meat or milk production. A well-known example is the mule, a sterile hybrid of a female horse and a male donkey, valued for its strength and endurance.</p>
+<p><span class="bold">Genetic Engineering</span></p>
+<p><span class="bold">Definition:</span> The direct manipulation of an organism's genes using biotechnology. It involves altering the DNA of an organism to change its traits.</p>
+<p><span class="bold">Basic Principle:</span> A gene for a desirable trait is identified and isolated from one organism and then inserted into the DNA of another organism. The resulting organism is known as a Genetically Modified Organism (GMO) or a transgenic organism.</p>
+<p><span class="bold">Key Steps:</span></p>
+<p><span class="bold">Identify</span> a gene of interest.</p>
+<p><span class="bold">Isolate</span> the gene using restriction enzymes.</p>
+<p><span class="bold">Insert</span> the gene into a vector (like a plasmid or a modified virus) that can carry it into the host organism's cells.</p>
+<p><span class="bold">Transform</span> the host organism by introducing the vector.</p>
+<p><span class="bold">Select</span> the organisms that have successfully incorporated the new gene.</p>
+<p><span class="bold">Applications:</span></p>
+<p><span class="bold">Agriculture:</span> Creating crops that are resistant to pests (e.g., Bt corn), tolerant to herbicides, or have enhanced nutritional value (e.g., Golden Rice).</p>
+<p><span class="bold">Medicine:</span> Using bacteria to produce human proteins like insulin for treating diabetes and human growth hormone.</p>
+<p><span class="bold">Research:</span> Modifying organisms to study gene function and disease.</p>
+<p><span class="bold">Gene Banks</span></p>
+<p><span class="bold">Definition:</span> A type of biorepository that preserves genetic material. For plants, this is typically in the form of seeds stored in cold, dry conditions (a seed bank). For animals, it involves cryopreservation of sperm, eggs, and embryos.</p>
+<p><span class="bold">Purpose:</span></p>
+<p><span class="bold">Conservation of Biodiversity:</span> To safeguard the genetic diversity of plants and animals, especially rare and endangered species, from extinction.</p>
+<p><span class="bold">Food Security:</span> To preserve the genetic diversity of crop varieties and livestock breeds. This diversity is a critical resource for breeders to develop new varieties that can adapt to future challenges like climate change, new pests, and diseases.</p>
+<p><span class="bold">Research:</span> To provide genetic material for scientific study.</p>
+<p><span class="bold">Example:</span> The Svalbard Global Seed Vault in Norway is a secure backup facility for the world's crop diversity.</p>
+<p><span class="bold">Gene Therapy</span></p>
+<p><span class="bold">Definition:</span> An experimental technique that uses genes to treat or prevent disease. In the future, this technique may allow doctors to treat a disorder by inserting a gene into a patient's cells instead of using drugs or surgery.</p>
+<p><span class="bold">Approaches:</span></p>
+<p><span class="bold">Gene Transfer/Addition:</span> A normal copy of a gene is inserted into cells to compensate for a non-functional or missing gene.</p>
+<p><span class="bold">Genome Editing:</span> Tools like CRISPR-Cas9 are used to directly correct a faulty gene by adding, removing, or altering specific DNA sequences.</p>
+<p><span class="bold">Delivery (Vectors):</span> A carrier, often a modified virus that has been made harmless, is used to deliver the therapeutic gene into the patient's cells.</p>
+<p><span class="bold">Potential Applications:</span> Treating inherited disorders (e.g., cystic fibrosis, sickle cell anemia), certain types of cancer, and viral infections.</p>
+<p><span class="bold">Tissue Culture (Micropropagation)</span></p>
+<p><span class="bold">Definition:</span> A collection of techniques used to maintain or grow plant cells, tissues, or organs under sterile conditions on a nutrient culture medium.</p>
+<p><span class="bold">Principle:</span> Based on the concept of <span class="bold">totipotency</span>, which is the ability of a single plant cell to regenerate into a whole plant.</p>
+<p><span class="bold">Process:</span></p>
+<p>A small piece of plant tissue (an <span class="bold">explant</span>) is taken from a parent plant.</p>
+<p>The explant is surface-sterilized to remove microbes.</p>
+<p>It is placed on a sterile gel-like medium (agar) containing nutrients, vitamins, and plant hormones.</p>
+<p>Hormones are manipulated to encourage cell division (forming a callus) and then differentiation into shoots and roots, forming plantlets.</p>
+<p><span class="bold">Applications:</span></p>
+<p><span class="bold">Mass Propagation:</span> Rapidly producing a large number of genetically identical plants (clones) from a single parent. This is commercially important for crops like orchids and bananas.</p>
+<p><span class="bold">Disease-Free Plants:</span> By culturing the meristem tip (a part of the plant often free of viruses), it is possible to produce virus-free clones from an infected parent plant.</p>
+<p><span class="bold">Conservation:</span> Propagating rare or endangered plant species.</p>
+<p><span class="bold">Genetic Engineering:</span> Plant cells are often genetically modified in tissue culture before being regenerated into whole plants.</p>
+<button class="back-to-top" id="backToTop">↑</button>
+<script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Show/hide back to top button
+    window.addEventListener('scroll', function() {
+        const backToTopButton = document.getElementById('backToTop');
+        if (window.pageYOffset > 200) {
+            backToTopButton.style.display = 'block';
+        } else {
+            backToTopButton.style.display = 'none';
+        }
+    });
+
+    // Scroll to top when button is clicked
+    document.getElementById('backToTop').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+</body>
+</html>

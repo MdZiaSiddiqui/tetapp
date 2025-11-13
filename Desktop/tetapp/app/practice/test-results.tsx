@@ -9,6 +9,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import MathText from '../../components/MathText';
 
 interface Question {
   id: string;
@@ -180,9 +181,13 @@ export default function TestResults() {
           </View>
 
           {!isExpanded && (
-            <Text className="text-sm text-gray-700 ml-11" numberOfLines={2}>
-              {question.question}
-            </Text>
+            <View className="ml-11">
+              <MathText
+                text={question.question}
+                fontSize="small"
+                color="#374151"
+              />
+            </View>
           )}
         </TouchableOpacity>
 
@@ -197,9 +202,12 @@ export default function TestResults() {
                   resizeMode="contain"
                 />
               )}
-              <Text className="text-base font-semibold text-gray-900 leading-relaxed">
-                {question.question}
-              </Text>
+              <MathText
+                text={question.question}
+                fontSize="medium"
+                color="#111827"
+                style={{ fontWeight: '600' }}
+              />
             </View>
 
             {/* Options */}
@@ -228,9 +236,14 @@ export default function TestResults() {
                     className={`p-3 rounded-xl mb-2 border ${optionStyle}`}
                   >
                     <View className="flex-row items-center justify-between">
-                      <Text className={`flex-1 text-sm ${textStyle}`}>
-                        {key}. {value}
-                      </Text>
+                      <View className="flex-1">
+                        <MathText
+                          text={`${key}. ${value}`}
+                          fontSize="small"
+                          color={isCorrectAnswer ? '#14532d' : isUserAnswer ? '#7f1d1d' : '#111827'}
+                          style={{ fontWeight: (isCorrectAnswer || isUserAnswer) ? '600' : 'normal' }}
+                        />
+                      </View>
                       {icon}
                     </View>
                   </View>
@@ -239,14 +252,21 @@ export default function TestResults() {
             </View>
 
             {/* Explanation */}
-            <View className="bg-blue-50 p-4 rounded-xl border border-blue-200">
-              <Text className="text-xs font-semibold text-blue-900 mb-2">
-                EXPLANATION
-              </Text>
-              <Text className="text-sm text-gray-900 leading-relaxed">
-                {question.solutions}
-              </Text>
-            </View>
+            {question.solutions && (
+              <View className="bg-blue-50 p-4 rounded-xl border border-blue-200" style={{ minHeight: 80 }}>
+                <Text className="text-xs font-semibold text-blue-900 mb-2">
+                  EXPLANATION
+                </Text>
+                <View style={{ width: '100%' }}>
+                  <MathText
+                    text={question.solutions}
+                    fontSize="small"
+                    color="#111827"
+                    style={{ width: '100%', flex: 1 }}
+                  />
+                </View>
+              </View>
+            )}
           </View>
         )}
       </View>

@@ -1,0 +1,985 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="math-renderer.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; }
+        h1 { color: #2E86AB; font-size: 2.5em; border-bottom: 3px solid #2E86AB; padding-bottom: 10px; }
+        h2 { color: #A23B72; font-size: 2em; border-bottom: 2px solid #A23B72; padding-bottom: 8px; }
+        h3 { color: #F18F01; font-size: 1.5em; border-bottom: 1px solid #F18F01; padding-bottom: 5px; }
+        h4 { color: #C73E1D; font-size: 1.2em; }
+        h5 { color: #6B4C7A; font-size: 1.1em; }
+        h6 { color: #4A90A4; font-size: 1em; }
+        p { margin-bottom: 1em; }
+        .bold { font-weight: bold; }
+        .italic { font-style: italic; }
+        .underline { text-decoration: underline; }
+        .math-display {
+            display: block;
+            text-align: center;
+            margin: 1em 0;
+            padding: 0.5em;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .math-inline {
+            font-style: italic;
+        }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        img { max-width: 100%; height: auto; }
+        
+        /* Table of Contents Styles */
+        .index {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .index h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2E86AB;
+            border: none;
+            padding: 0;
+        }
+        
+        .index ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .index li {
+            margin: 0;
+            margin-bottom: 10px;
+        }
+        
+        .index a {
+            display: block;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .index a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+<body>
+<div class="index">
+    <h2>📚 Table of Contents</h2>
+    <ul>
+        <li class="level-1"><a href="#section1">🔢 1. Sets</a></li>
+        <li class="level-1"><a href="#section2">🧮 2. Algebra</a></li>
+        <li class="level-1"><a href="#section3">🔟 3. Number System</a></li>
+        <li class="level-1"><a href="#section4">➕ 4. Arithmetic</a></li>
+        <li class="level-1"><a href="#section5">📐 5. Geometry</a></li>
+        <li class="level-1"><a href="#section6">📏 6. Mensuration</a></li>
+        <li class="level-1"><a href="#section7">📊 7. Data Handling</a></li>
+        <li class="level-1"><a href="#section8">📐 8. Trigonometry</a></li>
+    </ul>
+</div>
+
+<h2 id="section1">1. Sets</h2>
+<p>Set theory is the mathematical study of collections of objects. A <span class="italic">set</span> is a well-defined collection of distinct objects, considered as an object in its own right. Sets are usually denoted by capital letters and their elements listed within curly braces { }. The language of sets allows us to discuss relationships between groups of items in a precise way.</p>
+<p><span class="bold">Concept of a Set:</span>
+A set is simply a collection of distinct objects, called <span class="italic">elements</span> or <span class="italic">members</span> of the set. If an element x is in set A, we write x &isin; A; if not, x &notin; A. Sets can be described by listing their elements or by a defining property.
+<span class="italic">Examples:</span></p>
+<p>A = {2, 4, 6, 8} is the set of first four positive even numbers.</p>
+<p>B = {a, e, i, o, u} is the set of vowels in the English alphabet.</p>
+<p>C = {x | x < 0 and x &isin; &Zopf;} describes the set of all negative integers (this is <span class="bold">set-builder notation</span>, reading as “the set of all x such that x is less than 0 and x is an integer”).</p>
+<p>A set can also be infinite, e.g., &Nopf; = {1, 2, 3, ...} the set of natural numbers.</p>
+<p><span class="bold">Set Language and Notation:</span></p>
+<p>We use curly braces {} to list elements, and an ellipsis “…” for continuing patterns (e.g., {1,2,3,...,100}).</p>
+<p>The symbol &isin; means “is an element of,” and &notin; means “is not an element of.”</p>
+<p>&Nopf;, &Zopf;, &Qopf;, &Ropf; often denote standard sets (natural numbers, integers, rationals, reals).</p>
+<p>Two sets are <span class="bold">equal</span> (A = B) if they have exactly the same elements. Order and repetition in listing elements do not matter: {1,2,3} = {3,2,1} and {1,2,2,3} is the same as {1,2,3}.</p>
+<p><span class="bold">Notation examples:</span> If A = {1,2,3}, we can say 1 &isin; A, 4 &notin; A. We might also describe A = {x | 1 &le; x &le; 3, x &isin; &Nopf;}.</p>
+<p><span class="bold">Empty Set:</span>
+The empty set (or null set) is the set with no elements. It is denoted by {} or the symbol &empty; (phi). By definition, &empty; is a subset of every set (since there are no elements in &empty; that could violate subset conditions).
+<span class="italic">Examples of empty sets:</span></p>
+<p>The set of all humans with wings is &empty; (no such human exists).</p>
+<p>{x | x^2 = 2 and x is rational} = &empty;, because &radic;2 is not rational.</p>
+<p><span class="bold">Finite and Infinite Sets:</span></p>
+<p>A set is <span class="bold">finite</span> if it has a limited number of elements. One can count the elements and eventually finish counting. <span class="italic">(Example: {10, 20, 30} is finite with 3 elements.)</span></p>
+<p>A set is <span class="bold">infinite</span> if it goes on without end. <span class="italic">(Example: </span>&Nopf;<span class="italic">, the set of natural numbers, is infinite.)</span> Infinite sets can be countably infinite (like &Nopf; or &Zopf;, where you can list elements in sequence) or uncountable (like &Ropf;, the real numbers, which cannot be listed in sequence without omission).</p>
+<p>The <span class="bold">cardinality</span> of a set is the number of elements in it (for finite sets). We use notation <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>|</mo><mi>A</mi><mo>|</mo></math> to denote the number of elements in A. If A = {2,4,6,8}, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>|</mo><mi>A</mi><mo>|</mo></math> = 4. For infinite sets, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>|</mo><mi>A</mi><mo>|</mo></math> can be infinite (and in advanced contexts, different sizes of infinity can be compared).</p>
+<p><span class="bold">Subsets and Equality of Sets:</span></p>
+<p>A set A is a <span class="bold">subset</span> of set B (written A &sube; B) if <span class="italic">every</span> element of A is also an element of B. If A is subset of B but A is not equal to B, sometimes we say A is a <span class="italic">proper subset</span> of B (A &subset; B).</p>
+<p>If A &sube; B and B &sube; A, that means A and B have exactly the same elements, hence A = B (equality of sets).</p>
+<p><span class="italic">Examples:</span></p>
+<p>{1,2} &sube; {1,2,3} (and it’s a proper subset since 3 is in the larger set but not the smaller).</p>
+<p>&empty; &sube; A for any set A (empty set is subset of all sets).</p>
+<p>A &sube; A (any set is a subset of itself, though that’s usually called an improper subset if we want to distinguish).</p>
+<p><span class="bold">Cardinal Number of a Set:</span>
+As mentioned, the cardinal number (cardinality) is the count of distinct elements in the set.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>|</mo><mi>X</mi><mo>|</mo></math> = n (a finite number), we can list those elements. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>|</mo><mi>X</mi><mo>|</mo></math> = 0, X is empty.</p>
+<p>Cardinality is used in probability and combinatorics often, to count outcomes. For infinite sets, cardinalities are denoted by concepts like ℵ₀ (aleph-null) for countable infinity, etc., but at school level we focus on finite sets.
+<span class="italic">Example:</span> For A = {a, b, c}, |A| = 3. If B = {2,4,6,8}, |B| = 4. If C = {x | x is an integer, 1 &le; x &le; 100}, |C| = 100 (since it includes all integers 1 through 100).</p>
+<p><span class="bold">Set Operations:</span> Just as arithmetic has operations on numbers, there are operations to combine or relate sets:</p>
+<p><span class="bold">Union (A </span>&cup;<span class="bold"> </span><span class="bold">B):</span> The set of all elements that are <span class="bold">in A or in B or in both</span>. Essentially it combines the two sets (duplicates merged since sets don’t repeat elements). <span class="italic">Example:</span> If A = {1,2,3} and B = {3,4,5}, then A &cup; B = {1,2,3,4,5}.</p>
+<p><span class="bold">Intersection (A </span>&cap;<span class="bold"> </span><span class="bold">B):</span> The set of all elements that are <span class="bold">common to both A and B</span> (in A <span class="italic">and</span> in B). <span class="italic">Example:</span> With A and B as above, A &cap; B = {3} (only the element 3 is in both). If two sets have no element in common, their intersection is the empty set (they are called <span class="italic">disjoint</span> sets).</p>
+<p><span class="bold">Difference (A </span><span class="bold">– </span><span class="bold">B):</span> The set of elements that are in A but not in B. <span class="italic">Example:</span> A – B = {1,2} (elements in A excluding any that are also in B). B – A = {4,5}.</p>
+<p><span class="bold">Complement:</span> Usually defined when talking about a universal set U (the set of all elements under consideration in a context). The complement of A (denoted A′ or A^c) is U – A, i.e., all elements in the universe that are not in A. <span class="italic">Example:</span> If U = {1,2,3,4,5} and A = {1,2,3}, then A′ = {4,5}.</p>
+<p><span class="bold">Cartesian Product (A </span><span class="bold">× </span><span class="bold">B):</span> The set of all ordered pairs (a, b) where a &isin; A and b &isin; B. <span class="italic">Example:</span> If A = {1,2} and B = {x,y}, then A × B = {(1,x), (1,y), (2,x), (2,y)}. (This concept is a foundation for coordinate geometry and relations, though not explicitly in the list, it’s often taught alongside sets.)</p>
+<p><span class="bold">Representation of Sets:</span></p>
+<p><span class="bold">Roster/Tabular Form:</span> Listing out all elements explicitly, when feasible. E.g., E = {2,4,6,8,10}.</p>
+<p><span class="bold">Set-Builder Form:</span> Describing the property of elements. E.g., E = {x | x is an even number between 1 and 11}.</p>
+<p>Sometimes, we use Venn diagrams (see below) to represent sets visually, especially when dealing with operations or relationships among sets.</p>
+<p>For large or infinite sets, roster form is impractical, so set-builder is useful (e.g., &Zopf; = {x | x is an integer}). Also, an ellipsis “…” is used in roster form to indicate continuation.</p>
+<p><span class="bold">Venn Diagrams and Their Properties:</span>
+A Venn diagram is a visual way to represent sets and their relationships using shapes (usually circles or ovals) within a rectangle that often represents the universal set U. Overlapping regions indicate intersections, non-overlapping parts indicate differences, etc.</p>
+<p>For two sets, a Venn diagram has two overlapping circles. The overlap is A &cap; B; the total area covered by both circles is A &cup; B. One can visually see which elements (or portions of the universal set) fall into which combination of membership.</p>
+<p>For three sets, we use three overlapping circles, which can show all possible intersections (pairs or all three) etc.</p>
+<p><span class="bold">Properties</span> (laws) that can be illustrated via Venn diagrams include:</p>
+<p><span class="italic">Commutative laws:</span> A &cup; B = B &cup; A, and A &cap; B = B &cap; A (order doesn’t matter for union/intersection).</p>
+<p><span class="italic">Associative laws:</span> (A &cup; B) &cup; C = A &cup; (B &cup; C); (A &cap; B) &cap; C = A &cap; (B &cap; C) (grouping doesn’t matter).</p>
+<p><span class="italic">Distributive laws:</span> A &cap; (B &cup; C) = (A &cap; B) &cup; (A &cap; C); A &cup; (B &cap; C) = (A &cup; B) &cap; (A &cup; C).</p>
+<p><span class="italic">De Morgan</span><span class="italic">’</span><span class="italic">s laws:</span> The complement of a union is the intersection of complements, and vice versa: (A &cup; B)′ = A′ &cap; B′; (A &cap; B)′ = A′ &cup; B′.</p>
+<p>Venn diagrams help in solving problems involving sets, like finding the number of elements in unions or intersections given some data (including survey problems with overlaps). They provide an intuitive understanding of set relations.</p>
+<h2 id="section2">2. Algebra</h2>
+<p>Algebra is the branch of mathematics that uses symbols (usually letters) to represent numbers in expressions and equations. This allows us to generalize arithmetic and solve problems with unknown values. Algebra provides a powerful language to describe patterns and relationships. Key topics include:</p>
+<p><span class="bold">Introduction to Algebra (Use of Symbols):</span>
+In algebra, letters (like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>y</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>n</mi></math>) are used to stand for numbers. These letters are called <span class="italic">variables</span> because their values can vary or be unknown in general. For example, the equation <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>+</mo><mn>5</mn><mo>=</mo><mn>12</mn></math> asks "what number x would make this true?" (which we solve to find <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mn>7</mn></math>). By using variables, we can state general formulas or relationships (e.g., the area of a circle <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math> works for any radius <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>r</mi></math>).</p>
+<p>Using variables, we can translate word problems into equations. For instance, "a number increased by 3 is 10" becomes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>+</mo><mn>3</mn><mo>=</mo><mn>10</mn></math>. Algebra is essentially a unifying thread in mathematics that helps solve equations, describe sequences, and define functions.</p>
+<p><span class="bold">Algebraic Expressions:</span>
+An algebraic expression is a combination of numbers, variables, and operations (such as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>+</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>-</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>&times;</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>&div;</mo></math>, powers) but <span class="bold">without an equality sign</span>. Examples include: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi><mo>+</mo><mn>5</mn></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>-</mo><mn>7</mn></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><mi>x</mi><mn>2</mn></mfrac><mo>+</mo><mn>3</mn><mi>y</mi></math>, etc.</p>
+<p><span class="bold">Terms:</span> The parts of an expression separated by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>+</mo></math> or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>-</mo></math> signs. In <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi><mo>+</mo><mn>5</mn></math>, the terms are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn></math>. In <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>-</mo><mn>7</mn></math>, the terms are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>-</mo><mn>7</mn></math>.</p>
+<p><span class="bold">Coefficients:</span> The numerical factor of a term that contains a variable. In <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn></math> is the coefficient of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi></math>. If no number is written, the coefficient is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>1</mn></math> (e.g., in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup></math>, coefficient is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>1</mn></math>).</p>
+<p><span class="bold">Like and Unlike Terms:</span> Terms are <span class="italic">like terms</span> if they have the exact same variable part (same variables raised to the same powers). They can be combined by addition/subtraction. E.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn><mi>x</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><mi>x</mi></math> are like terms (they combine to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>8</mn><mi>x</mi></math>), but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn><mi>x</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn><msup><mi>x</mi><mn>2</mn></msup></math> are unlike (different powers).</p>
+<p><span class="bold">Polynomials:</span> A specific type of algebraic expression where all exponents are whole numbers and no variables in denominators. For example, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><mi>x</mi><mo>-</mo><mn>2</mn></math> is a polynomial in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi></math>. (Polynomials are covered more below.)</p>
+<p><span class="bold">Exponents and Powers (in Algebraic context):</span>
+Variables can also have exponents. The rules for exponents (mentioned in Number System above) apply in algebra too. For instance, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>&times;</mo><msup><mi>x</mi><mn>3</mn></msup><mo>=</mo><msup><mi>x</mi><mn>5</mn></msup></math>.</p>
+<p>Often in algebra, we use exponents to represent very large or small numbers in compact form (scientific notation) or to represent products of repeated factors algebraically.</p>
+<p>We can only directly combine exponential terms by multiplication/division if they have the same base (or sometimes by same exponent in factorization contexts).</p>
+<p>Also, note <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mi>m</mi></msup><mo>&times;</mo><msup><mi>a</mi><mi>n</mi></msup><mo>=</mo><msup><mi>a</mi><mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow></msup></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><msup><mi>a</mi><mi>m</mi></msup><msup><mi>a</mi><mi>n</mi></msup></mfrac><mo>=</mo><msup><mi>a</mi><mrow><mi>m</mi><mo>-</mo><mi>n</mi></mrow></msup></math> still hold.</p>
+<p>With variables, an expression like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><msup><mi>x</mi><mn>3</mn></msup></math> means <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mo>&times;</mo><mi>x</mi><mo>&times;</mo><mi>x</mi><mo>&times;</mo><mi>x</mi></math>. If we have something like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>&times;</mo><msup><mi>y</mi><mn>3</mn></msup></math>, it's <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>&times;</mo><mi>x</mi><mo>&times;</mo><mi>y</mi><mo>&times;</mo><mi>y</mi><mo>&times;</mo><mi>y</mi></math>. If bases differ (e.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>&times;</mo><msup><mi>y</mi><mn>2</mn></msup></math>), you can combine them as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>x</mi><mi>y</mi><mo>)</mo></mrow><mn>2</mn></msup></math>.</p>
+<p><span class="bold">Factorization:</span>
+Factorization (or factoring) is the process of expressing an algebraic expression as a product of its factors. It's essentially the reverse of expansion (multiplying out). Key methods of factorization include:</p>
+<p><span class="bold">Common Factor Extraction:</span> Identify a common factor in all terms and factor it out. <span class="italic">Example:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>6</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>9</mn><mi>x</mi><mo>=</mo><mn>3</mn><mi>x</mi><mo>(</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn><mo>)</mo></math> (we factored out <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><mi>x</mi></math>).</p>
+<p><span class="bold">Grouping:</span> For four-term expressions, sometimes grouping terms into pairs helps. <span class="italic">Example:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mi>x</mi><mo>+</mo><mi>a</mi><mi>y</mi><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>b</mi><mi>y</mi><mo>=</mo><mi>a</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>+</mo><mi>b</mi><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo><mo>=</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mi>y</mi><mo>)</mo></math></p>
+<p><span class="bold">Using Identities (Special products):</span> Recognize patterns such as difference of squares or perfect square trinomials (discussed below) to factor accordingly. <span class="italic">Example:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mn>2</mn></msup><mo>-</mo><msup><mi>b</mi><mn>2</mn></msup><mo>=</mo><mo>(</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>)</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></math> is an identity used to factor a difference of squares. If you had <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>9</mn></math>, you can factor it as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mn>3</mn><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mn>3</mn><mo>)</mo></math> because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>9</mn><mo>=</mo><msup><mn>3</mn><mn>2</mn></msup></math>.</p>
+<p><span class="bold">Quadratic Trinomials:</span> For expressions like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi></math>, find two numbers that multiply to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mi>c</mi></math> and add to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>b</mi></math> (when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>=</mo><mn>1</mn></math>, it's simpler: multiply to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>c</mi></math> and add to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>b</mi></math>). Then split the middle term and factor by grouping. <span class="italic">Example:</span> To factor <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>5</mn><mi>x</mi><mo>+</mo><mn>6</mn></math>, find two numbers multiplying to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>6</mn></math> and adding to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn></math> (that's <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn></math>). We rewrite <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn><mi>x</mi></math> as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn><mi>x</mi></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn><mi>x</mi><mo>+</mo><mn>6</mn><mo>=</mo><mi>x</mi><mo>(</mo><mi>x</mi><mo>+</mo><mn>2</mn><mo>)</mo><mo>+</mo><mn>3</mn><mo>(</mo><mi>x</mi><mo>+</mo><mn>2</mn><mo>)</mo><mo>=</mo><mo>(</mo><mi>x</mi><mo>+</mo><mn>3</mn><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mn>2</mn><mo>)</mo></math>, then factor groupwise: </p>
+<p><span class="bold">Higher-degree polynomials:</span> Sometimes use synthetic division or long division to factor given one known root, using the Factor Theorem (if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>f</mi><mo>(</mo><mi>r</mi><mo>)</mo><mo>=</mo><mn>0</mn></math> then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mi>r</mi><mo>)</mo></math> is a factor). For example, if polynomial <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><msup><mi>x</mi><mn>3</mn></msup><mo>-</mo><mn>6</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>11</mn><mi>x</mi><mo>-</mo><mn>6</mn></math> has root <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mn>2</mn></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mn>2</mn><mo>)</mo></math> is a factor, and you can divide <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>x</mi><mo>)</mo></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mn>2</mn><mo>)</mo></math> to factor it. (This might be more advanced than required, but worth noting the concept.)</p>
+<p><span class="bold">Special Products and Expansions:</span>
+Certain algebraic expressions multiply out to well-known patterns, and remembering these can speed up both expansion and factorization:</p>
+<p><span class="bold">Square of a Sum:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup></math></p>
+<p><span class="bold">Square of a Difference:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>-</mo><mn>2</mn><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup></math></p>
+<p><span class="bold">Product of a Sum and Difference:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>(</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>)</mo><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>-</mo><msup><mi>b</mi><mn>2</mn></msup></math> (Difference of two squares.)</p>
+<p><span class="bold">Cube of a Sum:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><mn>3</mn></msup><mo>=</mo><msup><mi>a</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>+</mo><mn>3</mn><mi>a</mi><msup><mi>b</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>3</mn></msup></math></p>
+<p><span class="bold">Cube of a Difference:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>)</mo></mrow><mn>3</mn></msup><mo>=</mo><msup><mi>a</mi><mn>3</mn></msup><mo>-</mo><mn>3</mn><msup><mi>a</mi><mn>2</mn></msup><mi>b</mi><mo>+</mo><mn>3</mn><mi>a</mi><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><msup><mi>b</mi><mn>3</mn></msup></math></p>
+<p><span class="bold">Sum of Cubes:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mn>3</mn></msup><mo>+</mo><msup><mi>b</mi><mn>3</mn></msup><mo>=</mo><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>(</mo><msup><mi>a</mi><mn>2</mn></msup><mo>-</mo><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mo>)</mo></math></p>
+<p><span class="bold">Difference of Cubes:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mn>3</mn></msup><mo>-</mo><msup><mi>b</mi><mn>3</mn></msup><mo>=</mo><mo>(</mo><mi>a</mi><mo>-</mo><mi>b</mi><mo>)</mo><mo>(</mo><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><mi>a</mi><mi>b</mi><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mo>)</mo></math></p>
+<p><span class="bold">General expansion:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>+</mo><mi>a</mi><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mi>b</mi><mo>)</mo><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mrow><mo>(</mo><mi>a</mi><mo>+</mo><mi>b</mi><mo>)</mo></mrow><mi>x</mi><mo>+</mo><mi>a</mi><mi>b</mi></math> (This is useful for mental expansion or factoring quadratics.)
+These identities are "special" because they occur often; recognizing them makes it easier to expand expressions quickly or factor expressions that match these forms. For example, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>16</mn></math> can be spotted as a difference of squares = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mn>4</mn><mo>)</mo><mo>(</mo><mi>x</mi><mo>+</mo><mn>4</mn><mo>)</mo></math>. Or if you need to expand <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>x</mi><mo>-</mo><mn>5</mn><mo>)</mo></mrow><mn>2</mn></msup></math>, you can apply the second identity directly.</p>
+<p><span class="bold">Linear Equations and their Graphs:</span>
+A linear equation is an equation of degree 1 (the highest power of the variable is 1). In one variable (say x), a linear equation looks like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi><mo>=</mo><mn>0</mn></math> and has a single solution <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mo>-</mo><mfrac><mi>b</mi><mi>a</mi></mfrac></math>. In two variables (x and y), a typical form is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mi>x</mi><mo>+</mo><mi>b</mi><mi>y</mi><mo>+</mo><mi>c</mi><mo>=</mo><mn>0</mn></math> (or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>y</mi><mo>=</mo><mi>m</mi><mi>x</mi><mo>+</mo><mi>c</mi></math>), which represents a straight line when graphed on the coordinate plane. Key points:</p>
+<p><span class="bold">Solution of a linear equation in one variable:</span> There is exactly one solution (if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>&ne;</mo><mn>0</mn></math>). E.g., solve 2x + 7 = 15 → 2x = 8 → x = 4.</p>
+<p><span class="bold">Solution of a linear equation in two variables:</span> Infinitely many solutions (each solution is an (x,y) pair that lies on the line). For example, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>+</mo><mi>y</mi><mo>=</mo><mn>5</mn></math> has solutions like (0,5), (1,4), (2,3), etc., forming a line.</p>
+<p><span class="bold">Graphing a line:</span> You can find two or more solutions (points) and plot them, then draw a straight line through. For example, to graph <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn><mi>y</mi><mo>=</mo><mn>6</mn></math>, find intercepts: set x=0 → 3y=6 → y=2 (point (0,2)); set y=0 → 2x=6 → x=3 (point (3,0)). Plot (0,2) and (3,0) and draw the line through them.</p>
+<p><span class="bold">Intercept form:</span> Lines often intercept axes; x-intercept is where y=0, y-intercept where x=0. The line equation can be expressed as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><mi>x</mi><mi>a</mi></mfrac><mo>+</mo><mfrac><mi>y</mi><mi>b</mi></mfrac><mo>=</mo><mn>1</mn></math> if a and b are intercepts on x and y axes respectively.</p>
+<p><span class="bold">Slope-intercept form:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>y</mi><mo>=</mo><mi>m</mi><mi>x</mi><mo>+</mo><mi>c</mi></math>, where m is the slope of the line and c is the y-intercept (point where line crosses y-axis). e.g. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>y</mi><mo>=</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn></math> has slope 2, y-intercept 3. (Slope is covered more below.)</p>
+<p><span class="bold">Polynomials:</span>
+A polynomial is an expression consisting of variables and coefficients combined using only addition, subtraction, and multiplication (no division by a variable, and exponents are non-negative integers). Examples: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>1</mn></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mi>x</mi><mo>+</mo><mn>5</mn></math>, or even <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>7</mn></math> (a constant is a polynomial of degree 0).</p>
+<p><span class="bold">Degree:</span> The degree of a polynomial is the highest exponent of the variable. E.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>x</mi><mn>4</mn></msup><mo>-</mo><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>x</mi><mo>-</mo><mn>7</mn></math> has degree 4. If multiple variables, degree is the sum of exponents in the highest term (e.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><msup><mi>y</mi><mn>3</mn></msup></math> has degree 5 in two variables).</p>
+<p><span class="bold">Classification by terms:</span> A polynomial can be monomial (1 term, e.g. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>5</mn><msup><mi>x</mi><mn>3</mn></msup></math>), binomial (2 terms, e.g. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>4</mn></math>), trinomial (3 terms, e.g. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>3</mn><mi>x</mi><mo>+</mo><mn>1</mn></math>), etc.</p>
+<p><span class="bold">Operations:</span> Polynomials can be added, subtracted, and multiplied to get another polynomial. They can be divided as well, though not always a polynomial quotient (sometimes a remainder is left, similar to integer division).</p>
+<p><span class="bold">Remainder & Factor Theorem:</span> If a polynomial <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>x</mi><mo>)</mo></math> is divided by (x - a), the remainder is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>a</mi><mo>)</mo></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>a</mi><mo>)</mo><mo>=</mo><mn>0</mn></math>, then (x - a) is a factor of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>x</mi><mo>)</mo></math>. This is a useful concept for finding roots or factoring higher-degree polynomials.</p>
+<p><span class="bold">Zeros/Roots:</span> The solutions to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>P</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mn>0</mn></math> are called roots of the polynomial. A polynomial of degree n has at most n real roots. For quadratic (degree 2) or higher, finding roots may require factorization or formulas.</p>
+<p><span class="bold">Quadratic Equations and Applications:</span>
+A quadratic equation is a polynomial equation of degree 2, generally written in standard form as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi><mo>=</mo><mn>0</mn></math> (with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>&ne;</mo><mn>0</mn></math>). It can have two, one, or zero real solutions (roots), which can be found by various methods:</p>
+<p><span class="bold">Factoring:</span> If the quadratic factors nicely: e.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>5</mn><mi>x</mi><mo>+</mo><mn>6</mn></math> factors to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>(</mo><mi>x</mi><mo>-</mo><mn>2</mn><mo>)</mo><mo>(</mo><mi>x</mi><mo>-</mo><mn>3</mn><mo>)</mo><mo>=</mo><mn>0</mn></math>, giving roots <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mn>2</mn></math> or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mn>3</mn></math>.</p>
+<p><span class="bold">Quadratic Formula:</span> For a general quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi><mo>=</mo><mn>0</mn></math>, the solutions are
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <mi mathcolor="#000000">x</mi>
+  <mo mathcolor="#000000">=</mo>
+  <mfrac mathcolor="#000000">
+    <mrow>
+      <mo mathcolor="#000000">−</mo>
+      <mi mathcolor="#000000">b</mi>
+      <mo mathcolor="#000000">±</mo>
+      <msqrt mathcolor="#000000">
+        <msup>
+          <mrow>
+            <mi mathcolor="#000000">b</mi>
+          </mrow>
+          <mrow>
+            <mn mathcolor="#000000">2</mn>
+          </mrow>
+        </msup>
+        <mo mathcolor="#000000">−</mo>
+        <mn mathcolor="#000000">4</mn>
+        <mi mathcolor="#000000">a</mi>
+        <mi mathcolor="#000000">c</mi>
+      </msqrt>
+    </mrow>
+    <mrow>
+      <mn mathcolor="#000000">2</mn>
+      <mi mathcolor="#000000">a</mi>
+    </mrow>
+  </mfrac>
+  <mo mathcolor="#000000">.</mo>
+</math>
+</p>
+<p>This formula works for any quadratic (the expression under the square root, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>b</mi><mn>2</mn></msup><mo>-</mo><mn>4</mn><mi>a</mi><mi>c</mi></math>, is called the discriminant and determines the nature of roots: if >0 two real roots, =0 one real root (double root), <0 no real roots but two complex roots).</p>
+<p><span class="bold">Completing the Square:</span> Another method, turning <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi></math> into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>(</mo><mi>x</mi><mo>-</mo><mi>h</mi><msup><mo>)</mo><mn>2</mn></msup><mo>+</mo><mi>k</mi></math> form to solve, but typically leads to the quadratic formula result.</p>
+<p><span class="bold">Graphs:</span> The graph of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>y</mi><mo>=</mo><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi></math> is a parabola. If a > 0, it opens upward (U-shape); if a < 0, downward (&cap;-shape). The vertex point is the maximum or minimum.</p>
+<p><span class="bold">Applications:</span> Quadratics appear in area problems, physics (projectile motion trajectories are parabolic), optimization problems, etc. For example, if one needs to maximize area for a given perimeter (leading to a quadratic in length), or find two numbers given their sum and product (which translates to solving a quadratic).
+<span class="italic">Example application:</span> "The product of two consecutive positive integers is 72. Find the integers." Let the first integer be n, then second is n+1. Equation: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>n</mi><mo>(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>=</mo><mn>72</mn></math>. This gives n = 8 or n = -9 (reject -9 if only positive integers considered). So the numbers are 8 and 9.</p>
+<p><span class="bold">Concept of Progressions (Sequences):</span>
+A progression is essentially a sequence of numbers that follow a specific pattern. Each number in the sequence is called a term. Progressions allow us to describe and analyze ordered sets of numbers where there is a definite rule connecting successive terms. Two common types are Arithmetic and Geometric progressions:</p>
+<p><span class="bold">Arithmetic Progression (AP):</span>
+An AP is a sequence where each term (after the first) is obtained by <span class="bold">adding a fixed number</span> called the common difference (d) to the previous term.
+<span class="italic">Example:</span> 5, 8, 11, 14, … is an AP with first term a₁ = 5 and common difference d = 3.</p>
+<p><span class="bold">nth term of an AP:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo><mi>d</mi></math>. This formula gives the value of the term at position n. For the example, the 10th term would be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>a</mi><mn>10</mn></msub><mo>=</mo><mn>5</mn><mo>+</mo><mo>(</mo><mn>10</mn><mo>-</mo><mn>1</mn><mo>)</mo><mo>&times;</mo><mn>3</mn><mo>=</mo><mn>32</mn></math>.</p>
+<p><span class="bold">Sum of first n terms (S_n):</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mi>n</mi><mn>2</mn></mfrac><mo>[</mo><mn>2</mn><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><mo>(</mo><mi>n</mi><mo>-</mo><mn>1</mn><mo>)</mo><mi>d</mi><mo>]</mo></math>. This can also be written as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><mfrac><mi>n</mi><mn>2</mn></mfrac><mo>(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub><mo>)</mo></math> (average of first and last term times number of terms).
+<span class="italic">Example:</span> Sum of first 5 terms of 5,8,11,...: first term 5, fifth term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>a</mi><mn>5</mn></msub><mo>=</mo><mn>5</mn><mo>+</mo><mo>(</mo><mn>5</mn><mo>-</mo><mn>1</mn><mo>)</mo><mo>&times;</mo><mn>3</mn><mo>=</mo><mn>17</mn></math>. Average of first and fifth = (5+17)/2 = 11, times 5 terms gives S_5 = 55. Listing them: 5+8+11+14+17 = 55, which matches.</p>
+<p>APs are used in situations with constant change per step, like linear growth or uniform spacing (e.g., house numbers on a street, days of week repeating every 7 days which is an AP modulo 7).</p>
+<p><span class="bold">Geometric Progression (GP):</span>
+A GP is a sequence where each term (after the first) is obtained by <span class="bold">multiplying by a fixed number</span> called the common ratio (r).
+<span class="italic">Example:</span> 3, 6, 12, 24, … is a GP with first term a₁ = 3 and common ratio r = 2 (each term is double the previous).</p>
+<p><span class="bold">nth term of a GP:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><msup><mi>r</mi><mrow><mi>n</mi><mo>-</mo><mn>1</mn></mrow></msup></math>. For the example, the 5th term would be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>a</mi><mn>5</mn></msub><mo>=</mo><mn>3</mn><mo>&times;</mo><msup><mn>2</mn><mrow><mn>5</mn><mo>-</mo><mn>1</mn></mrow></msup><mo>=</mo><mn>48</mn></math>.</p>
+<p><span class="bold">Sum of first n terms (S_n):</span> For r &ne; 1, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>S</mi><mi>n</mi></msub><mo>=</mo><msub><mi>a</mi><mn>1</mn></msub><mfrac><mrow><mn>1</mn><mo>-</mo><msup><mi>r</mi><mi>n</mi></msup></mrow><mrow><mn>1</mn><mo>-</mo><mi>r</mi></mrow></mfrac></math>. (If r is between 0 and 1, r^n tends to 0 as n grows; if |r|>1, the terms grow large.)
+<span class="italic">Example:</span> Sum of first 4 terms of 3,6,12,24: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>S</mi><mn>4</mn></msub><mo>=</mo><mn>3</mn><mfrac><mrow><mn>1</mn><mo>-</mo><msup><mn>2</mn><mn>4</mn></msup></mrow><mrow><mn>1</mn><mo>-</mo><mn>2</mn></mrow></mfrac><mo>=</mo><mn>3</mn><mfrac><mrow><mn>1</mn><mo>-</mo><mn>16</mn></mrow><mrow><mo>-</mo><mn>1</mn></mrow></mfrac><mo>=</mo><mn>45</mn></math>. Listing check: 3+6+12+24 = 45.</p>
+<p>GPs model exponential growth or decay situations (like population growth at a fixed percentage, financial interest compounding if deposits or ratios considered, radioactive decay, etc.).</p>
+<p><span class="bold">Infinite GP:</span> If |r|<1, an infinite GP has a finite sum <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>S</mi><mi>&infin;</mi></msub><mo>=</mo><mfrac><msub><mi>a</mi><mn>1</mn></msub><mrow><mn>1</mn><mo>-</mo><mi>r</mi></mrow></mfrac></math>. e.g., 1 + 1/2 + 1/4 + 1/8 + ... = 2. (This is beyond basic syllabus but shows a fascinating result of infinite series.)</p>
+<h2 id="section3">3. Number System</h2>
+<p>The Number System covers different categories of numbers and their properties, forming the foundation of arithmetic and algebra. Important concepts include:</p>
+<p><span class="bold">Prime and Composite Numbers:</span></p>
+<p><span class="italic">Prime numbers</span> are natural numbers greater than 1 that have exactly two factors: 1 and themselves. <span class="italic">(Examples: 2, 3, 5, 7 are prime.)</span></p>
+<p><span class="italic">Composite numbers</span> have more than two factors (they can be divided evenly by numbers other than 1 and themselves). <span class="italic">(Examples: 4 = 2</span><span class="italic">×</span><span class="italic">2, 6 = 2</span><span class="italic">×</span><span class="italic">3, 8 = 2</span><span class="italic">×</span><span class="italic">4 are composite.)</span></p>
+<p>The number 1 is <span class="bold">neither prime nor composite</span> (it has only one factor, itself).</p>
+<p><span class="bold">Fundamental Theorem of Arithmetic:</span> Every composite number can be expressed as a product of prime numbers, and this factorization is unique (except for the order of factors). <span class="italic">Example:</span> 12 = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>2</mn></msup><mo>&times;</mo><mn>3</mn></math>, 60 = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>2</mn></msup><mo>&times;</mo><mn>3</mn><mo>&times;</mo><mn>5</mn></math></p>
+<p><span class="bold">Sieve of Eratosthenes:</span> An ancient algorithm for finding all prime numbers up to a specified integer. It works by iteratively marking as composite (i.e., not prime) the multiples of each prime, starting with the first prime number, 2. This method efficiently eliminates non-prime numbers, leaving only primes unmarked.</p>
+<p><span class="bold">Tests of Divisibility:</span> These are quick rules to determine if a number is divisible by another without performing full division:</p>
+<p>Divisible by 2: if the last digit is even (0, 2, 4, 6, 8).</p>
+<p>Divisible by 3: if the sum of its digits is divisible by 3. <span class="italic">(Example: 123 </span>→<span class="italic"> </span><span class="italic">1+2+3=6, and 6 is divisible by 3, so 123 is divisible by 3.)</span></p>
+<p>Divisible by 4: if the last two digits form a number divisible by 4. <span class="italic">(Example: 712 </span>→<span class="italic"> </span><span class="italic">last two digits 12, and 12 is divisible by 4.)</span></p>
+<p>Divisible by 5: if the last digit is 0 or 5.</p>
+<p>Divisible by 6: if it is divisible by both 2 <span class="bold">and</span> 3 (combines those rules).</p>
+<p>Divisible by 7: Double the last digit and subtract it from the rest of the number. If the result is divisible by 7 (including 0), then the original number is divisible by 7. <span class="italic">(Example: 357 </span>→<span class="italic"> </span><span class="italic">35 - 2×7 = 35 - 14 = 21, which is divisible by 7, so 357 is divisible by 7.)</span></p>
+<p>Divisible by 8: if the last three digits form a number divisible by 8.</p>
+<p>Divisible by 9: if the sum of its digits is divisible by 9.</p>
+<p>Divisible by 10: if the last digit is 0.</p>
+<p>Divisible by 11: if the difference between the sum of digits in odd places and even places is 0 or a multiple of 11. <span class="italic">(Example: 2728 </span>→<span class="italic"> </span><span class="italic">(2+2) </span><span class="italic">– </span><span class="italic">(7+8) = 4 </span><span class="italic">– </span><span class="italic">15 = -11, which is divisible by 11, so 2728 is divisible by 11.)</span></p>
+<p>Divisible by 12: if it is divisible by both 3 and 4.</p>
+<p><span class="bold">Whole Numbers and Integers:</span></p>
+<p><span class="italic">Whole numbers</span> are the non-negative integers: <span class="bold">0, 1, 2, 3, </span><span class="bold">…</span>. (This set includes zero and all positive counting numbers.)</p>
+<p><span class="italic">Integers</span> include all whole numbers <span class="bold">and</span> their negatives: …, -3, -2, -1, 0, 1, 2, 3, … . Integers extend indefinitely in both positive and negative directions on the number line.</p>
+<p><span class="bold">Fractions and Decimal Fractions:</span></p>
+<p>A <span class="italic">fraction</span> represents a part of a whole and is written in the form <span class="bold">p/q</span> (where q&ne;0). For example, ¾ means 3 parts out of 4 equal parts of something. Fractions can be <span class="italic">proper</span> (numerator < denominator), <span class="italic">improper</span> (numerator &ge; denominator), or <span class="italic">mixed</span> (an integer with a fractional part, e.g. 2⅓).</p>
+<p><span class="italic">Decimal fractions</span> are another way to represent fractions, using place value and a decimal point. For example, 3/4 can be written as 0.75 in decimal form. Terminating decimals have a finite number of decimal places (0.5, 0.75), while repeating (recurring) decimals have one or more repeating digits or patterns (e.g. 0.333… = 1/3, 0.272727… = 3/11).</p>
+<p><span class="bold">Least Common Multiple (LCM) and Greatest Common Divisor (GCD):</span></p>
+<p>The <span class="bold">LCM</span> of two or more integers is the smallest positive number that is a multiple of each of the integers. <span class="italic">Example: LCM(6, 8) = 24</span> (since 24 is the smallest number divisible by both 6 and 8). LCM is useful for adding or subtracting fractions with different denominators, or finding common periods in repeating events.</p>
+<p>The <span class="bold">GCD</span> (also called HCF - Highest Common Factor) of two or more integers is the largest positive number that divides each of the integers without a remainder. <span class="italic">Example: GCD(18, 24) = 6</span> (since 6 is the greatest number that divides both 18 and 24 exactly). GCD is useful for simplifying fractions to lowest terms.</p>
+<p><span class="bold">Relation:</span> For any two positive integers a and b, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>&times;</mo><mi>b</mi><mo>=</mo><mtext>LCM</mtext><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>)</mo><mo>&times;</mo><mtext>GCD</mtext><mo>(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo>)</mo></math>.</p>
+<p><span class="bold">Prime Factorization Method:</span> To find LCM and GCD using prime factorization:</p>
+<ul>
+<li><span class="bold">For GCD:</span> Take the product of the lowest powers of common prime factors.</li>
+<li><span class="bold">For LCM:</span> Take the product of the highest powers of all prime factors.</li>
+</ul>
+<p><span class="italic">Example:</span> For 12 = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>2</mn></msup><mo>&times;</mo><mn>3</mn></math> and 18 = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mo>&times;</mo><msup><mn>3</mn><mn>2</mn></msup></math>:
+<br>GCD(12, 18) = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>1</mn></msup><mo>&times;</mo><msup><mn>3</mn><mn>1</mn></msup><mo>=</mo><mn>6</mn></math>
+<br>LCM(12, 18) = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>2</mn></msup><mo>&times;</mo><msup><mn>3</mn><mn>2</mn></msup><mo>=</mo><mn>36</mn></math></p>
+<p><span class="bold">Rational and Irrational Numbers:</span></p>
+<p>A <span class="bold">rational number</span> is a number that can be expressed as a fraction <span class="bold">p/q</span> where p and q are integers and q&ne;0. Rational numbers include integers (e.g. 5 = 5/1), terminating decimals (0.25 = 1/4), and repeating decimals (0.333… = 1/3).</p>
+<p>An <span class="bold">irrational number</span> cannot be expressed as a simple fraction; its decimal form is non-terminating and non-repeating. Classic examples include <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>2</mn></msqrt></math> (approximately 1.41421356…, which cannot be expressed exactly as a fraction) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>&pi;</mi></math> (3.14159…, the ratio of a circle's circumference to its diameter).</p>
+<p><span class="bold">Real numbers</span> consist of all rational and irrational numbers together – essentially any number that can be found on the continuous number line.</p>
+<p><span class="bold">Operations with Irrational Numbers:</span></p>
+<ul>
+<li>The sum or difference of a rational and an irrational number is irrational.</li>
+<li>The product or quotient of a non-zero rational number and an irrational number is irrational.</li>
+<li>The sum, difference, product, or quotient of two irrational numbers may be rational or irrational.</li>
+</ul>
+<p><span class="italic">Examples:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>2</mn></msqrt><mo>+</mo><mn>3</mn></math> is irrational; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>2</mn></msqrt><mo>&times;</mo><msqrt><mn>8</mn></msqrt><mo>=</mo><msqrt><mn>16</mn></msqrt><mo>=</mo><mn>4</mn></math> is rational.</p>
+<p><span class="bold">Properties of Numbers (Closure, Commutativity, Associativity, etc.):</span>
+These refer to fundamental properties of operations on number sets:</p>
+<p><span class="bold">Closure:</span> A set of numbers is <span class="italic">closed</span> under an operation if performing that operation on members of the set always yields a member of the same set. <span class="italic">(Example: Integers are closed under addition and multiplication </span><span class="italic">– </span><span class="italic">adding or multiplying any two integers gives an integer. However, integers are not closed under division, since 5 </span><span class="italic">÷ </span><span class="italic">2 = 2.5, which is not an integer.)</span></p>
+<p><span class="bold">Commutative Property:</span> Changing the order of operands does not change the result. Addition and multiplication are commutative for real numbers: <span class="bold">a + b = b + a</span>, <span class="bold">a </span><span class="bold">× </span><span class="bold">b = b </span><span class="bold">× </span><span class="bold">a</span>. (Subtraction and division are <span class="italic">not</span> commutative: e.g., 5 – 2 &ne; 2 – 5.)</p>
+<p><span class="bold">Associative Property:</span> Changing the grouping of operands (without changing the order) does not change the result. For addition and multiplication: <span class="bold">(a + b) + c = a + (b + c)</span>, <span class="bold">(a </span><span class="bold">× </span><span class="bold">b) </span><span class="bold">× </span><span class="bold">c = a </span><span class="bold">× </span><span class="bold">(b </span><span class="bold">× </span><span class="bold">c)</span>. (Again, subtraction/division are not associative.)</p>
+<p><span class="bold">Distributive Property:</span> Relates multiplication and addition: <span class="bold">a </span><span class="bold">× </span><span class="bold">(b + c) = a</span><span class="bold">×</span><span class="bold">b + a</span><span class="bold">×</span><span class="bold">c</span>. This property allows expansion of products over sums and is fundamental in algebra.</p>
+<p><span class="bold">Identity Elements:</span> For addition, 0 is the additive identity (adding 0 leaves a number unchanged: a + 0 = a). For multiplication, 1 is the multiplicative identity (a × 1 = a).</p>
+<p><span class="bold">Inverse Elements:</span> For addition, the inverse of a number is its negative (a + (−a) = 0). For multiplication, the inverse (reciprocal) of a nonzero number a is 1/a (since a × 1/a = 1). These allow solving equations by “undoing” operations.</p>
+<p><span class="bold">Real Numbers and the Number Line:</span>
+All rational and irrational numbers together form the set of real numbers. Real numbers can be represented as points on the number line. Every real number corresponds to a unique point on the line, and conversely, every point on the line represents a unique real number. This continuum property of real numbers underlies the concept of distance and measurement in geometry and algebra.</p>
+<p><span class="bold">Laws of Exponents (Indices):</span>
+Exponents (or powers) denote repeated multiplication. The laws of exponents make calculation easier and algebraic manipulation possible:
+<span class="italic">For any non-zero base a, and any integers m and n:</span></p>
+<p><span class="bold">Product of powers:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mi>m</mi></msup><mo>&times;</mo><msup><mi>a</mi><mi>n</mi></msup><mo>=</mo><msup><mi>a</mi><mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow></msup></math>. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>3</mn></msup><mo>&times;</mo><msup><mn>2</mn><mn>4</mn></msup><mo>=</mo><msup><mn>2</mn><mn>7</mn></msup><mo>=</mo><mn>128</mn></math>)</span></p>
+<p><span class="bold">Quotient of powers:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><msup><mi>a</mi><mi>m</mi></msup><msup><mi>a</mi><mi>n</mi></msup></mfrac><mo>=</mo><msup><mi>a</mi><mrow><mi>m</mi><mo>-</mo><mi>n</mi></mrow></msup></math>. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><msup><mn>5</mn><mn>5</mn></msup><msup><mn>5</mn><mn>2</mn></msup></mfrac><mo>=</mo><msup><mn>5</mn><mn>3</mn></msup></math>)</span></p>
+<p><span class="bold">Power of a power:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><msup><mi>a</mi><mi>m</mi></msup><mo>)</mo></mrow><mi>n</mi></msup><mo>=</mo><msup><mi>a</mi><mrow><mi>m</mi><mo>&times;</mo><mi>n</mi></mrow></msup></math>. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><msup><mn>3</mn><mn>2</mn></msup><mo>)</mo></mrow><mn>4</mn></msup><mo>=</mo><msup><mn>3</mn><mn>8</mn></msup></math>)</span></p>
+<p><span class="bold">Power of a product:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mi>a</mi><mo>&times;</mo><mi>b</mi><mo>)</mo></mrow><mi>m</mi></msup><mo>=</mo><msup><mi>a</mi><mi>m</mi></msup><mo>&times;</mo><msup><mi>b</mi><mi>m</mi></msup></math>. (Similarly, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mrow><mo>(</mo><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>)</mo></mrow><mi>m</mi></msup><mo>=</mo><mfrac><msup><mi>a</mi><mi>m</mi></msup><msup><mi>b</mi><mi>m</mi></msup></mfrac></math>)</p>
+<p><span class="bold">Zero exponent:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mn>0</mn></msup><mo>=</mo><mn>1</mn></math> (for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>&ne;</mo><mn>0</mn></math>). Any non-zero number raised to 0 is defined to be 1. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>7</mn><mn>0</mn></msup><mo>=</mo><mn>1</mn></math>)</span></p>
+<p><span class="bold">Negative exponent:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mrow><mo>-</mo><mi>m</mi></mrow></msup><mo>=</mo><mfrac><mn>1</mn><msup><mi>a</mi><mi>m</mi></msup></mfrac></math>. A negative exponent represents a reciprocal. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>10</mn><mrow><mo>-</mo><mn>2</mn></mrow></msup><mo>=</mo><mfrac><mn>1</mn><msup><mn>10</mn><mn>2</mn></msup></mfrac><mo>=</mo><mfrac><mn>1</mn><mn>100</mn></mfrac><mo>=</mo><mn>0.01</mn></math>)</span></p>
+<p><span class="bold">Fractional exponent:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mrow><mfrac><mn>1</mn><mi>n</mi></mfrac></mrow></msup><mo>=</mo><msqrt><mi>a</mi></msqrt></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mrow><mfrac><mi>m</mi><mi>n</mi></mfrac></mrow></msup><mo>=</mo><msup><mrow><mo>(</mo><msqrt><mi>a</mi></msqrt><mo>)</mo></mrow><mi>m</mi></msup><mo>=</mo><msqrt><mrow><msup><mi>a</mi><mi>m</mi></msup></mrow></msqrt></math>. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>9</mn><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow></msup><mo>=</mo><msqrt><mn>9</mn></msqrt><mo>=</mo><mn>3</mn></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>8</mn><mrow><mfrac><mn>2</mn><mn>3</mn></mfrac></mrow></msup><mo>=</mo><msup><mrow><mo>(</mo><msqrt><mn>8</mn></msqrt><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mn>2</mn><mn>2</mn></msup><mo>=</mo><mn>4</mn></math>)</span></p>
+<p><span class="bold">Squares, Square Roots, Cubes, and Cube Roots:</span></p>
+<p>The <span class="bold">square</span> of a number is that number times itself (power of 2). For example, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>5</mn><mn>2</mn></msup><mo>=</mo><mn>25</mn></math>. Perfect squares are integers that are squares of integers (1, 4, 9, 16, 25, …).</p>
+<p>The <span class="bold">square root</span> of a number x is a number y such that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mi>x</mi></math>. It is the inverse operation of squaring. Every positive number has two square roots: a positive one (principal square root) and a negative one. <span class="italic">(Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>25</mn></msqrt><mo>=</mo><mn>5</mn></math> or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mo>-</mo><mn>5</mn></math>, but when we say <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>25</mn></msqrt></math> we usually mean the positive root 5.)</span> Non-perfect squares have irrational roots (e.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>2</mn></msqrt></math>).</p>
+<p>The <span class="bold">cube</span> of a number is that number raised to power 3 (multiplied by itself twice): e.g., <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>3</mn><mn>3</mn></msup><mo>=</mo><mn>27</mn></math>.</p>
+<p>The <span class="bold">cube root</span> of a number x is a number y such that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>y</mi><mn>3</mn></msup><mo>=</mo><mi>x</mi></math>. <span class="italic">(Example: The cube root of 27 is 3, written <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mroot><mn>27</mn><mn>3</mn></mroot><mo>=</mo><mn>3</mn></math>)</span> Every integer (positive, negative, or zero) has one real cube root (unlike square roots, where negatives are not real). Perfect cubes are numbers like 8, 27, 64 (since <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>8</mn><mo>=</mo><msup><mn>2</mn><mn>3</mn></msup></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>27</mn><mo>=</mo><msup><mn>3</mn><mn>3</mn></msup></math>, etc.).</p>
+<p><span class="bold">Properties of Square Roots:</span></p>
+<ul>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mrow><mi>a</mi><mo>&times;</mo><mi>b</mi></mrow></msqrt><mo>=</mo><msqrt><mi>a</mi></msqrt><mo>&times;</mo><msqrt><mi>b</mi></msqrt></math> (for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>,</mo><mi>b</mi><mo>&ge;</mo><mn>0</mn></math>)</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow></msqrt><mo>=</mo><mfrac><msqrt><mi>a</mi></msqrt><msqrt><mi>b</mi></msqrt></mfrac></math> (for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>a</mi><mo>,</mo><mi>b</mi><mo>&ge;</mo><mn>0</mn></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>b</mi><mo>&ne;</mo><mn>0</mn></math>)</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><msup><mi>a</mi><mn>2</mn></msup></msqrt><mo>=</mo><mrow><mo>|</mo><mi>a</mi><mo>|</mo></mrow></math> (absolute value of a)</li>
+</ul>
+<p><span class="bold">Properties of Cube Roots:</span></p>
+<ul>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mroot><mrow><mi>a</mi><mo>&times;</mo><mi>b</mi></mrow><mn>3</mn></mroot><mo>=</mo><mroot><mi>a</mi><mn>3</mn></mroot><mo>&times;</mo><mroot><mi>b</mi><mn>3</mn></mroot></math></li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mroot><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow><mn>3</mn></mroot><mo>=</mo><mfrac><mroot><mi>a</mi><mn>3</mn></mroot><mroot><mi>b</mi><mn>3</mn></mroot></mfrac></math> (for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>b</mi><mo>&ne;</mo><mn>0</mn></math>)</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mroot><msup><mi>a</mi><mn>3</mn></msup><mn>3</mn></mroot><mo>=</mo><mi>a</mi></math></li>
+</ul>
+<p><span class="bold">Simplifying Square Roots:</span> To simplify square roots of non-perfect squares, factor the number and extract perfect square factors.</p>
+<p><span class="italic">Example:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><mn>72</mn></msqrt><mo>=</mo><msqrt><mrow><mn>36</mn><mo>&times;</mo><mn>2</mn></mrow></msqrt><mo>=</mo><msqrt><mn>36</mn></msqrt><mo>&times;</mo><msqrt><mn>2</mn></msqrt><mo>=</mo><mn>6</mn><msqrt><mn>2</mn></msqrt></math></p>
+<p><span class="bold">Rationalizing Denominators:</span> The process of eliminating radicals from the denominator of a fraction.</p>
+<p><span class="italic">Example:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><mn>1</mn><msqrt><mn>2</mn></msqrt></mfrac><mo>=</mo><mfrac><mn>1</mn><msqrt><mn>2</mn></msqrt></mfrac><mo>&times;</mo><mfrac><msqrt><mn>2</mn></msqrt><msqrt><mn>2</mn></msqrt></mfrac><mo>=</mo><mfrac><msqrt><mn>2</mn></msqrt><mn>2</mn></mfrac></math></p>
+<p><span class="bold">Finding Missing Numbers in Puzzles (Alphabets in Sums):</span>
+Sometimes arithmetic puzzles use letters or symbols to represent unknown numbers or digits in equations involving all four operations (+, −, ×, ÷). Solving these puzzles means figuring out which digit each letter stands for, consistent with the arithmetic.</p>
+<p><span class="bold">Alphametic puzzles:</span> For example, in a puzzle like
+</p>
+<p>  A B
++ B A
+-----
+    9 9</p>
+<p>each letter stands for a digit. Here, A and B are digits that sum in each column to give the result “99”. We deduce possible values (A + B must produce 9 in the ones place and carry to produce 9 in tens place, etc.). Through logical reasoning or trial, one finds a solution (e.g., A=4, B=5 gives 45+54=99).</p>
+<p><span class="bold">Missing operation puzzles:</span> Another type might give a sequence of numbers with blank operations (e.g., 8 __ 4 __ 3 = 20) where you fill in +, −, ×, or ÷ to make it correct. These require testing different operation combinations and respecting order of operations.</p>
+<p><span class="bold">Strategy:</span> Use clues like unique sums, carry-overs in addition, or the size of results to narrow down possibilities. Basic algebraic thinking (assigning variables to letters and forming equations) can also solve such puzzles.</p>
+<p><span class="bold">Number Patterns:</span>
+Number patterns are sequences that follow a certain rule. Detecting the rule allows you to predict subsequent numbers or fill in missing terms.</p>
+<p><span class="italic">Arithmetic patterns:</span> Each term changes by a constant difference. <span class="italic">(Example: 5, 8, 11, 14, ... has a pattern </span><span class="italic">“</span><span class="italic">add 3</span><span class="italic">”</span><span class="italic">.)</span></p>
+<p><span class="italic">Geometric patterns:</span> Each term changes by a constant factor (ratio). <span class="italic">(Example: 3, 6, 12, 24, ... has a pattern </span><span class="italic">“</span><span class="italic">multiply by 2</span><span class="italic">”</span><span class="italic">.)</span></p>
+<p><span class="italic">Other patterns:</span> Some sequences follow square numbers (1, 4, 9, 16, ... = n<sup>2</sup>), cube numbers (1, 8, 27, 64, ... = n<sup>3</sup>), triangular numbers (1, 3, 6, 10, 15, ... which add 2,3,4,5,...), Fibonacci sequence (1, 1, 2, 3, 5, 8, ... each term is sum of previous two), etc.</p>
+<p>Recognizing patterns involves looking at differences or ratios between terms, or other positions (like every second term). <span class="bold">Number puzzles</span> often use patterns in creative ways, such as magic squares or arithmetic progressions hidden in a grid.</p>
+<p><span class="bold">Number Puzzles:</span>
+These are brain-teasers or problems that involve numbers and require logical reasoning to solve. They often combine arithmetic with patterns or clever tricks:</p>
+<p><span class="italic">Magic squares:</span> A grid (often 3×3 or 4×4) to fill with numbers so that each row, column, and sometimes diagonal sums to the same constant.</p>
+<p><span class="italic">Sudoku:</span> Although uses numbers, it’s more of a logic puzzle (place numbers 1–9 in a grid so no row/col/box repeats a number).</p>
+<p><span class="italic">Cross-number puzzles:</span> Similar to crosswords but with numbers, where clues may involve arithmetic.</p>
+<p><span class="italic">Miscellaneous puzzles:</span> e.g. “Find a 2-digit number which is equal to 4 times the sum of its digits” – solved by forming equations (let the number be 10x+y, then 10x+y = 4(x+y) …).
+Solving number puzzles improves understanding of number properties and arithmetic operations, as you often break numbers apart (into digits, factors, etc.) to reason through the challenge.</p>
+<p><span class="bold">Euclid</span><span class="bold">’</span><span class="bold">s Division Lemma:</span>
+This is a formal statement of the long-division process for integers, and it is the basis of the Euclidean algorithm for finding GCD. It states that for any two integers <span class="bold">a</span> and <span class="bold">b</span> (with b > 0), there exist unique integers <span class="bold">q</span> and <span class="bold">r</span> such that:
+<span class="bold">a = b </span><span class="bold">· </span><span class="bold">q + r</span>, where <span class="bold">0 </span><span class="bold">&le; </span><span class="bold">r < b</span>.
+Here, <span class="bold">a</span> is the dividend, <span class="bold">b</span> is the divisor, <span class="bold">q</span> is the quotient, and <span class="bold">r</span> is the remainder when a is divided by b.
+<span class="italic">Example:</span> If a = 20 and b = 6, we can write 20 = 6×3 + 2, where quotient q=3 and remainder r=2 (since 2 < 6). This lemma guarantees the existence of such q and r and that they are unique for given a and b.</p>
+<p>Using Euclid’s division lemma repeatedly (Euclidean algorithm) allows us to find the GCD of two numbers. For instance, to find GCD(20, 6): 20 = 6×3 + 2, then 6 = 2×3 + 0; once remainder is 0, the last non-zero remainder (2) is the GCD.</p>
+<p><span class="bold">Concept of Logarithms:</span>
+A logarithm is essentially an exponent. The logarithm of a number <span class="italic">y</span> with respect to base <span class="italic">b</span> (written as log_b(y)) is the power to which <span class="italic">b</span> must be raised to produce <span class="italic">y</span>. In equation form:
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>y</mi><mo>)</mo><mo>=</mo><mi>x</mi><mtext> if and only if </mtext><msup><mi>b</mi><mi>x</mi></msup><mo>=</mo><mi>y</mi></math>
+Some key points and properties:</p>
+<p><span class="bold">Common Bases:</span> Common logarithms use base 10 (log_10) and natural logarithms use base e (≈2.718). For instance, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mn>10</mn></msub><mo>(</mo><mn>1000</mn><mo>)</mo><mo>=</mo><mn>3</mn></math> because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>10</mn><mn>3</mn></msup><mo>=</mo><mn>1000</mn></math>.</p>
+<p><span class="bold">Laws of Logarithms:</span></p>
+<ul>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>M</mi><mo>&times;</mo><mi>N</mi><mo>)</mo><mo>=</mo><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>M</mi><mo>)</mo><mo>+</mo><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>N</mi><mo>)</mo></math> (the log of a product is the sum of logs)</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mfrac><mi>M</mi><mi>N</mi></mfrac><mo>)</mo><mo>=</mo><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>M</mi><mo>)</mo><mo>-</mo><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>N</mi><mo>)</mo></math> (the log of a quotient is the difference of logs)</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><msup><mi>M</mi><mi>p</mi></msup><mo>)</mo><mo>=</mo><mi>p</mi><mo>&times;</mo><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>M</mi><mo>)</mo></math> (the log of a power is the exponent times the log of the base)</li>
+</ul>
+<p>These laws mirror the laws of exponents and facilitate simplifying or solving exponential equations.</p>
+<p><span class="bold">Change of Base Formula:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mi>b</mi></msub><mo>(</mo><mi>a</mi><mo>)</mo><mo>=</mo><mfrac><mrow><msub><mi>log</mi><mi>c</mi></msub><mo>(</mo><mi>a</mi><mo>)</mo></mrow><mrow><msub><mi>log</mi><mi>c</mi></msub><mo>(</mo><mi>b</mi><mo>)</mo></mrow></mfrac></math>, which allows computing logs on calculators by changing to base 10 or base e.</p>
+<p><span class="bold">Characteristic and Mantissa (for common logs):</span> In log_10 form, the integer part of the logarithm is called the characteristic (indicates order of magnitude) and the fractional part is the mantissa (which depends on significant figures of the number). This is more relevant in using log tables.</p>
+<p><span class="bold">Usage:</span> Logarithms help solve equations where the unknown is in an exponent (e.g., find t if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mi>t</mi></msup><mo>=</mo><mn>40</mn></math>, here <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>t</mi><mo>=</mo><msub><mi>log</mi><mn>2</mn></msub><mo>(</mo><mn>40</mn><mo>)</mo></math>). They are also used to define scales like pH in chemistry or the Richter scale for earthquakes, where the logarithm maps large ranges of input into manageable numbers.</p>
+<p><span class="bold">Solving Logarithmic Equations:</span></p>
+<p>To solve equations involving logarithms:</p>
+<ol>
+<li>Isolate the logarithmic expression</li>
+<li>Apply the definition of logarithms to convert to exponential form</li>
+<li>Solve the resulting equation</li>
+<li>Check that solutions are valid (arguments of logarithms must be positive)</li>
+</ol>
+<p><span class="italic">Example:</span> Solve <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>log</mi><mn>2</mn></msub><mo>(</mo><mi>x</mi><mo>-</mo><mn>3</mn><mo>)</mo><mo>=</mo><mn>4</mn></math>
+<br>Convert to exponential form: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mn>2</mn><mn>4</mn></msup><mo>=</mo><mi>x</mi><mo>-</mo><mn>3</mn></math>
+<br>Simplify: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>16</mn><mo>=</mo><mi>x</mi><mo>-</mo><mn>3</mn></math>
+<br>Solve: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mn>19</mn></math>
+<br>Check: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>-</mo><mn>3</mn><mo>=</mo><mn>16</mn><mo>></mo><mn>0</mn></math>, so the solution is valid.</p>
+<h2 id="section4">4. Arithmetic</h2>
+<p>Arithmetic deals with numerical calculations and the application of the basic operations (addition, subtraction, multiplication, division) to solve problems, often related to real-life scenarios. Key topics include:</p>
+<p><span class="bold">Ratio and Proportion:</span></p>
+<p>A <span class="bold">ratio</span> is a comparison of two quantities by division. It is expressed as “a to b” or a:b (which equals a/b as a fraction). For example, if there are 2 apples and 3 oranges, the ratio of apples to oranges is 2:3. Ratios can be scaled up or down (2:3 is equivalent to 4:6, 6:9, etc.).</p>
+<p>A <span class="bold">proportion</span> states that two ratios are equal. For instance, 2:3 = 6:9 is a proportion. In equation form, a/b = c/d. A useful property: in a true proportion, <span class="bold">cross-multiplying</span> gives ad = bc.</p>
+<p><span class="bold">Problem-solving:</span> If a/b = c/d and one of the four values is unknown, you can find it by cross-multiplication. <span class="italic">Example:</span> If a recipe mixes sugar and flour in ratio 2:5 and you have 10 cups of flour, how much sugar is needed? Set 2/5 = x/10, cross-multiply to get 5x = 20 → x = 4 cups of sugar.</p>
+<p><span class="bold">Simple Interest:</span>
+Simple interest is interest calculated only on the principal (the initial amount of money) over time. It grows linearly.</p>
+<p><span class="bold">Formula:</span> <span class="bold">I = (P </span><span class="bold">× </span><span class="bold">R </span><span class="bold">× </span><span class="bold">T) / 100</span>, where:
+P = principal (initial amount),
+R = annual interest rate (in %),
+T = time period (in years).</p>
+<p><span class="bold">Interest vs. Amount:</span> The interest I is the extra money earned or paid. The total amount A after interest is added: <span class="bold">A = P + I</span>.</p>
+<p><span class="italic">Example:</span> If P = ₹1000, R = 5% per year, and T = 3 years, then I = (1000×5×3)/100 = ₹150. The amount A = 1000 + 150 = ₹1150.</p>
+<p>Simple interest is used in situations like short-term loans, simple bank accounts, or bonds when compounding is not considered.</p>
+<p><span class="bold">Compound Interest:</span>
+Compound interest is interest calculated on the initial principal <span class="bold">and also on the accumulated interest</span> from previous periods. This means the money grows at an increasing rate (interest on interest).</p>
+<p><span class="bold">Annual compounding formula:</span> <span class="bold">A = P </span><span class="bold">× </span><span class="bold">(1 + R/100)^T</span>, where A is the amount after T years (with interest added). The compound interest earned would be A – P.</p>
+<p>If compounding is more frequent (like quarterly, monthly), the formula adjusts: for compounding n times a year at rate R, <span class="bold">A = P </span><span class="bold">× </span><span class="bold">(1 + (R/(100n)))^(nT)</span>.</p>
+<p><span class="italic">Example:</span> P = ₹1000 at 10% annual rate, compounded yearly for 2 years: A = 1000×(1+0.10)^2 = 1000×1.1^2 = 1000×1.21 = ₹1210. The interest earned = ₹210. (Notice this is slightly more than the ₹200 that simple interest would give, due to interest-on-interest in the second year.)</p>
+<p>Compound interest is used in savings accounts, investments, and any situations where interest is periodically added to the principal. It grows faster than simple interest for the same rate and time.</p>
+<p><span class="bold">Time and Distance:</span>
+This involves problems relating speed, distance, and time, which are connected by the formula <span class="bold">Distance = Speed </span><span class="bold">× </span><span class="bold">Time</span>.</p>
+<p>If you know any two of these quantities, you can find the third: <span class="bold">Speed = Distance/Time</span>, <span class="bold">Time = Distance/Speed</span>.</p>
+<p>Units must be consistent (e.g., if distance is in km and time in hours, speed will be in km/h). Conversion may be needed (e.g., km/h to m/s or vice versa: 1 m/s = 3.6 km/h).</p>
+<p><span class="italic">Example:</span> A car traveling at 60 km/h for 2.5 hours will cover Distance = 60 × 2.5 = 150 km.</p>
+<p><span class="bold">Relative speed:</span> If two objects move in the same direction, their <span class="italic">relative speed</span> is the difference of their speeds; if in opposite directions, it’s the sum. This concept is useful in problems about moving trains, overtaking, head-on approach, etc.</p>
+<p><span class="bold">Average speed:</span> If an object covers different distances with different speeds, average speed = total distance / total time (not simply the average of speeds). For example, going to a place at 30 km/h and returning at 60 km/h, the average speed is not 45 km/h; instead, use total distance and time to compute it.</p>
+<p><span class="bold">Discount:</span>
+Discount is a reduction on the marked price of an item, often given as a percentage. It’s commonly seen in shopping or commerce.</p>
+<p><span class="bold">Marked Price (List Price):</span> The original price of the item before discount.</p>
+<p><span class="bold">Discount Rate:</span> A percentage of the marked price by which the price is reduced.</p>
+<p><span class="bold">Sale Price (Discounted Price):</span> The price after subtracting the discount.
+<span class="bold">Sale Price = Marked Price </span><span class="bold">– </span><span class="bold">Discount.</span> Also, if the discount rate is D%, then <span class="bold">Discount = (D/100) </span><span class="bold">× </span><span class="bold">Marked Price</span>.</p>
+<p><span class="italic">Example:</span> An article marked at ₹500 is on 10% discount. Discount = 10/100 × 500 = ₹50. So the sale price = 500 – 50 = ₹450.</p>
+<p>Sometimes successive discounts are given (e.g., 20% off, then an additional 10% off on the reduced price). These are not simply additive (20%+10%=30% total) but multiplicative in effect: the final price = original price × (0.80) × (0.90) = original × 0.72, effectively a 28% overall discount.</p>
+<p><span class="bold">Tax:</span>
+In everyday contexts, “tax” often refers to sales tax or value-added tax (VAT/GST) applied on purchases, or income tax on earnings. Here we focus on sales tax (or similar) in price calculations:</p>
+<p><span class="bold">Sales Tax/Value Added Tax:</span> A percentage added to the selling price of goods/services. If an item’s base price is P and tax rate is T%, the tax amount = (T/100)×P, and <span class="bold">Total Price = P + Tax</span>.</p>
+<p><span class="italic">Example:</span> A gadget costs ₹1000 before tax, and the sales tax rate is 5%. Tax = 0.05×1000 = ₹50, so total price = ₹1050.</p>
+<p>Sometimes prices are quoted “inclusive of tax,” meaning tax is already included. To find the base price from an inclusive price, one can reverse-calculate: Base Price = Total Price / (1 + T/100).</p>
+<p><span class="bold">Income Tax:</span> calculated on earnings as per certain slabs or rates, but that’s outside basic arithmetic scope.</p>
+<p><span class="bold">Time and Work:</span>
+This topic deals with how long it takes for one or more people (or machines) to complete a task, and how they work together. The key is understanding work rate.</p>
+<p>Define “one unit of work” as the whole job. If a person can complete the job in <span class="bold">D days</span>, then the person’s work rate is <span class="bold">1/D</span> of the job per day.</p>
+<p>If two people have rates R1 and R2 (jobs per day), working together their combined rate is R1 + R2 jobs per day (assuming they don’t interfere with each other). The time taken together for one job = 1/(R1+R2) days.</p>
+<p><span class="italic">Example:</span> If A can finish a job in 5 days and B can finish the same job in 10 days, then A’s rate = 1/5 job per day, B’s rate = 1/10 per day. Together rate = 1/5 + 1/10 = 3/10 jobs per day. So together they finish the job in 10/3 ≈ 3.33 days.</p>
+<p><span class="bold">Work equivalence:</span> Sometimes work problems involve different units or outputs (like “pipes filling a tank”, “machines producing items”). The concept is similar: find individual rates (tank per hour, items per hour, etc.), then combine.</p>
+<p><span class="bold">Inverse relationship:</span> More people/machines working together means less time needed, roughly inversely proportional if all have equal efficiency (e.g., if one person takes 6 days, two similar people take ~3 days).</p>
+<p><span class="bold">Profit and Loss:</span>
+These concepts apply to buying and selling of goods, comparing cost and selling price to determine gain or loss.</p>
+<p><span class="bold">Cost Price (CP):</span> The price at which an item is purchased (cost to the seller).</p>
+<p><span class="bold">Selling Price (SP):</span> The price at which the item is sold to a customer.</p>
+<p><span class="bold">Profit (or Gain):</span> If SP > CP, the seller makes a profit = SP – CP.</p>
+<p><span class="bold">Loss:</span> If SP < CP, the seller incurs a loss = CP – SP.</p>
+<p><span class="bold">Profit/Loss Percentage:</span> This is usually calculated with respect to cost price:</p>
+<p>Profit% = (Profit / CP) × 100</p>
+<p>Loss% = (Loss / CP) × 100</p>
+<p><span class="italic">Example:</span> A shopkeeper buys an item for ₹80 (CP) and sells it for ₹100 (SP). Here Profit = ₹20, and Profit% = (20/80)×100 = 25%. If instead the selling price was ₹70, Loss = ₹10, Loss% = (10/80)×100 = 12.5%.</p>
+<p><span class="bold">Mark-up and Discount interplay:</span> A seller might mark an item at a higher price than CP and then give a discount. Understanding profit and loss in such cases requires careful step-by-step calculation (first apply markup to find SP before discount, then apply discount, etc.).</p>
+<p><span class="bold">Break-even:</span> SP = CP results in neither profit nor loss (0% gain).</p>
+<h2 id="section5">5. Geometry</h2>
+<p>Geometry is the study of shapes, sizes, and properties of space. It spans from flat shapes (plane geometry) to solid shapes (solid geometry). Early geometry was developed to solve practical problems in measurement, construction, and astronomy. This section covers fundamental geometry concepts, some historical context, and coordinate geometry which bridges algebra and geometry.</p>
+<p><span class="bold">History of Geometry:</span>
+Geometry has ancient origins in various civilizations. Practical geometry (for land surveying, construction) existed in Egypt and Mesopotamia. The <span class="bold">Greeks</span> systematized geometry: Euclid (around 300 BCE) wrote <span class="italic">The Elements</span>, a collection of geometric knowledge organized axiomatically, which became the basis for Euclidean geometry taught in schools.</p>
+<p><span class="bold">Euclid</span><span class="bold">’</span><span class="bold">s approach:</span> He started with basic definitions (point, line, etc.), postulates (like “through any two points there is exactly one straight line”), and common notions, then systematically proved a sequence of propositions. This logical development set the standard for deductive reasoning in math.</p>
+<p><span class="bold">Indian contributions:</span> Ancient India also contributed significantly. The <span class="bold">Ś</span><span class="bold">ulba S</span><span class="bold">ū</span><span class="bold">tras</span> (dated ~800-500 BCE) contained geometric constructions and the earliest recorded statement of the Pythagorean theorem (as a rule for altar construction). Indian mathematicians like <span class="bold">Aryabhata</span> and <span class="bold">Brahmagupta</span> (5th-7th century CE) worked on astronomy and geometry; Brahmagupta derived formulas for cyclic quadrilaterals (Brahmagupta’s formula gives area = &radic;((s-a)(s-b)(s-c)(s-d)) for a quadrilateral inscribed in a circle, where s is semiperimeter). Indian mathematicians also developed concepts of trigonometry which link to geometry of circles.</p>
+<p><span class="bold">Other contributions:</span> The Arabs preserved and expanded geometric knowledge during the medieval period (introducing algebraic techniques into geometry), and later, the development of <span class="bold">coordinate geometry</span> by René Descartes (1637) merged algebra and geometry, revolutionizing the field. Geometry continued to evolve with non-Euclidean geometries in the 19th century (though that’s beyond school scope).</p>
+<p><span class="bold">Euclid</span><span class="bold">’</span><span class="bold">s Geometry (Euclidean Geometry):</span>
+Euclidean geometry refers to the geometry of the plane and space based on Euclid’s postulates. Key ideas include:</p>
+<p><span class="bold">Points and Lines:</span> A point indicates a position (no size). A line has length but no thickness and extends infinitely in both directions. A line segment has two endpoints and finite length. A ray starts at a point and extends infinitely in one direction.</p>
+<p><span class="bold">Postulates (simplified):</span></p>
+<p>A straight line segment can be drawn joining any two points.</p>
+<p>A straight line can be extended indefinitely in a straight line.</p>
+<p>A circle can be drawn with any center and radius.</p>
+<p>All right angles are congruent.</p>
+<p>(Parallel Postulate) Given a line and a point not on it, there is exactly one line through the point parallel to the given line.</p>
+<p>Using these and other logical axioms, Euclid derived many propositions (theorems) about triangles, parallel lines, circles, etc. In Euclidean geometry: the sum of angles in a triangle is 180°, the parallel postulate holds true, and concepts like congruence and similarity are defined via rigid motions or ratios.</p>
+<p><span class="bold">Euclidean vs Non-Euclidean:</span> In non-Euclidean geometries, the parallel postulate is altered; for instance, on a sphere, “lines” are great circles and parallels as we know them don’t exist (sum of angles in a triangle > 180°). But for school geometry, we stick to Euclidean geometry (flat plane, typical rules).</p>
+<p><span class="bold">Lines and Angles:</span>
+Fundamental building blocks in geometry are lines and angles formed when lines intersect or when we construct shapes:</p>
+<p><span class="bold">Line relationships:</span> Lines can be intersecting (cross at a point) or parallel (never meet, always same distance apart). If lines are <span class="italic">perpendicular</span>, they intersect at a right angle (90°).</p>
+<p><span class="bold">Angles:</span> An angle is formed by two rays sharing a common endpoint (vertex). Measured in degrees: a full circle is 360°. Types of angles:</p>
+<p>Acute angle: less than 90°</p>
+<p>Right angle: exactly 90°</p>
+<p>Obtuse angle: between 90° and 180°</p>
+<p>Straight angle: 180° (a straight line)</p>
+<p>Reflex angle: between 180° and 360°</p>
+<p><span class="bold">Pairs of angles:</span></p>
+<p><span class="bold">Adjacent angles:</span> share a vertex and a side but do not overlap.</p>
+<p><span class="bold">Vertical (opposite) angles:</span> formed when two lines intersect; they are opposite each other at the intersection. Vertical angles are <span class="bold">always equal</span>.</p>
+<p><span class="bold">Complementary angles:</span> two angles that sum to 90° (one is the complement of the other).</p>
+<p><span class="bold">Supplementary angles:</span> two angles that sum to 180° (one is the supplement of the other). Adjacent supplementary angles on a straight line are called a linear pair.</p>
+<p><span class="bold">Alternate interior angles:</span> when two parallel lines are cut by a transversal (a line crossing them), angles on opposite sides of the transversal and inside the parallel lines are alternate interior angles (they are equal if lines are parallel).</p>
+<p><span class="bold">Corresponding angles:</span> in the same scenario, an angle in the upper left position at one intersection corresponds to the angle in the upper left position at the other intersection; these are equal if lines are parallel.</p>
+<p>These angle relationships are vital in proving lines parallel or analyzing geometric figures.</p>
+<p><span class="bold">Similar Triangles:</span>
+Triangles are <span class="bold">similar</span> if they have the same shape, but possibly different sizes. Formally, two triangles are similar if their corresponding angles are equal (and thus corresponding sides are proportional).</p>
+<p><span class="bold">Criteria for similarity:</span></p>
+<p>AAA (Angle-Angle-Angle): If two angles of one triangle equal two angles of another, the third automatically equals too, and the triangles are similar. (AA is usually enough to establish similarity, as the third angle will match.)</p>
+<p>SAS (Side-Angle-Side in proportion): If an angle of one triangle equals an angle of another, and the sides including those angles are in the same ratio, the triangles are similar.</p>
+<p>SSS (Side-Side-Side in proportion): If all three pairs of corresponding sides are in the same ratio, the triangles are similar.</p>
+<p><span class="bold">Properties of similar triangles:</span></p>
+<p>Corresponding sides are proportional: if triangles ABC ~ DEF, then AB/DE = BC/EF = CA/FD (and that common ratio is the scale factor of similarity).</p>
+<p>Corresponding angles are equal: ∠A = ∠D, ∠B = ∠E, ∠C = ∠F in the example above.</p>
+<p>If one triangle is scaled (enlarged or reduced) to form the other, lengths scale by factor k, areas scale by k<sup>2</sup>.</p>
+<p><span class="bold">Applications:</span> Using similarity is a powerful tool to find unknown lengths (e.g., shadow problems or using small similar triangles within big ones in geometric proofs). For instance, the concept behind map scales or models relies on similarity.</p>
+<p><span class="bold">Pythagoras</span><span class="bold">’ </span><span class="bold">Theorem:</span>
+In any <span class="bold">right-angled triangle</span> (one angle = 90°), the relationship between the side lengths is given by Pythagorean theorem:
+<span class="bold">(Hypotenuse)^2 = (Leg)^2 + (Other Leg)^2.</span>
+Typically phrased: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>c</mi><mn>2</mn></msup><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup></math>, where c is the length of the hypotenuse (side opposite the right angle), and a and b are lengths of the other two sides.</p>
+<p><span class="italic">Example:</span> In a right triangle with legs 3 cm and 4 cm, the hypotenuse is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><msup><mn>3</mn><mn>2</mn></msup><mo>+</mo><msup><mn>4</mn><mn>2</mn></msup></msqrt><mo>=</mo><msqrt><mn>25</mn></msqrt><mo>=</mo><mn>5</mn></math> cm. (3-4-5 forms a Pythagorean triple.)</p>
+<p><span class="bold">Converse of Pythagoras:</span> If in a triangle <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>a</mi><mn>2</mn></msup><mo>+</mo><msup><mi>b</mi><mn>2</mn></msup><mo>=</mo><msup><mi>c</mi><mn>2</mn></msup></math> holds, then the triangle has a right angle opposite side of length c. This is useful to check if a triangle with given sides is right-angled.</p>
+<p>The theorem is fundamental in geometry, allowing distance calculations. It’s also the basis for defining distance in coordinate geometry and has countless proofs (including one by Euclid). Ancient cultures like Babylon and India knew specific Pythagorean triples long before the general theorem was articulated.</p>
+<p><span class="bold">Congruency of Triangles:</span>
+Two figures are <span class="bold">congruent</span> if they are exactly the same shape and size. Congruent triangles have all three sides equal and all three angles equal (essentially one is a copy of the other, possibly rotated or flipped). To prove triangles congruent, certain minimum conditions can be met:</p>
+<p><span class="bold">SSS (Side-Side-Side):</span> If three sides of one triangle are respectively equal to three sides of another, the triangles are congruent.</p>
+<p><span class="bold">SAS (Side-Angle-Side):</span> If two sides and the included angle of one triangle are equal to the corresponding two sides and included angle of another, they are congruent.</p>
+<p><span class="bold">ASA (Angle-Side-Angle):</span> If two angles and the included side of one triangle equal the corresponding two angles and side of another, congruency holds.</p>
+<p><span class="bold">AAS (Angle-Angle-Side):</span> If two angles and a non-included side of one triangle equal the corresponding parts of another, the triangles are congruent. (This is a variation since if two angles are known, the third is also known, so it reduces to ASA effectively.)</p>
+<p><span class="bold">RHS (Right angle-Hypotenuse-Side):</span> In right triangles, if the hypotenuse and one leg of one triangle equal the hypotenuse and one leg of another right triangle, the two are congruent.</p>
+<p>Congruent triangles have all corresponding sides equal and angles equal. Once triangles are known congruent, any corresponding measures (altitudes, medians, etc.) are also equal. This concept is used to prove many geometric properties (like showing two segments are equal by placing them as sides of congruent triangles).</p>
+<p><span class="bold">Properties of Circles:</span>
+A circle is the set of all points in a plane that are at a fixed distance (radius) from a fixed point (center). Important parts and properties include:</p>
+<p><span class="bold">Radius (r):</span> A segment from center to any point on the circle. All radii of a circle are equal.</p>
+<p><span class="bold">Diameter (d):</span> A chord that passes through the center. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>d</mi><mo>=</mo><mn>2</mn><mi>r</mi></math>. It's the longest distance across the circle.</p>
+<p><span class="bold">Circumference:</span> The perimeter or length around the circle. Formula: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>C</mi><mo>=</mo><mn>2</mn><mi>&pi;</mi><mi>r</mi><mo>=</mo><mi>&pi;</mi><mi>d</mi></math></p>
+<p><span class="bold">Arc:</span> A connected part of the circle’s circumference. Measured in degrees (central angle) or length. A semicircle is an arc of 180°.</p>
+<p><span class="bold">Chord:</span> A segment joining any two points on the circle. Diameter is a special chord (longest one).</p>
+<p><span class="bold">Tangent:</span> A line that touches the circle at exactly one point. A tangent is perpendicular to the radius at the point of contact.</p>
+<p><span class="bold">Sector:</span> A “pie-slice” region bounded by two radii and the arc between them (like central angle area).</p>
+<p><span class="bold">Segment (circular):</span> Region between a chord and the arc above it. (A minor segment is the smaller area cut off by a chord, major segment the larger).</p>
+<p><span class="bold">Angles in circles:</span> Several theorems: e.g., angle in a semicircle is 90° (if you take any diameter and any third point on circle, the triangle formed is right-angled at that third point); angles at center vs circumference (central angle subtended by an arc is twice the inscribed angle on the circle subtended by the same arc). Opposite angles in a cyclic quadrilateral (all corners on the circle) sum to 180°, etc.</p>
+<p><span class="bold">Circle Area:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math> For example, a circle of radius 7 cm has area <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>&pi;</mi><mo>&times;</mo><msup><mn>7</mn><mn>2</mn></msup><mo>=</mo><mn>49</mn><mi>&pi;</mi></math>.</p>
+<p><span class="bold">Circular combinations:</span> Annulus (ring) area = &pi;(R<sup>2</sup> - r<sup>2</sup>) if R is outer radius and r inner radius.
+These are just a few properties; circles have rich geometry, including symmetry (a circle has infinite lines of symmetry through its center and rotational symmetry of any angle).</p>
+<p><span class="bold">Properties of Triangles:</span>
+Triangles have many important properties and center points:</p>
+<p><span class="bold">Angle Sum Property:</span> Sum of interior angles of any triangle is 180°. So if two angles are known, the third is 180° minus the sum of the two.</p>
+<p><span class="bold">Exterior Angle Property:</span> An exterior angle of a triangle (formed when one side is extended) equals the sum of the two opposite interior angles. (This is a consequence of the angle sum rule.)</p>
+<p><span class="bold">Types of triangles by sides:</span> Equilateral (3 equal sides, each angle 60°), Isosceles (2 equal sides, base angles equal), Scalene (no equal sides).</p>
+<p><span class="bold">Types by angles:</span> Right (one 90° angle), Acute (all angles < 90°), Obtuse (one angle > 90°).</p>
+<p><span class="bold">Perimeter:</span> sum of side lengths.</p>
+<p><span class="bold">Area:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>&times;</mo><mi>b</mi><mi>a</mi><mi>s</mi><mi>e</mi><mo>&times;</mo><mi>h</mi><mi>e</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></math>. For example, if base = 10, height = 6, area = ½×10×6 = 30. Also Heron's formula for area if sides a, b, c: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><msqrt><mi>s</mi><mo>(</mo><mi>s</mi><mo>-</mo><mi>a</mi><mo>)</mo><mo>(</mo><mi>s</mi><mo>-</mo><mi>b</mi><mo>)</mo><mo>(</mo><mi>s</mi><mo>-</mo><mi>c</mi><mo>)</mo></msqrt></math>, where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>s</mi><mo>=</mo><mfrac><mi>a</mi><mo>+</mo><mi>b</mi><mo>+</mo><mi>c</mi><mn>2</mn></mfrac></math> is semiperimeter.</p>
+<p><span class="bold">Important centers:</span></p>
+<p>Centroid (intersection of medians) – divides medians in 2:1 ratio, is the triangle’s balancing point.</p>
+<p>Circumcenter (intersection of perpendicular bisectors of sides) – center of the circumscribed circle through all vertices; in acute triangle it lies inside, right triangle at midpoint of hypotenuse, obtuse outside.</p>
+<p>Incenter (intersection of angle bisectors) – center of inscribed circle that touches each side; always inside.</p>
+<p>Orthocenter (intersection of altitudes) – meets inside for acute, on the vertex of right angle for right triangles, outside for obtuse.</p>
+<p><span class="bold">Inequality:</span> In any triangle, sum of any two sides > third side. Also, the longest side is opposite the largest angle (and vice versa).</p>
+<p><span class="bold">Congruence & similarity</span> (already discussed) help derive many properties like segments or angles equal under certain conditions.</p>
+<p><span class="bold">Properties of Quadrilaterals:</span>
+A quadrilateral is a four-sided polygon. General properties and special types:</p>
+<p><span class="bold">Angle sum:</span> Interior angles of any quadrilateral sum to 360°. (Because a quadrilateral can be divided into two triangles, each contributing 180°).</p>
+<p><span class="bold">Types of quadrilaterals:</span></p>
+<p><span class="bold">Trapezium (Trapezoid):</span> at least one pair of opposite sides is parallel. (In some definitions, exactly one pair parallel.) The parallel sides are called bases.</p>
+<p><span class="bold">Parallelogram:</span> opposite sides are parallel (so two pairs of parallel sides). Opposite sides are equal in length, opposite angles equal. Diagonals bisect each other. Examples: rectangle, rhombus are special parallelograms.</p>
+<p><span class="bold">Rectangle:</span> a parallelogram with all angles 90°. Opposite sides are equal; diagonals are equal in length.</p>
+<p><span class="bold">Rhombus:</span> a parallelogram with all sides equal (like a pushed over square). Opposite angles equal, diagonals perpendicular and bisect angles.</p>
+<p><span class="bold">Square:</span> a rectangle with all sides equal (also a rhombus with right angles). It has all properties of rectangle and rhombus (all sides equal, all angles 90°, diagonals equal, bisect each other at 90°, etc.).</p>
+<p><span class="bold">Kite:</span> two pairs of adjacent sides equal. One pair of opposite angles equal (the ones between unequal sides). Diagonals are perpendicular, one of them bisected by the other.</p>
+<p><span class="bold">Area formulas:</span></p>
+<p>Parallelogram = base × height (same as area of rectangle, because parallelogram can be transformed to rectangle).</p>
+<p>Rectangle = length × breadth.</p>
+<p>Square = side<sup>2</sup>.</p>
+<p>Triangle (half of parallelogram) = ½ × base × height.</p>
+<p>Trapezium = ½ × (sum of parallel sides) × height. (If a and b are lengths of parallel sides, area = ½<span class="italic">(a+b)</span>h.)</p>
+<p>Rhombus = ½ × (product of diagonals). (Because it can be split into 4 right triangles by diagonals.)</p>
+<p><span class="bold">Additional:</span></p>
+<p>In parallelogram, any one angle + adjacent angle = 180° (consecutive angles supplementary).</p>
+<p>In trapezium, often one might calculate median length (line joining midpoints of legs) = average of base lengths.</p>
+<p>Many properties of trapeziums and parallelograms can be proven using parallel lines angle relationships.</p>
+<p><span class="bold">Polygons (General Properties):</span>
+A polygon is a closed figure with straight sides. A triangle (3 sides), quadrilateral (4 sides) are polygons, and so on. For an n-sided polygon (n-gon):</p>
+<p><span class="bold">Sum of interior angles:</span> = (n - 2) × 180°. (Derived from dividing polygon into (n-2) triangles.) For example, a pentagon (n=5) has interior angles summing to 3×180 = 540°.</p>
+<p><span class="bold">Sum of exterior angles:</span> For any convex polygon, one exterior angle at each vertex sums to 360° (taking them in the same rotational direction around the polygon). This is a useful fact: if you extend each side, the turn you make as you go around returns you to full 360°.</p>
+<p><span class="bold">Regular polygon:</span> all sides equal and all angles equal. In a regular n-gon, each interior angle =  . For example, regular hexagon (n=6) each interior = ((6-2)*180)/6 = 120°. Each exterior angle then is 360°/n = 60° in this case (since interior+exterior = 180° for each vertex in a convex polygon).</p>
+<p><span class="bold">Diagonals:</span> Number of diagonals in an n-gon = n(n-3)/2 (because each vertex connects to all others except itself and two adjacent, and divide by 2 for double counting). For example, a hexagon has 6*3/2 = 9 diagonals.</p>
+<p>Polygons can be concave (having an interior angle > 180° causing a “recess”) or convex (all interior angles < 180°). The angle sum formula and exterior sum rule assume convex polygons in the straightforward proofs.</p>
+<p><span class="bold">Parts of a Circle:</span>
+<span class="italic">(This was partly covered under circle properties, but here we list clearly parts and related terms)</span></p>
+<p><span class="bold">Center:</span> The given fixed point from which all points on the circle are equidistant.</p>
+<p><span class="bold">Radius:</span> A line segment from the center to any point on the circle; all radii are equal in a circle.</p>
+<p><span class="bold">Diameter:</span> A chord passing through the center; longest chord; equal to 2 radii.</p>
+<p><span class="bold">Circumference:</span> The distance around the circle (perimeter).</p>
+<p><span class="bold">Arc:</span> A part of the circumference. A minor arc is smaller than a semicircle; a major arc is larger.</p>
+<p><span class="bold">Semicircle:</span> An arc spanning half the circle (ends at endpoints of a diameter).</p>
+<p><span class="bold">Chord:</span> A segment joining two points on the circle. The diameter is a special chord.</p>
+<p><span class="bold">Tangent:</span> A line that touches the circle at exactly one point (point of tangency). A tangent is perpendicular to the radius at that point.</p>
+<p><span class="bold">Secant:</span> A line that cuts through the circle at two points (essentially extending a chord infinitely in both directions).</p>
+<p><span class="bold">Central angle:</span> An angle with its vertex at the center of the circle; its measure equals the measure of the intercepted arc.</p>
+<p><span class="bold">Inscribed angle:</span> An angle with its vertex on the circle (and rays along chords); its measure is half the measure of the intercepted arc.</p>
+<p><span class="bold">Sector:</span> The region bounded by two radii and the arc between them (like a “pizza slice” of the circle).</p>
+<p><span class="bold">Segment (of a circle):</span> The region between a chord and the arc it subtends.</p>
+<p><span class="bold">Concentric circles:</span> Two or more circles with the same center but different radii.</p>
+<p><span class="bold">Annulus:</span> The ring-shaped region between two concentric circles (mentioned as “ring” in Mensuration section for area calculations).</p>
+<p><span class="bold">Construction of Circle, Triangles, and Quadrilaterals:</span>
+Geometric construction refers to drawing shapes accurately using a compass and straightedge (no measurement of lengths/angles with tools, just construction). Common constructions include:</p>
+<p><span class="bold">Circle:</span> Given a center point and a radius length, one can draw a circle with a compass set to that radius. Also, given three non-collinear points, one can construct a circle passing through them (the circumcircle of the triangle they form) by finding the intersection of perpendicular bisectors (circumcenter).</p>
+<p><span class="bold">Triangles:</span> Various scenarios – for example:</p>
+<p>Construct a triangle given three side lengths (SSS). Use each length to draw arcs and find intersections for vertices.</p>
+<p>Given two sides and the included angle (SAS), draw one side, then use a protractor or constructed angle, and mark off the second side from the angle, then join to form triangle.</p>
+<p>Given two angles and a side (ASA/AAS), one can draw one side, then construct the angles at its ends, then mark off the second side length along one ray and complete the triangle.</p>
+<p>Construct special triangles: e.g., an equilateral triangle (all sides equal) can be constructed by taking a segment and swinging arcs from its endpoints.</p>
+<p><span class="bold">Quadrilaterals:</span> Many quadrilaterals can be constructed given certain minimum data (depends on type):</p>
+<p>General quadrilateral: typically need four sides and one diagonal or something like that (since after drawing three sides, the fourth is fixed by intersection if diagonal known).</p>
+<p>Parallelogram: given adjacent sides and included angle, one can construct easily (draw one side, then use angle to draw second side from one end, replicate lengths and parallel lines).</p>
+<p>Rectangle or square: use perpendicular lines (90°) and equal lengths (for square all sides same, for rectangle opposite sides equal and all angles 90°).</p>
+<p><span class="bold">Basic Constructions:</span> also include: bisecting a given angle, constructing perpendicular bisector of a segment (to find midpoint or create perpendicular line), drawing parallel lines through a point, dropping a perpendicular from a point to a line, etc. These are fundamental steps often used within constructing shapes.</p>
+<p><span class="bold">Circles and Concurrent Lines in Triangles:</span></p>
+<p><span class="bold">Concurrency in Triangles:</span> Several important sets of lines in a triangle meet at single points (are concurrent):</p>
+<p><span class="bold">Medians:</span> A median connects a vertex of a triangle to the midpoint of the opposite side. All three medians intersect at the centroid (as mentioned, centroid divides medians in 2:1 ratio from vertex).</p>
+<p><span class="bold">Perpendicular Bisectors:</span> These are lines that are perpendicular to each side at its midpoint. They all intersect at the circumcenter, which is equidistant from all vertices (center of the circumscribed circle around the triangle).</p>
+<p><span class="bold">Angle Bisectors:</span> Lines that split each angle into two equal angles. They meet at the incenter, which is equidistant from all sides (center of inscribed circle).</p>
+<p><span class="bold">Altitudes:</span> Perpendiculars dropped from each vertex to the opposite side (or its extension). They meet at the orthocenter.</p>
+<p>These intersection points (centroid, circumcenter, incenter, orthocenter) are four notable “centers” of a triangle, each with significance. For example, the circumcenter allows one to draw a circle through all vertices, the incenter a circle tangent to all sides. In an equilateral triangle, all these four points coincide at the same spot.</p>
+<p><span class="bold">Circles in Triangles:</span></p>
+<p><span class="italic">Incircle:</span> The circle inscribed in a triangle (touching all three sides) is centered at the incenter.</p>
+<p><span class="italic">Circumcircle:</span> The circle passing through all three vertices of a triangle is centered at the circumcenter.</p>
+<p>Some triangle properties: all triangles have an incircle and circumcircle. A right triangle’s circumcenter lies at the midpoint of the hypotenuse (since the hypotenuse subtends a right angle at the circle’s circumference, meaning the hypotenuse is a diameter of the circumcircle).</p>
+<p><span class="italic">Excircle:</span> A circle externally tangent to one side of triangle and the extensions of the other two; there are three excircles (one opposite each vertex), centered at intersection of external angle bisectors.</p>
+<p><span class="bold">Coordinate Geometry (Cartesian Geometry):</span>
+Coordinate geometry introduces using ordered pairs of numbers to represent points on a plane. By doing so, algebraic methods can solve geometric problems. The Cartesian coordinate system consists of two perpendicular axes: the horizontal x-axis and vertical y-axis, intersecting at the origin (0,0). A point in the plane is given by coordinates (x, y) where x is the distance along the x-axis and y the distance along the y-axis.</p>
+<p><span class="bold">Coordinates of a Point & Plotting:</span>
+A point P with coordinates (a, b) means: starting from origin (0,0), move a units along the x-axis (to the right if a is positive, left if negative), and from that point move b units parallel to the y-axis (up if b is positive, down if negative). Mark the point there.
+<span class="italic">Quadrants:</span> The plane is divided into four quadrants by the axes: I (x positive, y positive), II (x negative, y positive), III (x neg, y neg), IV (x pos, y neg). Points on axes have either x=0 or y=0.
+<span class="italic">Example:</span> Plot (3, 2) (go right 3, up 2), (-4, 1) (left 4, up 1), ( -2, -3 ) (left 2, down 3).
+Reading coordinates: given a point on graph, see its projections on axes to determine (x,y).</p>
+<p><span class="bold">Linear Equations in Two Variables (Graphical Representation):</span>
+As noted, a linear equation in two variables, like ax + by + c = 0, graphs as a straight line. To plot one, find at least two convenient points that satisfy the equation:</p>
+<p>Set x = 0 → find y (this gives y-intercept).</p>
+<p>Set y = 0 → find x (gives x-intercept).
+Or choose other values if intercepts aren’t integers. Plot these points and draw the line through them.
+<span class="italic">Example:</span> For 2x + y = 6, intercepts are (x=0 ⇒ y=6) and (y=0 ⇒ x=3). So line goes through (0,6) and (3,0).
+Every solution (x,y) of the equation lies on that line, and every point on the line gives a solution when plugged into the equation. If we have two linear equations (a system), graphically their solutions are the intersection point(s) of their lines (one solution if lines meet at a point, none if lines parallel and distinct, infinitely many if lines coincide).</p>
+<p><span class="bold">Linear Equations with Two Variables (Algebraic View):</span>
+Each linear equation in two variables represents a relationship between x and y. There are infinitely many pairs (x,y) that satisfy it (all lying on the line, as above). Often we deal with solving two such equations simultaneously (which typically has one unique solution if the lines intersect).
+<span class="italic">Example:</span> Solve the system:
+
+ .
+Adding them: 3x = 9 ⇒ x = 3, then from first eqn y = 2. So solution (3,2). This corresponds to lines x+y=5 and 2x-y=4 crossing at (3,2).
+If equations are multiples (represent the same line), there are infinitely many solutions (all points on that line). If parallel (no intersection), no solution.
+The algebraic methods to solve are substitution or elimination. Graphical method is visual as described.</p>
+<p><span class="bold">Slope of a Line:</span>
+The slope (m) of a line measures its steepness or inclination. It is defined as the ratio of the “rise” (vertical change) to the “run” (horizontal change) between any two distinct points on the line.
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>m</mi><mo>=</mo><mfrac><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub></msub><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub></msub></mfrac></math> for any two points (x₁, y₁) and (x₂, y₂) on the line (with x₂ &ne; x₁).</p>
+<p>A positive slope means the line rises as x increases (uphill left-to-right). A negative slope means the line falls as x increases (downhill left-to-right). Zero slope means the line is horizontal. Undefined slope (division by zero) corresponds to a vertical line (x constant).</p>
+<p>In equation form y = mx + c, m is explicitly the slope.</p>
+<p><span class="italic">Example:</span> For the line through (1,2) and (4,8): slope m = (8-2)/(4-1) = 6/3 = 2. Meaning for every 1 unit you go right, y increases by 2. So equation would be y = 2x + b, plugging one point: 2 = 2(1)+b gives b = 0, thus y=2x (which indeed passes through those points).</p>
+<p><span class="bold">Distance Between Two Points:</span>
+Given two points  and  , the distance  can be found by applying the Pythagorean theorem in the coordinate plane:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>d</mi><mo>=</mo><msqrt><msup><mrow><mo>(</mo><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></msqrt></math>
+This formula comes from considering the difference in x (&Delta;x = x₂ - x₁) as one leg of a right triangle and difference in y (&Delta;y = y₂ - y₁) as the other leg. The line connecting the points is the hypotenuse.
+<span class="italic">Example:</span> Distance between A(0,0) and B(3,4) is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msqrt><msup><mrow><mo>(</mo><mn>3</mn><mo>-</mo><mn>0</mn><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><mn>4</mn><mo>-</mo><mn>0</mn><mo>)</mo></mrow><mn>2</mn></msup></msqrt><mo>=</mo><msqrt><mn>9</mn><mo>+</mo><mn>16</mn></msqrt><mo>=</mo><msqrt><mn>25</mn></msqrt><mo>=</mo><mn>5</mn></math>.
+This distance formula is crucial for geometry on the coordinate plane, to compute lengths of sides, perimeters, check congruency (equal lengths), etc.</p>
+<p><span class="bold">Section Formula:</span>
+The section formula gives the coordinates of a point that divides a line segment between two points in a given ratio. If you have P(x₁,y₁) and Q(x₂,y₂), and you want the point R that divides PQ in the ratio m:n (m parts from P, n parts from Q, internally), then:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mfrac><mrow><mi>m</mi><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi>n</mi><msub><mi>x</mi><mn>1</mn></msub></mrow><mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow></mfrac><mo>,</mo><mo>&nbsp;</mo><mi>y</mi><mo>=</mo><mfrac><mrow><mi>m</mi><msub><mi>y</mi><mn>2</mn></msub><mo>+</mo><mi>n</mi><msub><mi>y</mi><mn>1</mn></msub></mrow><mrow><mi>m</mi><mo>+</mo><mi>n</mi></mrow></mfrac></math>
+Essentially a weighted average of the coordinates, weighted by how far the point is from each end. If the ratio is 1:1, it simply gives the midpoint formula: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>x</mi><mo>=</mo><mfrac><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><mn>2</mn></mfrac><mo>,</mo><mo>&nbsp;</mo><mi>y</mi><mo>=</mo><mfrac><msub><mi>y</mi><mn>1</mn></msub><mo>+</mo><msub><mi>y</mi><mn>2</mn></msub><mn>2</mn></mfrac></math>.</p>
+<p><span class="italic">Example:</span> If we want the midpoint of A(2, 6) and B(8, 4), take m=n=1: midpoint = ((2+8)/2, (6+4)/2) = (5, 5).</p>
+<p>If the ratio is external (point lies outside the segment on the line), the formula adjustments use a difference (m-n) in appropriate place; but typically in 8-12 curriculum we focus on internal division.</p>
+<p>Section formula helps in many contexts, e.g., finding centroid of a triangle (which divides medians in 2:1 ratio) or locating a point that partitions a segment in a given proportion.</p>
+<p><span class="bold">Area of a Triangle (Coordinate Geometry):</span>
+Given three vertices  , the area of the triangle can be found using the determinant (shoelace) formula:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>|</mo><msub><mi>x</mi><mn>1</mn></msub><mo>(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>3</mn></msub><mo>)</mo><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><mo>(</mo><msub><mi>y</mi><mn>3</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub><mo>)</mo><mo>+</mo><msub><mi>x</mi><mn>3</mn></msub><mo>(</mo><msub><mi>y</mi><mn>1</mn></msub><mo>-</mo><msub><mi>y</mi><mn>2</mn></msub><mo>)</mo><mo>|</mo></math>
+This comes from taking half the absolute difference between sums of cross-multiplications of coordinates.</p>
+<p><span class="italic">Example:</span> Coordinates A(0,0), B(4,0), C(0,3): area = ½ |0<span class="italic">(0-3) + 4</span>(3-0) + 0<span class="italic">(0-0)| = </span><span class="italic">½ </span><span class="italic">|0 + 12 + 0| = </span><span class="italic">½ </span><span class="italic">* 12 = 6. This matches the base</span>height/2 formula (base=4, height=3, area=6).</p>
+<p>If points are collinear, this area will compute to 0 (since the points form a “degenerate” triangle).</p>
+<p>Another way: we can find area by dividing shape or using integration, but the above formula is standard. It’s useful to determine if three points are collinear (area = 0 means collinearity).</p>
+<p><span class="bold">Collinearity of Points:</span>
+Three or more points are collinear if they lie on a single straight line. In coordinate terms, three points A, B, C are collinear if the slope of AB equals the slope of BC (assuming different x-coordinates), or equivalently if the area of triangle ABC (computed as above) is zero.</p>
+<p>Using slope: Check if  (with appropriate handling if denominators zero, e.g., all three have same x coordinate which is a vertical line case).</p>
+<p>Using area: Plug in coordinates into the determinant formula; if result is 0, collinear.</p>
+<p><span class="italic">Example:</span> Points (1,2), (2,4), (3,6) are collinear since each slope between successive points = (4-2)/(2-1) = 2, (6-4)/(3-2) = 2. Also area via formula = 0. They lie on line y=2x.
+Collinearity is important for checking if one point lies on the line segment between two others, or simplifying geometry problems by reducing a triangle to a line if area is zero.</p>
+<p><span class="bold">Centroid of a Triangle (Coordinate Calculation):</span>
+The centroid is the point of intersection of the medians of a triangle (each median connecting a vertex with midpoint of opposite side). In coordinate terms, if triangle vertices are  ,  ,  , the centroid  has coordinates:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>G</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo><mo>=</mo><mo>(</mo><mfrac><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><msub><mi>x</mi><mn>3</mn></msub><mn>3</mn></mfrac><mo>,</mo><mfrac><msub><mi>y</mi><mn>1</mn></msub><mo>+</mo><msub><mi>y</mi><mn>2</mn></msub><mo>+</mo><msub><mi>y</mi><mn>3</mn></msub><mn>3</mn></mfrac><mo>)</mo></math>
+(It's the average of the coordinates of the vertices.)</p>
+<p><span class="italic">Example:</span> For triangle with A(0,0), B(6,0), C(3,6): centroid = ((0+6+3)/3, (0+0+6)/3) = (9/3, 6/3) = (3, 2). This matches the fact that medians would intersect at that point (one can check medians equations).</p>
+<p>The centroid divides each median in a 2:1 ratio (with the longer segment from vertex to centroid). But the formula directly gives location which is convenient in coordinate geometry problems (like finding balancing point or center of mass if weights at vertices).</p>
+<p><span class="bold">Symmetry:</span>
+Symmetry in geometry refers to a situation where a shape or figure is invariant under some transformation (reflection, rotation, etc.). Two major types in elementary geometry:</p>
+<p><span class="bold">Line (Reflection) Symmetry:</span> A figure has line symmetry if it can be reflected across a line (the line of symmetry) and appear unchanged. For instance, a circle has infinitely many lines of symmetry (any diameter line), a square has 4 (two axes through opposite sides and two through opposite vertices), a triangle may have some depending on type (equilateral has 3, isosceles has 1, scalene has none). In coordinate geometry, the y-axis is a line of symmetry for even functions (like y = x<sup>2</sup>), etc.</p>
+<p><span class="bold">Rotational Symmetry:</span> A figure has rotational symmetry if it can be rotated (by an angle less than 360°) about a central point and coincide with itself. The number of rotations that map it to itself within 360° is the order of symmetry. For example, an equilateral triangle has rotational symmetry of order 3 (120° rotations), a square order 4 (90° rotations). A circle technically has infinite order rotational symmetry (any rotation works).</p>
+<p><span class="bold">Point Symmetry (Origin symmetry):</span> When rotated 180° about a point (often the origin in coordinate geometry), the figure looks the same (like an upside-down rotation flips it onto itself). For example, the graph of y = x<sup>3</sup> is symmetric about the origin (point symmetry).</p>
+<p>In coordinate terms, symmetry can be tested: e.g., symmetry about the y-axis means replacing (x,y) with (-x,y) yields the same equation/shape. Symmetry about the origin means (x,y) to (-x,-y) leaves shape invariant.</p>
+<p><span class="bold">Applications:</span> Recognizing symmetry can simplify problems – e.g., in integration or geometry proofs, symmetrical properties can reduce complexity. In design and nature, symmetry is aesthetically and structurally significant.</p>
+<h2 id="section6">6. Mensuration</h2>
+<p>Mensuration is the mathematics of measuring geometric figures, such as finding lengths, areas, and volumes. It provides formulas to quantify physical space that shapes occupy. Key formulas and concepts for 2D shapes (perimeter and area) and 3D solids (surface area and volume) include:</p>
+<p><span class="bold">Perimeter of a Square and Rectangle:</span></p>
+<p>Square: All four sides equal (side = a). <span class="bold">Perimeter = 4a.</span> For example, a square of side 5 cm has perimeter 20 cm.</p>
+<p>Rectangle: Opposite sides equal (length = L, breadth = B). <span class="bold">Perimeter = 2(L + B).</span> E.g., rectangle with L=8, B=3 has perimeter 2*(8+3)=22 units.</p>
+<p><span class="italic">Note:</span> Perimeter is the total distance around the shape. Units are the same as the side lengths (e.g., cm, m).</p>
+<p><span class="bold">Area of a Square and Rectangle:</span></p>
+<p>Square: <span class="bold">Area = side</span><span class="bold"><sup>2</sup> </span><span class="bold">= a</span><span class="bold"><sup>2</sup></span><span class="bold">.</span> (Conceptually, it's how many unit squares can fit in the square.) Example: side 5 cm gives area 25 cm<sup>2</sup>.</p>
+<p>Rectangle: <span class="bold">Area = length </span><span class="bold">× </span><span class="bold">breadth = L </span><span class="bold">× </span><span class="bold">B.</span> Example: 8 × 3 = 24 (square units).</p>
+<p>If dimensions are in m, area in m<sup>2</sup>, etc. Simple but fundamental.</p>
+<p><span class="bold">Area of a Triangle:</span></p>
+<p><span class="bold">Area = </span><span class="bold">½ × </span><span class="bold">base </span><span class="bold">× </span><span class="bold">height.</span> The base can be any side; the height (altitude) is the perpendicular distance from the opposite vertex to that base line.</p>
+<p>Example: a triangle with base 10 cm and corresponding height 6 cm has area ½ * 10 * 6 = 30 cm<sup>2</sup>.</p>
+<p>Other formulas: If all sides a, b, c known, use Heron’s formula:  (semiperimeter), then </p>
+<p>For right triangles, a quick formula is ½ * product of the two legs (since one leg can serve as base and the other as height, being perpendicular).</p>
+<p><span class="bold">Area of a Circle:</span></p>
+<p><span class="bold">Area = </span><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math>, where r is radius. This formula comes from calculus or cutting circle arguments but is accepted as standard.</p>
+<p>If diameter D given, since D = 2r, area = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>&pi;</mi><msup><mrow><mo>(</mo><mfrac><mi>D</mi><mn>2</mn></mfrac><mo>)</mo></mrow><mn>2</mn></msup><mo>=</mo><mfrac><mi>&pi;</mi><mn>4</mn></mfrac><msup><mi>D</mi><mn>2</mn></msup></math></p>
+<p>Example: radius 7 m → area = &pi; * 49 = 49&pi; m<sup>2</sup> (~153.94 m<sup>2</sup> if &pi;≈3.14).</p>
+<p>Often leave answers in terms of &pi; for exactness unless a numerical approximation is needed.</p>
+<p><span class="bold">Area of a Ring (Annulus):</span></p>
+<p>A ring is the region between two concentric circles (one circle cut out of a larger circle). If the outer radius is R and inner radius is r (R > r), then <span class="bold">Area of ring = Area_big_circle </span><span class="bold">– </span><span class="bold">Area_small_circle = </span><span class="bold">&pi;</span><span class="bold">R</span><span class="bold"><sup>2</sup> – &pi;</span><span class="bold">r</span><span class="bold"><sup>2</sup> </span><span class="bold">= </span><span class="bold">&pi;</span><span class="bold">(R</span><span class="bold"><sup>2</sup> </span><span class="bold">- r</span><span class="bold"><sup>2</sup></span><span class="bold">).</span></p>
+<p>Example: outer radius 10 cm, inner radius 7 cm, area = &pi;(100 - 49) = 51&pi; cm<sup>2</sup>.</p>
+<p>This formula is just a direct application of circle area for difference of two radii.</p>
+<p><span class="bold">Area of Quadrilaterals:</span> There are various formulas depending on the type of quadrilateral:</p>
+<p><span class="bold">Parallelogram:</span> Area = base × height (very much like a slanted rectangle). The base is any side, and height is the perpendicular distance to the opposite side. Note: height is <span class="bold">not</span> necessarily the length of the other side unless it’s a rectangle.
+<span class="italic">Example:</span> parallelogram with base 12 cm and a height (altitude) of 5 cm has area 60 cm<sup>2</sup> (even if the side length slanting is longer).</p>
+<p><span class="bold">Trapezium (Trapezoid):</span> One pair of parallel sides, say lengths a and b, and distance (height) h between them: <span class="bold">Area = </span><span class="bold">½ × </span><span class="bold">(a + b) </span><span class="bold">× </span><span class="bold">h</span>. (It’s the average of the parallel sides times the height.)
+<span class="italic">Example:</span> base1 = 10, base2 = 6, height = 4: area = 0.5<span class="italic">(10+6)</span>4 = 0.5<span class="italic">16</span>4 = 32 units<sup>2</sup>.</p>
+<p><span class="bold">Rhombus:</span> All sides equal, but not generally 90° angles. With diagonals of lengths d1 and d2: <span class="bold">Area = </span><span class="bold">½ × </span><span class="bold">d1 </span><span class="bold">× </span><span class="bold">d2.</span> (Because diagonals bisect each other at right angles, effectively dividing the rhombus into 4 right triangles.)
+<span class="italic">Example:</span> d1=10, d2=8, area = 0.5<span class="italic">10</span>8 = 40.</p>
+<p><span class="bold">Rectangle/Square:</span> already covered (special cases of parallelogram; square also special rhombus/rectangle).</p>
+<p><span class="bold">Kite:</span> like a rhombus formula essentially if you know diagonals (since kite also has perpendicular diagonals, one of which is bisected by the other typically), so area formula is also ½ * d1 * d2 for a kite.</p>
+<p><span class="bold">General Quadrilateral:</span> If we know coordinates, can split into two triangles and use determinant method, or if we know one diagonal and the heights to that diagonal from the other two vertices, we can sum areas of two triangles. There isn’t a simple single formula for all general quadrilaterals with only side lengths (except cyclic quadrilateral or if other info given).</p>
+<p><span class="bold">Polygons in general:</span> If coordinates are known, can use shoelace formula for any polygon to find area.</p>
+<p><span class="bold">Surface Area and Volume of a Cube:</span></p>
+<p>Cube has 6 identical square faces (side length = a).</p>
+<p><span class="bold">Total Surface Area (TSA):</span> 6 * (area of one face) = 6a<sup>2</sup>.</p>
+<p><span class="bold">Lateral (Side) Surface Area (LSA):</span> Area of the 4 side faces (excluding top and bottom) = 4a<sup>2</sup>.</p>
+<p><span class="bold">Volume:</span> a<sup>3</sup> (since length × width × height = a<span class="italic">a</span>a).</p>
+<p>Example: side 3 cm → TSA = 6*9 = 54 cm<sup>2</sup>; Volume = 27 cm<sup>3</sup>.</p>
+<p><span class="bold">Surface Area and Volume of a Cuboid:</span></p>
+<p>A cuboid (rectangular prism) has length L, breadth B, height H. It’s like a 3D rectangle.</p>
+<p><span class="bold">Total Surface Area:</span> sum of areas of 6 faces. Opposite faces are equal in area: two L×B, two B×H, two L×H. So TSA = 2(LB + BH + LH).</p>
+<p><span class="bold">Lateral Surface Area:</span> only the four walls (excluding top and bottom): 2<span class="italic">(L+B)</span>H (because there are two pairs of opposite rectangular side faces each of dimension L×H and B×H). Another way: perimeter of base (rectangle) * height.</p>
+<p><span class="bold">Volume:</span> L × B × H (basically base area * height).</p>
+<p>Example: L=5, B=4, H=3 → TSA = 2(5<span class="italic">4 + 4</span>3 + 5<span class="italic">3) = 2(20 + 12 + 15) = 2</span>47 = 94; LSA = 2<span class="italic">(5+4)</span>3 = 2<span class="italic">9</span>3 = 54; Volume = 5<span class="italic">4</span>3 = 60.</p>
+<p><span class="bold">Surface Area and Volume of a Cylinder:</span></p>
+<p>A right circular cylinder has base radius r and height h. Think of a tin can shape.</p>
+<p><span class="bold">Curved Surface Area (CSA or Lateral Surface):</span> The area around the side, excluding top and bottom, which unrolls into a rectangle (width = circumference, height = h). CSA = circumference * height = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>&pi;</mi><mi>r</mi><mi>h</mi></math></p>
+<p><span class="bold">Total Surface Area:</span> includes top and bottom circles. So TSA = Lateral area + 2*(area of base) = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>&pi;</mi><mi>r</mi><mi>h</mi><mo>+</mo><mn>2</mn><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup><mo>=</mo><mn>2</mn><mi>&pi;</mi><mi>r</mi><mo>(</mo><mi>h</mi><mo>+</mo><mi>r</mi><mo>)</mo></math> Sometimes factored as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>&pi;</mi><mi>r</mi><mo>(</mo><mi>h</mi><mo>+</mo><mi>r</mi><mo>)</mo></math></p>
+<p><span class="bold">Volume:</span> base area * height = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup><mi>h</mi></math> (Because cross-section is a circle of area &pi;r<sup>2</sup>, extruded height h.)</p>
+<p>Example: r=5, h=10: CSA = 2&pi;<span class="italic">5</span>10 = 100&pi;; base area = 25&pi;, so TSA = 100&pi; + 2*25&pi; = 150&pi;; Volume = 25&pi; * 10 = 250&pi; (approx 785.4 if &pi; ~3.14).</p>
+<p><span class="bold">Surface Area and Volume of a Cone:</span></p>
+<p>A (right circular) cone has base radius r and vertical height h. It also has a slant height ℓ (the length of the straight line from the tip along the surface to a point on the edge of the base). These are related by Pythagoras: </p>
+<p><span class="bold">Curved Surface Area:</span> The area of the cone’s lateral surface (excluding base) = &pi; r ℓ. (It’s like a sector of a circle when flattened, but formula as given).</p>
+<p><span class="bold">Total Surface Area:</span> curved area + base area = &pi; r ℓ + &pi; r<sup>2</sup>. = &pi; r (ℓ + r).</p>
+<p><span class="bold">Volume:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>V</mi><mo>=</mo><mfrac><mn>1</mn><mn>3</mn></mfrac><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup><mi>h</mi></math> It's one third the volume of a cylinder with same base and height, reflecting that a cone "tapers" linearly.</p>
+<p>Example: r=3, h=4 -> ℓ = 5 (3-4-5 triangle). CSA = &pi;<span class="italic">3</span>5 = 15&pi;; base area = 9&pi;, so TSA = 24&pi;; Volume = 1/3 * &pi;<span class="italic">9</span>4 = 12&pi;.</p>
+<p><span class="bold">Surface Area and Volume of a Sphere:</span></p>
+<p>A sphere of radius r (like a perfect ball).</p>
+<p><span class="bold">Surface Area:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>A</mi><mo>=</mo><mn>4</mn><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math> (This is actually the derivative of volume formula etc, but we use it as is). Essentially 4 times area of a circle of same radius.</p>
+<p><span class="bold">Volume:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>V</mi><mo>=</mo><mfrac><mn>4</mn><mn>3</mn></mfrac><mi>&pi;</mi><msup><mi>r</mi><mn>3</mn></msup></math></p>
+<p>Example: r=6 -> Surface = 4&pi;*36 = 144&pi;; Volume ~ 4/3 &pi; * 216 = 288&pi;.</p>
+<p><span class="bold">Surface Area and Volume of a Hemisphere:</span></p>
+<p>A hemisphere is half of a sphere (like a bowl if you cut a ball in half). It has a circular base (the flat face where the cut is).</p>
+<p><span class="bold">Curved Surface Area:</span> half the sphere's area = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math> (This is the area of the dome part only.)</p>
+<p><span class="bold">Total Surface Area:</span> include the base circle area: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>2</mn><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup><mo>+</mo><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup><mo>=</mo><mn>3</mn><mi>&pi;</mi><msup><mi>r</mi><mn>2</mn></msup></math></p>
+<p><span class="bold">Volume:</span> half the sphere's volume = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>&times;</mo><mfrac><mn>4</mn><mn>3</mn></mfrac><mi>&pi;</mi><msup><mi>r</mi><mn>3</mn></msup><mo>=</mo><mfrac><mn>2</mn><mn>3</mn></mfrac><mi>&pi;</mi><msup><mi>r</mi><mn>3</mn></msup></math></p>
+<p>Example: r=4 -> curved area = 2&pi;<span class="italic">16 = 32</span><span class="italic">&pi;</span><span class="italic">; base area = 16</span><span class="italic">&pi;</span><span class="italic">; TSA = 48</span><span class="italic">&pi;</span><span class="italic">; Volume ~ 2/3 </span><span class="italic">&pi;</span>64 = (128/3)&pi; ≈ 134.04 (with &pi;=3.14, but better leave in terms of &pi;).</p>
+<p><span class="bold">Conversion of One Solid to Another Shape:</span>
+This concept involves reshaping an object of a certain volume into a different shape. The key idea is <span class="bold">conservation of volume</span> (assuming no material is lost or added).</p>
+<p>If you melt or recast a solid into another shape, <span class="bold">Volume of original = Volume of new shape</span> (since material amount stays same).</p>
+<p>To solve problems: set the volumes equal and solve for the unknown dimension.
+<span class="italic">Example:</span> Suppose you have a metal sphere of radius 3 cm. It’s melted and recast into a cylinder of height 4 cm. Find the radius of the cylinder.</p>
+<p>Volume of sphere = 4/3 &pi; * 27 = 36&pi; cm<sup>3</sup>.</p>
+<p>Volume of cylinder = &pi; r<sup>2</sup> h = &pi; * r<sup>2</sup> * 4.</p>
+<p>Set equal: &pi; * r<sup>2</sup> * 4 = 36&pi; → r<sup>2</sup> * 4 = 36 → r<sup>2</sup> = 9 → r = 3 cm. (Interestingly same number, but that's coincidence of numbers).</p>
+<p>Another scenario: multiple smaller shapes formed from one big shape or vice versa. For instance, “How many small cones of given size can be made from a larger cone’s material?” – use volume ratio to find count.</p>
+<p><span class="bold">Surface Area and Volume of Combination of Solids:</span>
+Sometimes shapes are combined (either attached or one cut out from another).</p>
+<p><span class="bold">Volume:</span> If solids are attached (like a capsule shape = cylinder + 2 hemispheres at ends, or a cone on a cylinder like an ice cream cone shape), the total volume is the sum of individual volumes (since volume is just additive for distinct regions).</p>
+<p>If one shape is removed from another (like a cylindrical hole drilled through a cube), then volume left = volume(original) - volume(removed part).</p>
+<p><span class="bold">Surface Area:</span> This is trickier: when combining, some surfaces become internal (hidden) and not part of external surface area anymore, or new surfaces are exposed if cutting out.</p>
+<p>For example, a cylinder with a hemisphere on top (dome) – total external surface = curved area of cylinder + area of its bottom (if not resting on ground) + curved area of hemisphere + (note: the base of hemisphere and top of cylinder join, so that circle is not exposed externally). So we must <span class="italic">exclude</span> that joint circle from surface area calculation.</p>
+<p>If asked for surface area of the <span class="italic">combination</span>, carefully consider which faces are exposed.</p>
+<p>For a shape like a cube with a cylindrical hole, the surface area includes the walls of the hole too because they are now “exposed” inner surface. So you’d add cylindrical inner surface area and subtract the areas of faces that got holes (the circular openings).</p>
+<p><span class="bold">Example (attached solids):</span> A cylinder of radius r and height h with a cone (same base radius r) of height H on top. Volume = &pi;r<sup>2</sup>h + (1/3)&pi;r<sup>2</sup>H. Surface area = (curved area of cylinder) + (curved area of cone) + (area of bottom of cylinder). The circular area where cone meets cylinder is not exposed. If bottom sits on a surface and is not exposed, we omit that as well.</p>
+<p><span class="bold">Example (removed):</span> A cube of side a with a spherical cavity of radius r bored inside (completely enclosed). Volume remaining = a<sup>3</sup> - 4/3 &pi; r<sup>3</sup>. Surface area exposed = 6a<sup>2</sup> (outer faces of cube) plus the inner surface area of the sphere (4&pi;r<sup>2</sup>) if you consider the inside of cavity as an exposed surface (though if it's completely sealed inside, one might not count it as "surface" unless specifically mentioning inner surface). Usually, combination surface area implies outer surface unless explicitly asking for inner.</p>
+<h2 id="section7">7. Data Handling</h2>
+<p>Data handling encompasses statistics (collecting, organizing, summarizing data) and probability (measuring likelihood of events). It equips us to make sense of numerical information and randomness in daily life.</p>
+<p><span class="bold">Collection and Classification of Data:</span>
+Data can be collected through surveys, experiments, or observation. Once collected, data needs to be organized for clarity.</p>
+<p><span class="bold">Raw data:</span> The initial unordered list of observations (e.g., test scores of students in a class). Raw data is often messy or ungrouped.</p>
+<p><span class="bold">Classification:</span> We might categorize data (e.g., tally how many falls in certain categories or intervals). For example, if collecting favorite colors of students, we categorize by color; if collecting ages, we might group into ranges (0-10, 10-20, etc.).</p>
+<p>Good data handling involves defining what you’re measuring (ensuring consistency), and possibly designing a table or form to record data systematically.</p>
+<p><span class="bold">Frequency Distribution Table:</span>
+A frequency distribution table lists data values (or intervals of values) against their frequency (how often each occurs). This helps condense raw data.</p>
+<p>For <span class="bold">discrete data</span> (distinct values, like shoe sizes or number of siblings), you can list each value and count occurrences.</p>
+<p>For <span class="bold">continuous data</span> or large range, data is often grouped into class intervals (e.g., 0–10, 10–20, etc.) and then frequencies counted for each interval.</p>
+<p>A typical table might have columns like: Class Interval | Tally | Frequency.
+<span class="italic">Example:</span> Survey of ages of 30 people might produce:
+0–10: 4 people, 11–20: 5 people, 21–30: 12 people, 31–40: 6 people, 41–50: 3 people.</p>
+<p>The table makes it easier to see distribution (most people are in 21–30 range in this example).</p>
+<p><span class="bold">Tally Marks:</span>
+Tally marks are a quick way to count frequencies by marking strokes (||||) usually in groups of five (the fifth mark crosses the previous four, making it easy to see groups of 5).</p>
+<p>When collecting data real-time, one often makes a tally mark for each occurrence in the appropriate category, grouping in fives for easy counting.
+<span class="italic">Example:</span> Counting coin flips results: Heads vs Tails. You could tally: Heads: |||| (4), Tails: |||| | (6). This is quicker to note and then convert to frequency (Heads 4, Tails 6).</p>
+<p>In frequency tables, often the tally column is filled first, then tallies are counted to give numeric frequency.</p>
+<p><span class="bold">Bar Graph:</span>
+A bar graph (or bar chart) is a visual representation of categorical data with rectangular bars. Each category’s bar length (or height) is proportional to its frequency or value.</p>
+<p>Bars can be vertical or horizontal. There should be equal spacing between bars (for clarity) and equal width of bars.</p>
+<p>Useful for comparing discrete categories (e.g., population of different cities, votes for options, etc.).</p>
+<p><span class="italic">Example:</span> If one is showing number of students choosing different stream subjects: Science: 30, Commerce: 20, Arts: 15, a bar graph with those categories on x-axis and count on y-axis will have bars at heights 30, 20, 15 respectively.</p>
+<p><span class="bold">Grouped bar graphs</span> can show sub-categories side by side within a category (e.g., male vs female in each class section). <span class="bold">Stacked bar charts</span> show totals split into parts. But the basic idea remains comparing magnitudes.</p>
+<p><span class="bold">Pictograph:</span>
+A pictograph represents data using icons or pictures where each icon represents a certain number of units. It’s a more visually intuitive but less precise way to show data (commonly used in lower grades or infographics).</p>
+<p>The key must be given (e.g., ✩ = 10 items). Partial icons can represent fractions of that value if needed.</p>
+<p><span class="italic">Example:</span> If showing fruit preference among kids with a pictograph: an icon of an apple might represent 5 kids liking apples. If 12 kids like apples, you draw 2 whole apple icons and a partial (to represent 2 out of 5).</p>
+<p>Pictographs are simple and fun but not practical for large numbers or precise data.</p>
+<p><span class="bold">Pie Diagram (Pie Chart):</span>
+A pie chart is a circular chart divided into slices, where each slice represents a category’s proportion of the whole. The whole pie is 100% (or total frequency).</p>
+<p>The angle of each sector = <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mfrac><mtext>Frequency of category}</mtext><mtext>Total frequency}</mtext></mfrac><mo>&times;</mo><mn>360</mn><mo>&deg;</mo></math></p>
+<p>Good for showing percentage or proportional data (like budget breakdown, market share, etc.) at a glance. However, comparing slices can be tricky if many categories or similar sizes.</p>
+<p><span class="italic">Example:</span> If a family's monthly expense is divided into Rent 25%, Food 30%, Education 20%, Savings 15%, Misc 10%, a pie chart will have slices with those percentages of the circle (90°, 108°, 72°, 54°, 36° respectively for each category).</p>
+<p>It’s important that categories are parts of a whole in a meaningful way (pie chart not appropriate if categories don’t sum to a meaningful total).</p>
+<p><span class="bold">Mean (Average) for Ungrouped Data:</span>
+The mean is the sum of all observations divided by the number of observations. It’s a measure of central tendency.</p>
+<p><span class="bold">Formula:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mover><mi>x</mi><mo>&#x00AF;</mo></mover><mo>=</mo><mfrac><mrow><msubsup><mo>&#x2211;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><msub><mi>x</mi><mi>i</mi></msub></mrow><mi>n</mi></mfrac></math>.</p>
+<p><span class="italic">Example:</span> Test scores {70, 80, 95, 60}, mean = (70+80+95+60)/4 = 305/4 = 76.25.</p>
+<p>Mean uses all data points, but can be sensitive to outliers (extremely high or low values skew it).</p>
+<p><span class="bold">Median for Ungrouped Data:</span>
+The median is the middle value when data is arranged in ascending (or descending) order. If there are an odd number of observations, median is the center one. If even number, median is the average of the two middle values.</p>
+<p><span class="italic">Example:</span> Data {5, 8, 12, 20, 22} (already sorted), median = 12 (3rd of 5). If data {5, 8, 12, 20}, median = (8+12)/2 = 10 (average of 2nd and 3rd in sorted list).</p>
+<p>Median is a better measure than mean for skewed distributions or when outliers are present, because it depends on order, not magnitude of extreme values.</p>
+<p><span class="bold">Mode for Ungrouped Data:</span>
+The mode is the value that appears <span class="bold">most frequently</span> in the data set. There can be more than one mode (bimodal, multimodal) if multiple values tie for highest frequency, or no mode if all values occur only once (or tie equally in frequency in a trivial way).</p>
+<p><span class="italic">Example:</span> Data {4, 1, 4, 2, 7, 4, 2} – sorted {1,2,2,4,4,4,7}. The mode is 4 (since 4 occurs 3 times, more than any other number). Another set {1,2,2,3,3} has two modes: 2 and 3 each appear twice.</p>
+<p>Mode is the only measure of central tendency that can be used for categorical data (like finding the most popular color among choices).</p>
+<p><span class="bold">Mean, Median, Mode for Grouped Data:</span>
+When data is grouped, exact values are not all known individually, so we use methods to estimate:</p>
+<p><span class="bold">Mean:</span> Use the class midpoint (the average of class interval endpoints) as representative of each class, multiply by class frequency to get a "total", sum up and divide by total frequency. Formula: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mover><mi>x</mi><mo>&#x00AF;</mo></mover><mo>=</mo><mfrac><mrow><msubsup><mo>&#x2211;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>f</mi><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub></mrow><mrow><msubsup><mo>&#x2211;</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>k</mi></msubsup><msub><mi>f</mi><mi>i</mi></msub></mrow></mfrac></math>, where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>x</mi><mi>i</mi></msub></math> is midpoint of class i and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>f</mi><mi>i</mi></msub></math> its frequency.</p>
+<p><span class="bold">Median:</span> For grouped data, you identify the median class (where the cumulative frequency crosses n/2). Then interpolate within that class using formula:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>M</mi><mo>=</mo><mi>L</mi><mo>+</mo><mfrac><mrow><mo>(</mo><mfrac><mi>n</mi><mn>2</mn></mfrac><mo>-</mo><mi>C</mi><mo>)</mo><mo>&times;</mo><mi>h</mi></mrow><msub><mi>f</mi><mi>m</mi></msub></mfrac></math>
+where L = lower boundary of median class, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>C</mi></math> = cumulative frequency up to class before median class, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>f</mi><mi>m</mi></msub></math> = frequency of median class, h = class width.
+(This formula finds how far into the median class the median lies, proportional to how many into that class the median falls.)</p>
+<p><span class="bold">Mode:</span> Identify the modal class (with highest frequency). The mode can be estimated by formula (for continuous grouped data) known as the <span class="italic">mode formula</span>:
+</p>
+<p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>Mode</mi><mo>=</mo><mi>L</mi><mo>+</mo><mfrac><mrow><mo>(</mo><msub><mi>f</mi><mn>1</mn></msub><mo>-</mo><msub><mi>f</mi><mn>0</mn></msub><mo>)</mo><mo>&times;</mo><mi>h</mi></mrow><mrow><mn>2</mn><msub><mi>f</mi><mn>1</mn></msub><mo>-</mo><msub><mi>f</mi><mn>0</mn></msub><mo>-</mo><msub><mi>f</mi><mn>2</mn></msub></mrow></mfrac></math>
+where L = lower boundary of modal class, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>f</mi><mn>1</mn></msub></math> = frequency of modal class, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>f</mi><mn>0</mn></msub></math> = freq of class before modal, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msub><mi>f</mi><mn>2</mn></msub></math> = freq of class after modal, h = class width.
+This gives a value within the modal class as an estimate of the "peak". If distribution is not too grouped or classes equal width, sometimes one might just report the modal class or the class mark as the mode.</p>
+<p>Grouped formulas are part of higher grade curriculum and needed when precise data isn’t available, but an estimate is acceptable.</p>
+<p><span class="bold">Cumulative Frequency Table:</span>
+Cumulative frequency (cf) is the running total of frequencies as you move through the classes or values in order. There are two types:</p>
+<p><span class="bold">Less-than cumulative frequency:</span> At a value or class boundary X, how many data points are <= X. You accumulate from start up to that point.</p>
+<p><span class="bold">Greater-than cumulative frequency:</span> How many are >= a certain value, accumulating from top down.
+Typically, a cumulative frequency table for grouped data adds another column where each entry is the sum of that class frequency and all previous class frequencies.
+<span class="italic">Example:</span> Suppose class intervals 0–10 (f=5), 10–20 (f=8), 20–30 (f=7), 30–40 (f=10). Less-than cumulative freq:</p>
+<p>up to 10: 5</p>
+<p>up to 20: 5+8 = 13</p>
+<p>up to 30: 13+7 = 20</p>
+<p>up to 40: 20+10 = 30 (which should equal total n).
+These help in finding median or percentiles (e.g., median is at n/2 = 15th data, which falls in 20–30 class here).
+Plotting cumulative frequency against upper class boundary yields an ogive.</p>
+<p><span class="bold">Ogive Curves:</span>
+An ogive is a graph of the cumulative frequency distribution. There are typically two:</p>
+<p><span class="bold">Less-than ogive:</span> Plot points (upper class boundary, cumulative frequency) and join them with a smooth curve or straight line segments. It starts at the lowest boundary with cf = 0 and climbs to total n at highest boundary.</p>
+<p><span class="bold">Greater-than ogive:</span> Plot (lower class boundary, cf downward) which starts at total n and decreases to 0 at the top end.
+If both are drawn, their intersection gives median (but often just one type is drawn).</p>
+<p>Ogives are useful to estimate median, quartiles, etc., by reading values corresponding to 25%, 50%, 75% of total frequency on the y-axis and dropping to x-axis.</p>
+<p>The shape is typically an S-shaped curve for less-than ogive (starting slow, steep in middle, leveling at end if distribution is reasonable). It’s basically the cumulative distribution graph.</p>
+<p><span class="bold">Concept of Probability:</span>
+Probability is a measure of how likely an event is to occur, on a scale from 0 (impossible) to 1 (certain). For equally likely outcomes, the probability of an event = (number of favorable outcomes) / (total number of outcomes).</p>
+<p><span class="bold">Experiment, Sample Space, Event:</span></p>
+<p>An <span class="italic">experiment</span> is a process that yields random results (e.g., tossing a coin, rolling a die).</p>
+<p>The <span class="italic">sample space</span> (S) is the set of all possible outcomes. E.g., for a die S={1,2,3,4,5,6}.</p>
+<p>An <span class="italic">event</span> is a subset of the sample space – one or more outcomes that satisfy a condition (e.g., event A = “roll an even number” = {2,4,6}).</p>
+<p><span class="bold">Probability of event A:</span> P(A) = |A|/|S| if outcomes are equally likely. Example: probability of even on a die = 3/6 = 1/2.</p>
+<p>Probabilities can also be thought of in terms of long-run frequency: if you repeat the experiment many times, the fraction of times A occurs should approach P(A).</p>
+<p>Probability values: always between 0 and 1 inclusive. Sum of probabilities of all elementary outcomes = 1.</p>
+<p><span class="bold">Simple Problems on Single Events:</span>
+Day-to-day probability often involves one event or a single trial scenario:
+<span class="italic">Examples:</span></p>
+<p>Tossing a fair coin: P(Heads) = 1/2, P(Tails) = 1/2.</p>
+<p>Drawing a card from a well-shuffled standard deck (52 cards): P(drawing an Ace) = 4/52 = 1/13; P(drawing a Heart) = 13/52 = 1/4.</p>
+<p>Rolling a fair die: P(prime number) = favorable outcomes {2,3,5} = 3/6 = 1/2; P(>4) = outcomes {5,6} = 2/6 = 1/3.</p>
+<p>Picking a random person and finding probability they have a birthday in January = 31/365 (ignoring leap).
+These are single-event probabilities. We assume each outcome is equally likely in such simple scenarios.</p>
+<p><span class="bold">Complementary Events:</span>
+The complement of event A, often denoted A′ or A^c, is the event that A <span class="bold">does not</span> happen (i.e., an outcome is in the sample space S but not in A).</p>
+<p><span class="bold">Property:</span> P(A) + P(A′) = 1. Because either A happens or it doesn’t (assuming there's no other possibility). So, P(A′) = 1 - P(A).</p>
+<p>Using complement often simplifies calculations. For example, if we want the probability of at least one success in several trials, it’s easier to do 1 - P(no successes). Or probability of “at least one 6 in two die rolls” = 1 - P(no 6 in either roll) = 1 - (5/6 * 5/6).</p>
+<p><span class="italic">Example:</span> If the chance of rain today is 0.3 (30%), then the chance of <span class="bold">not</span> raining (the complement) is 1 - 0.3 = 0.7 (70%).</p>
+<p>For a random person, if event A = “born on a weekend”, P(A) say = 2/7 (approx .2857), then complement “born on weekday” probability = 5/7 (~.7143).</p>
+<p>Complementary events are mutually exclusive and exhaustive (they cover all outcomes between them, and can’t occur together).</p>
+<h2 id="section8">8. Trigonometry</h2>
+<p>Trigonometry is the study of the relationships between angles and sides in triangles, especially right-angled triangles. It introduces trigonometric ratios that are fundamental in geometry, physics, engineering, and many applied fields. Key concepts include:</p>
+<p><span class="bold">Introduction to Trigonometry (Trigonometric Ratios):</span>
+Consider a right triangle (one angle = 90°). Focus on one of the acute angles, call it &theta;. Relative to &theta;:</p>
+<p>The side <span class="italic">opposite</span> &theta; is the side across the triangle from &theta;.</p>
+<p>The side <span class="italic">adjacent</span> to &theta; is the side next to &theta; (forming the angle &theta;, other than the hypotenuse).</p>
+<p>The <span class="italic">hypotenuse</span> is the side opposite the right angle (the longest side of the right triangle).
+The primary trigonometric ratios are defined as:</p>
+<p><span class="bold">sin </span><span class="bold">&theta;</span> (sine) = (length of <span class="bold">Opposite</span> side) / (length of <span class="bold">Hypotenuse</span>).</p>
+<p><span class="bold">cos </span><span class="bold">&theta;</span> (cosine) = (length of <span class="bold">Adjacent</span> side) / (length of <span class="bold">Hypotenuse</span>).</p>
+<p><span class="bold">tan </span><span class="bold">&theta;</span> (tangent) = (length of <span class="bold">Opposite</span> side) / (length of <span class="bold">Adjacent</span> side).
+These definitions come from similar right triangles: for a given angle &theta;, the ratio of specific sides is constant regardless of triangle size.</p>
+<p>Additionally, the reciprocals of these are defined:</p>
+<p><span class="bold">cosecant (csc or cosec </span><span class="bold">&theta;</span><span class="bold">)</span> = 1/sin&theta; = Hypotenuse/Opposite.</p>
+<p><span class="bold">secant (sec </span><span class="bold">&theta;</span><span class="bold">)</span> = 1/cos&theta; = Hypotenuse/Adjacent.</p>
+<p><span class="bold">cotangent (cot </span><span class="bold">&theta;</span><span class="bold">)</span> = 1/tan&theta; = Adjacent/Opposite.</p>
+<p><span class="italic">Example:</span> In a right triangle, if angle &theta; is such that opposite side = 3, adjacent = 4, hypotenuse = 5 (a 3-4-5 triangle), then sin&theta; = 3/5 = 0.6, cos&theta; = 4/5 = 0.8, tan&theta; = 3/4 = 0.75.</p>
+<p><span class="bold">Relationship Between Trigonometric Ratios:</span>
+Using the above definitions, certain identities and relationships are evident:</p>
+<p><span class="bold">tan </span><span class="bold">&theta; </span><span class="bold">= sin </span><span class="bold">&theta; </span><span class="bold">/ cos </span><span class="bold">&theta;</span><span class="bold">.</span> (Because sin&theta; = opp/hyp and cos&theta; = adj/hyp, dividing gives opp/adj.)</p>
+<p><span class="bold">cot </span><span class="bold">&theta; </span><span class="bold">= cos </span><span class="bold">&theta; </span><span class="bold">/ sin </span><span class="bold">&theta;</span> (similarly, or cot = 1/tan).</p>
+<p><span class="bold">sec </span><span class="bold">&theta; </span><span class="bold">= 1/cos </span><span class="bold">&theta;</span><span class="bold">, cosec </span><span class="bold">&theta; </span><span class="bold">= 1/sin </span><span class="bold">&theta;</span><span class="bold">.</span></p>
+<p><span class="bold">Primary Pythagorean Identity:</span> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>sin</mi><mn>2</mn></msup><mi>&theta;</mi><mo>+</mo><msup><mi>cos</mi><mn>2</mn></msup><mi>&theta;</mi><mo>=</mo><mn>1</mn></math> This comes from the Pythagorean theorem: (opp/hyp)<sup>2</sup> + (adj/hyp)<sup>2</sup> = (opp<sup>2</sup>+adj<sup>2</sup>)/hyp<sup>2</sup> = hyp<sup>2</sup>/hyp<sup>2</sup> = 1.
+From this, we can derive:</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>sec</mi><mn>2</mn></msup><mi>&theta;</mi><mo>=</mo><mn>1</mn><mo>+</mo><msup><mi>tan</mi><mn>2</mn></msup><mi>&theta;</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><msup><mi>cosec</mi><mn>2</mn></msup><mi>&theta;</mi><mo>=</mo><mn>1</mn><mo>+</mo><msup><mi>cot</mi><mn>2</mn></msup><mi>&theta;</mi></math></p>
+<p><span class="bold">Other Pythagorean identities:</span> Divide the primary identity by cos<sup>2</sup>&theta; (assuming cos&theta;&ne;0) to get <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>1</mn><mo>+</mo><msup><mi>tan</mi><mn>2</mn></msup><mi>&theta;</mi><mo>=</mo><msup><mi>sec</mi><mn>2</mn></msup><mi>&theta;</mi></math> Divide by sin<sup>2</sup>&theta; to get <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mn>1</mn><mo>+</mo><msup><mi>cot</mi><mn>2</mn></msup><mi>&theta;</mi><mo>=</mo><msup><mi>cosec</mi><mn>2</mn></msup><mi>&theta;</mi></math>.</p>
+<p>These fundamental relationships allow transforming expressions and solving trigonometric equations.</p>
+<p><span class="bold">Values of Trigonometric Ratios (Specific Angles):</span>
+Certain angles (0°, 30°, 45°, 60°, 90°) have well-known sine, cosine, and tangent values worth memorizing for quick reference:</p>
+<p><span class="bold">0</span><span class="bold">°</span><span class="bold">:</span> sin 0° = 0, cos 0° = 1, tan 0° = 0.</p>
+<p><span class="bold">30</span><span class="bold">°</span><span class="bold">:</span> sin 30° = 1/2, cos 30° = &radic;3/2 (~0.8660), tan 30° = 1/&radic;3 (~0.5774).</p>
+<p><span class="bold">45</span><span class="bold">°</span><span class="bold">:</span> sin 45° = &radic;2/2 (~0.7071), cos 45° = &radic;2/2 (~0.7071), tan 45° = 1.</p>
+<p><span class="bold">60</span><span class="bold">°</span><span class="bold">:</span> sin 60° = &radic;3/2 (~0.8660), cos 60° = 1/2, tan 60° = &radic;3 (~1.732).</p>
+<p><span class="bold">90</span><span class="bold">°</span><span class="bold">:</span> sin 90° = 1, cos 90° = 0, tan 90° is undefined (since cos 90° = 0, tan = sin/cos would involve division by zero; in a right triangle, the angle approaches 90°, opposite side ~ hypotenuse, adjacent side -> 0, so tan gets infinitely large).</p>
+<p>These can be recalled by various mnemonics or constructed via special triangles: e.g., 30-60-90 triangle (sides in ratio 1:&radic;3:2) for 30° and 60°, and isosceles right triangle (1:1:&radic;2) for 45°.</p>
+<p>Also, cos is the complementary of sin in these values (cos 30° = sin 60°, cos 45° = sin 45°, etc.), which leads into the complementary angles concept next.</p>
+<p><span class="bold">Trigonometric Identities:</span>
+We already listed the Pythagorean identities. There are also <span class="bold">angle sum and difference identities</span> (for advanced usage, like sin(A&plusmn;B) formulas), double angle formulas, etc., but within basic curriculum, the most important identities to remember are:</p>
+<p>sin<sup>2</sup>&theta; + cos<sup>2</sup>&theta; = 1.</p>
+<p>1 + tan<sup>2</sup>&theta; = sec<sup>2</sup>&theta;.</p>
+<p>1 + cot<sup>2</sup>&theta; = cosec<sup>2</sup>&theta;.</p>
+<p>sin(90° - &theta;) = cos &theta;, cos(90° - &theta;) = sin &theta; (complementary angles, see below).</p>
+<p>tan(90° - &theta;) = cot &theta;, cot(90° - &theta;) = tan &theta;.</p>
+<p>Additionally, sin(-&theta;) = -sin &theta;, cos(-&theta;) = cos &theta; (even/odd function property; negative angle flips sine’s sign but not cosine’s). Tan(-&theta;) = -tan &theta;. These reflect symmetry of trig functions: sine and tangent are odd, cosine is even.</p>
+<p>Basic identities also include <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>sin</mi><mn>2</mn><mi>&theta;</mi><mo>=</mo><mn>2</mn><mi>sin</mi><mi>&theta;</mi><mi>cos</mi><mi>&theta;</mi></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mi>cos</mi><mn>2</mn><mi>&theta;</mi><mo>=</mo><msup><mi>cos</mi><mn>2</mn></msup><mi>&theta;</mi><mo>-</mo><msup><mi>sin</mi><mn>2</mn></msup><mi>&theta;</mi></math> (though these might be slightly beyond intro level, they come in handy in higher classes).</p>
+<p><span class="bold">Trigonometric Ratios of Complementary Angles:</span>
+Complementary angles sum to 90°. In a right triangle, aside from the 90°, the other two angles are complementary to each other. Because of how sine and cosine are defined relative to different acute angles in the same right triangle, we get relationships:</p>
+<p>If angles A and B are such that A + B = 90°, then B = 90° - A.</p>
+<p>sin A = cos(90° - A) = cos B.</p>
+<p>cos A = sin(90° - A) = sin B.</p>
+<p>tan A = cot(90° - A) = cot B.</p>
+<p>cot A = tan(90° - A) = tan B.</p>
+<p>sec A = cosec(90° - A), and cosec A = sec(90° - A).
+<span class="italic">Example:</span> sin 30° = cos 60°, since 60° is comp of 30°. Indeed sin30 = 0.5, cos60 = 0.5. Or tan 10° = cot 80°.
+This makes sense because in one right triangle, one acute angle’s “opposite” is the other’s “adjacent” and vice versa. So one’s sine is the other’s cosine, etc.</p>
+<p><span class="bold">Applications of Trigonometry:</span>
+Trigonometry allows us to solve problems involving indirect measurements – typically lengths that are hard to measure directly can be computed using angles and a reference length. A classic application is measuring heights and distances using angles of elevation or depression:</p>
+<p><span class="bold">Angle of Elevation:</span> The angle your line of sight makes with the horizontal when you look up at an object. For instance, if you stand some distance from a tall building and look up to the top, the angle between a horizontal line from your eyes and the line of sight to the top is the angle of elevation.</p>
+<p><span class="bold">Angle of Depression:</span> The angle of your line of sight below the horizontal when looking down at an object. E.g., from the top of a lighthouse looking at a boat at sea, the angle between horizontal and the line of sight down to the boat is angle of depression. (Note: Angle of depression from one point equals angle of elevation from the other point if lines are parallel, like horizontal at observer and horizontal at object’s level, by alternate interior angles.)</p>
+<p><span class="bold">Solving height-distance problems:</span> Usually involves right triangles: one angle is known (elevation/depression), one side (often horizontal distance or vertical height) is known or measurable, and you need to find the other side.</p>
+<p>If you know the distance from the object and the angle of elevation, you can find height using: tan(&theta;) = opposite/adjacent, so opposite (height difference) = adjacent * tan(&theta;). <span class="italic">Example:</span> You are 50 m from a tower, angle of elevation to top is 30° → height of tower above your eye level = 50 * tan30° ≈ 50 * 0.577 = 28.9 m. Add your eye height if needed for total height.</p>
+<p>If you know height and need distance, use tan again: distance = height / tan(&theta;).</p>
+<p>Alternatively, sometimes use sin or cos if appropriate: e.g., a ladder leaning to a wall makes angle with ground, one might find how high it reaches (vertical) by using sin or cos.</p>
+<p><span class="bold">Angle of Depression example:</span> From a plane at 1000 m altitude, pilot sees a target on ground at angle of depression 30°. That means the line from plane to target is 30° below horizontal, which is essentially a 30° angle in a right triangle with vertical 1000 m (opposite) and slant distance as hypotenuse or horizontal distance as adjacent. Typically, horizontal distance = 1000 * cot30° = 1000 * (&radic;3) ≈ 1732 m. Or the slant distance (line of sight) = 1000 / sin30° = 2000 m.</p>
+<p>In all such problems, it’s crucial to draw a diagram, mark known lengths and angles, choose the right trig ratio (sin for opposite/hypotenuse, cos for adjacent/hypotenuse, tan for opposite/adjacent) and solve.</p>
+<p>Trigonometry is also used in navigation, architecture (roof slopes etc.), engineering (forces components), and so forth, but at this level, it’s mostly these right-triangle angle problems.</p>
+<p><span class="bold">Simple Problems:</span>
+Typically involve one triangle and one angle of elevation/depression: find a distance or height. Or two triangles back-to-back (like two observers at different distances viewing a object, or an object’s top and bottom being viewed, etc., leading to two equations). But they remain manageable with one or two uses of trig ratios.
+<span class="italic">Example problem:</span> A 10m tall pole casts a shadow of length 17.32 m. Find the angle of elevation of the sun. (Picture: sun rays hitting tip of pole, casting shadow end). tan(&theta;) = opposite/adjacent = 10/17.32 = 0.577. &theta; = 30° (since tan30 ≈0.577).
+Another: From a point 100 m from base of building, angle of elevation to top is 45°. Building height = 100.<span class="italic">tan45 = 100</span>1 = 100 m (plus observer’s eye height if needed).</p>
+<p>These illustrate using trig to get height from distance or vice versa. The key is identifying which sides relative to angle are known/unknown and picking sin, cos, or tan accordingly.</p>
+
+</body>
+</html>
