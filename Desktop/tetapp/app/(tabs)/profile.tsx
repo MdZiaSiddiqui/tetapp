@@ -7,7 +7,7 @@ import { supabase } from '../../lib/supabase';
 
 export default function Profile() {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading } = useAuth();
 
   // Fetch user profile
   const { data: profile } = useQuery({
@@ -42,6 +42,63 @@ export default function Profile() {
       ]
     );
   };
+
+  // Show sign-in prompt if not authenticated
+  if (!user && !loading) {
+    return (
+      <ScrollView className="flex-1 bg-white">
+        <StatusBar style="dark" />
+
+        <View className="px-6 pt-16 pb-6">
+          <Text className="text-3xl font-bold text-gray-800 mb-6">
+            Profile
+          </Text>
+
+          {/* Guest User Card */}
+          <View className="bg-blue-50 p-8 rounded-2xl mb-6 items-center">
+            <View className="w-24 h-24 bg-gray-300 rounded-full items-center justify-center mb-4">
+              <Text className="text-white text-4xl">👤</Text>
+            </View>
+
+            <Text className="text-2xl font-bold text-gray-800 mb-2">
+              Guest User
+            </Text>
+            <Text className="text-gray-600 text-center mb-6">
+              Sign in to save your progress and sync across devices
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => router.push('/login')}
+              className="bg-blue-500 py-4 px-8 rounded-xl w-full"
+            >
+              <Text className="text-white text-center text-lg font-semibold">
+                Sign In with Google
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* About Section */}
+          <View className="border-t border-gray-200 pt-6">
+            <TouchableOpacity className="py-3">
+              <Text className="text-gray-700 text-base">Help & Support</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity className="py-3">
+              <Text className="text-gray-700 text-base">Privacy Policy</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity className="py-3">
+              <Text className="text-gray-700 text-base">Terms of Service</Text>
+            </TouchableOpacity>
+
+            <View className="py-3">
+              <Text className="text-gray-500 text-sm">Version 1.0.0</Text>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
 
   return (
     <ScrollView className="flex-1 bg-white">

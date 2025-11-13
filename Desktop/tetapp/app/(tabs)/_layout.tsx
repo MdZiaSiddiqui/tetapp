@@ -37,7 +37,7 @@ export default function TabLayout() {
         name="notes"
         options={{
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>📖</Text>
+            <Text style={{ fontSize: 24 }}>💳</Text>
           ),
           tabBarLabel: '',
         }}

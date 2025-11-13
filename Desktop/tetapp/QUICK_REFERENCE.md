@@ -1,218 +1,113 @@
-# Test Session Refactor - Quick Reference
+# 🎯 Native Google Sign-In - Quick Reference
 
-## What Was Fixed
+## What It Does
 
-### 🐛 Main Problem: Slow Option Selection
-**Root Cause**: PanResponder gesture threshold too low (5px) + intercepting all touches
-
-**Solution**:
-```tsx
-// In useSwipeNavigation.ts - increased threshold
-onMoveShouldSetPanResponder: (_, gestureState) => {
-  return Math.abs(gestureState.dx) > 20;  // Was 5, now 20
-}
-
-// In test-session.tsx - prevent gesture interference
-<View className="mb-8" pointerEvents="box-none">
-  {/* Options here - touches go directly to buttons */}
-</View>
-```
-
-**Result**: Selection speed improved from 200-500ms to <50ms
+**Replaces browser-based OAuth with native Google Sign-In**
+- ✅ No browser popups
+- ✅ Native account picker
+- ✅ Instant authentication
+- ✅ Better UX
 
 ---
 
-## New File Structure
+## Setup (3 Steps)
 
+### 1. Google Cloud Console
 ```
-hooks/
-├── useTestTimer.ts          # Timer with auto-cleanup
-├── useQuestionStats.ts      # Memoized statistics
-├── useSwipeNavigation.ts    # Gesture handling (fixed threshold)
-└── useTestSession.ts        # Session state management
+1. Go to console.cloud.google.com
+2. Create Web OAuth Client ID
+3. Copy the Client ID
+```
 
-components/test-session/
-├── OptionButton.tsx         # Individual option (memoized)
-├── QuestionStats.tsx        # Stats display
-├── QuestionGrid.tsx         # Question navigation grid
-├── TestHeader.tsx           # Header with timer
-└── TestActions.tsx          # Bottom action buttons
+### 2. Add to .env
+```bash
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=YOUR_ID_HERE.apps.googleusercontent.com
+```
+
+### 3. Rebuild App
+```bash
+npx expo run:android
+# or
+npx expo run:ios
 ```
 
 ---
 
-## How to Use the New Hooks
+## How It Works
 
-### useTestTimer
 ```tsx
-const { formattedTime, isLowTime } = useTestTimer({
-  initialSeconds: 900,  // 15 minutes
-  onTimeUp: () => { /* handle time up */ },
-  enabled: true,
-});
-```
+// User taps button
+const { signInWithGoogle } = useAuth();
+await signInWithGoogle();
 
-### useQuestionStats
-```tsx
-const stats = useQuestionStats({
-  questionStatus: { 0: 'answered', 1: 'marked-for-review' },
-  totalQuestions: 10,
-  currentQuestionIndex: 2,
-});
-// Returns: { answered, notAnswered, notVisited, markedForReview, markedForReviewAnswered }
-```
-
-### useSwipeNavigation
-```tsx
-const { pan, panResponder } = useSwipeNavigation({
-  currentIndex: 5,
-  totalItems: 10,
-  onSwipeLeft: () => { /* next */ },
-  onSwipeRight: () => { /* previous */ },
-  enabled: true,
-});
-
-// In JSX:
-<Animated.View {...panResponder.panHandlers} style={{ transform: [{ translateX: pan }] }}>
-```
-
-### useTestSession
-```tsx
-const {
-  currentQuestionIndex,
-  selectedAnswer,
-  answeredQuestions,
-  questionStatus,
-  scrollViewRef,
-  handleAnswerSelect,
-  handleSubmitAnswer,
-  handleMarkForReview,
-  handleNextQuestion,
-  handlePreviousQuestion,
-  navigateToQuestion,
-} = useTestSession({
-  totalQuestions: 10,
-  onFinish: (answers) => { /* handle completion */ },
-});
+// Behind the scenes:
+// 1. Native Google picker appears
+// 2. User selects account
+// 3. App gets ID token
+// 4. Supabase creates session
+// 5. Done!
 ```
 
 ---
 
-## Key Improvements
+## Testing
 
-| Aspect | Before | After |
-|--------|--------|-------|
-| Component Size | 757 lines | 349 lines |
-| Selection Speed | 200-500ms | <50ms |
-| Re-renders/action | 10-15 | 1-2 |
-| Memory Leaks | Yes (timer) | None |
-| Error Handling | None | Full retry logic |
-| Loading States | None | Full support |
-| Accessibility | None | Full support |
-| Memoization | None | Full |
+**✅ Working:**
+- Native Google account picker UI
+- No browser
+- Console: "✅ Google Sign-In successful"
+- User profile appears
 
----
-
-## Testing the Refactor
-
-### Quick Test
-1. Start the app: `npx expo start`
-2. Navigate to test session
-3. **Test option selection** - should be instant now
-4. **Test swipe** - should work without interfering with selections
-5. **Test timer** - should count down and navigate at 0
-6. **Test navigation** - all buttons should work
-
-### What to Look For
-- ✅ Options select instantly (no delay)
-- ✅ Swipe gestures work smoothly
-- ✅ No lag or stuttering
-- ✅ Timer cleans up when navigating away
-- ✅ Error messages show if network fails
-- ✅ "Saving..." appears during submission
+**❌ Not working:**
+- "Not configured" → Add Client ID to .env
+- "DEVELOPER_ERROR" → Fix SHA-1 fingerprint
+- Still see browser → Rebuild the app
 
 ---
 
-## Common Issues & Solutions
+## Files Changed
 
-### Issue: Options still slow to select
-**Check**: Is `pointerEvents="box-none"` on the options container?
-```tsx
-<View className="mb-8" pointerEvents="box-none">
-```
-
-### Issue: Swipe too sensitive
-**Fix**: Increase threshold in `useSwipeNavigation.ts` line 20
-```tsx
-return Math.abs(gestureState.dx) > 30;  // Increase from 20 to 30
-```
-
-### Issue: Swipe not working
-**Fix**: Decrease threshold in `useSwipeNavigation.ts` line 20
-```tsx
-return Math.abs(gestureState.dx) > 10;  // Decrease from 20 to 10
-```
-
-### Issue: TypeScript errors
-**Run**: `npx tsc --noEmit --skipLibCheck` to see specific errors
+- `lib/auth-context.tsx` - Uses native GoogleSignin
+- `app.json` - Added plugin
+- `.env` - Added Google credentials
+- `package.json` - Added native package
 
 ---
 
-## Migration to Other Components
+## Docs
 
-Want to refactor `practice-session.tsx` similarly?
-
-1. Copy relevant hooks (`useTestTimer`, `useSwipeNavigation`, etc.)
-2. Extract large components into smaller ones
-3. Add memoization with `useCallback`, `useMemo`, `memo()`
-4. Add error handling with retry logic
-5. Add loading states for mutations
-6. Fix gesture conflicts with `pointerEvents="box-none"`
+- `GOOGLE_SIGNIN_QUICKSTART.md` - Quick checklist
+- `NATIVE_GOOGLE_SIGNIN_SETUP.md` - Detailed guide
+- `NATIVE_GOOGLE_SIGNIN_SUMMARY.md` - Full explanation
 
 ---
 
-## Performance Tips
+## Console Logs Cheat Sheet
 
-### Always Memoize
-```tsx
-// Handlers
-const handler = useCallback(() => { ... }, [deps]);
-
-// Computed values
-const value = useMemo(() => { ... }, [deps]);
-
-// Components
-const Component = memo(function Component(props) { ... });
+```
+✅ = Success
+❌ = Error
+🚀 = Starting process
+🔑 = Got token
+👤 = User info
+⚠️ = Warning
 ```
 
-### Prevent Gesture Conflicts
-```tsx
-// Let touches pass through to child buttons
-<View pointerEvents="box-none">
-  <TouchableOpacity onPress={...} />
-</View>
+Look for:
 ```
-
-### Clean Up Effects
-```tsx
-useEffect(() => {
-  const timer = setInterval(...);
-  return () => clearInterval(timer);  // Always clean up!
-}, []);
+✅ Google Sign-In configured successfully
+✅ Google Sign-In successful: user@gmail.com
+✅ Signed in to Supabase successfully!
 ```
 
 ---
 
-## Contact
+## TL;DR
 
-Questions about the refactor? Check:
-1. `REFACTOR_SUMMARY.md` - Full details
-2. Code comments in each file
-3. TypeScript interfaces for prop documentation
+**Before:** Browser popup → OAuth dance → Deep linking → Hope it works
+**After:** Native picker → Instant sign-in → Done
 
----
-
-**Status**: ✅ Complete - Ready for production testing
-**Date**: 2025-11-12
-**Reduced from**: 757 lines → 349 lines (54% reduction)
-**Performance gain**: 4-10x faster option selection
+**Need:** Google Web Client ID from console.cloud.google.com
+**Add to:** .env file
+**Then:** Rebuild app
+**Result:** Native Google Sign-In! 🎉

@@ -16,9 +16,6 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       staleTime: 1000 * 60 * 5, // 5 minutes
-      onError: (error) => {
-        console.error('Query error:', error);
-      },
     },
   },
 });
@@ -35,11 +32,12 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="index" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="auth/callback" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="subjects/[id]" />
             <Stack.Screen name="practice" />
             <Stack.Screen name="revision/session" />
-            <Stack.Screen name="notes" />
           </Stack>
         </AuthProvider>
       </QueryClientProvider>
