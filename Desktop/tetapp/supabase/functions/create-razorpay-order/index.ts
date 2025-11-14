@@ -145,7 +145,13 @@ serve(async (req) => {
     const razorpayOrder = await razorpayResponse.json()
 
     // Store pending payment in database
-    const { error: insertError } = await supabaseClient
+    // Use service role client to bypass RLS
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+
+    const { error: insertError } = await supabaseAdmin
       .from('payments')
       .insert({
         user_id: user.id,

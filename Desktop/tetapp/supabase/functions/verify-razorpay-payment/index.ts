@@ -156,8 +156,13 @@ serve(async (req) => {
       )
     }
 
-    // Step 6: Update payment record
-    const { error: updateError } = await supabaseClient
+    // Step 6: Update payment record (use service role to bypass RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+
+    const { error: updateError } = await supabaseAdmin
       .from('payments')
       .update({
         payment_id: razorpay_payment_id,
@@ -173,8 +178,8 @@ serve(async (req) => {
       console.error('Failed to update payment record:', updateError)
     }
 
-    // Step 7: Grant pro access to user
-    const { error: grantError } = await supabaseClient.rpc('grant_pro_access', {
+    // Step 7: Grant pro access to user (use admin client)
+    const { error: grantError } = await supabaseAdmin.rpc('grant_pro_access', {
       user_uuid: user.id,
       tier_type: paymentRecord.tier,
       package_duration: paymentRecord.package_type,

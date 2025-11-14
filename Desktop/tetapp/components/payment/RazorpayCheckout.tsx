@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { WebView } from 'react-native-webview';
+import RazorpayCheckoutSDK from 'react-native-razorpay';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../lib/auth-context';
 import {
   createRazorpayOrder,
   verifyRazorpayPayment,
-  generateRazorpayCheckoutHTML,
+  getRazorpayCheckoutOptions,
   type RazorpayPaymentState,
 } from '../../lib/razorpay';
 import type { TierType, PackageType } from '../../lib/pricing-config';
@@ -37,14 +37,13 @@ export default function RazorpayCheckout({
 }: RazorpayCheckoutProps) {
   const { user } = useAuth();
   const router = useRouter();
-  const webViewRef = useRef<WebView>(null);
 
   const [paymentState, setPaymentState] = useState<RazorpayPaymentState>({
     status: 'idle',
   });
 
-  // Create order when modal is opened
-  React.useEffect(() => {
+  // Create order and open native checkout when modal is opened
+  useEffect(() => {
     if (visible && paymentState.status === 'idle') {
       handleCreateOrder();
     }
@@ -53,46 +52,80 @@ export default function RazorpayCheckout({
   const handleCreateOrder = async () => {
     setPaymentState({ status: 'creating_order' });
 
-    const { success, order, error } = await createRazorpayOrder(tier, packageType);
+    console.log('🔵 [RazorpayCheckout] Creating order for:', { tier, package: packageType });
+
+    const { success, order, error, details } = await createRazorpayOrder(tier, packageType);
+
+    console.log('📊 [RazorpayCheckout] Order creation result:', { success, order: order?.id, error });
 
     if (!success || !order) {
+      const errorMessage = error || 'Failed to create payment order';
+      console.error('❌ [RazorpayCheckout] Order creation failed:', {
+        error: errorMessage,
+        details,
+        tier,
+        package: packageType
+      });
+
       setPaymentState({
         status: 'failed',
-        error: error || 'Failed to create payment order',
+        error: errorMessage,
       });
-      Alert.alert('Error', error || 'Failed to create payment order');
+
+      // Show detailed error in alert
+      Alert.alert(
+        'Payment Order Failed',
+        `${errorMessage}\n\n${details ? `Details: ${JSON.stringify(details)}` : 'Please check console for more info'}`,
+        [
+          { text: 'Try Again', onPress: () => setPaymentState({ status: 'idle' }) },
+          { text: 'Cancel', onPress: onClose, style: 'cancel' }
+        ]
+      );
       return;
     }
+
+    console.log('✅ [RazorpayCheckout] Order created successfully, opening native checkout...');
+
+    // Open native Razorpay checkout
+    openNativeCheckout(order);
+  };
+
+  const openNativeCheckout = (order: RazorpayOrder) => {
+    const options = getRazorpayCheckoutOptions(
+      order,
+      user?.email,
+      user?.user_metadata?.full_name
+    );
 
     setPaymentState({
       status: 'awaiting_payment',
       order,
     });
-  };
 
-  const handleWebViewMessage = async (event: any) => {
-    try {
-      const message = JSON.parse(event.nativeEvent.data);
-
-      switch (message.type) {
-        case 'payment_success':
-          await handlePaymentSuccess(message.data);
-          break;
-
-        case 'payment_failed':
-          handlePaymentFailed(message.data);
-          break;
-
-        case 'payment_cancelled':
+    // Open native Razorpay checkout
+    RazorpayCheckoutSDK.open(options)
+      .then((data: any) => {
+        // Payment successful
+        handlePaymentSuccess({
+          razorpay_payment_id: data.razorpay_payment_id,
+          razorpay_order_id: data.razorpay_order_id,
+          razorpay_signature: data.razorpay_signature,
+        });
+      })
+      .catch((error: any) => {
+        // Payment failed or cancelled
+        if (error.code === 0) {
+          // User cancelled
           handlePaymentCancelled();
-          break;
-
-        default:
-          console.log('Unknown message type:', message.type);
-      }
-    } catch (error) {
-      console.error('Error handling WebView message:', error);
-    }
+        } else {
+          // Payment failed
+          handlePaymentFailed({
+            code: error.code?.toString(),
+            description: error.description,
+            reason: error.reason,
+          });
+        }
+      });
   };
 
   const handlePaymentSuccess = async (paymentData: {
@@ -192,44 +225,16 @@ export default function RazorpayCheckout({
   const renderContent = () => {
     switch (paymentState.status) {
       case 'creating_order':
+      case 'awaiting_payment':
         return (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#3b82f6" />
-            <Text style={styles.loadingText}>Creating payment order...</Text>
+            <Text style={styles.loadingText}>
+              {paymentState.status === 'creating_order'
+                ? 'Preparing payment...'
+                : 'Opening payment checkout...'}
+            </Text>
           </View>
-        );
-
-      case 'awaiting_payment':
-        if (!paymentState.order) {
-          return (
-            <View style={styles.loadingContainer}>
-              <Text style={styles.errorText}>Order data missing</Text>
-            </View>
-          );
-        }
-
-        return (
-          <WebView
-            ref={webViewRef}
-            source={{
-              html: generateRazorpayCheckoutHTML(
-                paymentState.order,
-                user?.email,
-                user?.user_metadata?.full_name
-              ),
-            }}
-            onMessage={handleWebViewMessage}
-            style={styles.webview}
-            javaScriptEnabled
-            domStorageEnabled
-            startInLoadingState
-            renderLoading={() => (
-              <View style={styles.webviewLoading}>
-                <ActivityIndicator size="large" color="#3b82f6" />
-                <Text style={styles.loadingText}>Loading checkout...</Text>
-              </View>
-            )}
-          />
         );
 
       case 'verifying':
@@ -269,20 +274,11 @@ export default function RazorpayCheckout({
   return (
     <Modal
       visible={visible}
-      animationType="slide"
-      presentationStyle="fullScreen"
+      animationType="fade"
+      transparent={true}
       onRequestClose={onClose}
     >
       <View style={styles.container}>
-        {paymentState.status !== 'verifying' && (
-          <View style={styles.header}>
-            <TouchableOpacity onPress={onClose} style={styles.closeIconButton}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Secure Payment</Text>
-            <View style={{ width: 40 }} />
-          </View>
-        )}
         {renderContent()}
       </View>
     </Modal>
@@ -292,46 +288,25 @@ export default function RazorpayCheckout({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-    paddingTop: 50, // Account for status bar
-  },
-  closeIconButton: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeIcon: {
-    fontSize: 24,
-    color: '#6b7280',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  webview: {
-    flex: 1,
-  },
-  webviewLoading: {
-    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   loadingContainer: {
-    flex: 1,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    minWidth: 280,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   loadingText: {
     marginTop: 16,
@@ -346,10 +321,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   errorContainer: {
-    flex: 1,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    minWidth: 280,
+    maxWidth: 340,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   errorTitle: {
     fontSize: 24,

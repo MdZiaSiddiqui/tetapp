@@ -1,6 +1,6 @@
 /**
  * Razorpay Payment Service for React Native
- * Handles payment order creation, checkout, and verification
+ * Handles payment order creation, checkout, and verification using Supabase Edge Functions
  */
 
 import { supabase } from './supabase';
@@ -13,18 +13,13 @@ import type {
 } from './types/database.types';
 
 const RAZORPAY_KEY_ID = process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID;
-const PAYMENT_API_URL = process.env.EXPO_PUBLIC_PAYMENT_API_URL || 'http://localhost:3000';
 
 if (!RAZORPAY_KEY_ID) {
   console.warn('⚠️ EXPO_PUBLIC_RAZORPAY_KEY_ID is not set in .env file');
 }
 
-if (!process.env.EXPO_PUBLIC_PAYMENT_API_URL) {
-  console.warn('⚠️ EXPO_PUBLIC_PAYMENT_API_URL is not set in .env file, using localhost');
-}
-
 /**
- * Create a Razorpay order via Express backend
+ * Create a Razorpay order via Supabase Edge Function
  */
 export async function createRazorpayOrder(
   tier: TierType,
@@ -40,40 +35,38 @@ export async function createRazorpayOrder(
     }
 
     console.log('🔵 Creating Razorpay order:', { tier, package: packageType });
-    console.log('🔵 Using payment API:', PAYMENT_API_URL);
 
-    const response = await fetch(`${PAYMENT_API_URL}/create-order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    // Call Supabase Edge Function
+    const { data, error } = await supabase.functions.invoke('create-razorpay-order', {
+      body: {
         tier,
         package: packageType,
-        userId: session.user.id,
-      }),
+      },
     });
 
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      console.error('❌ Error creating Razorpay order:', data);
+    if (error) {
+      console.error('❌ Error creating Razorpay order:', error);
 
       let errorMessage = 'Failed to create order';
 
-      if (response.status === 404) {
-        errorMessage = 'Payment server not found. Please check EXPO_PUBLIC_PAYMENT_API_URL in .env';
-      } else if (response.status === 400) {
-        errorMessage = data.error || 'Invalid request parameters';
-      } else if (response.status >= 500) {
-        errorMessage = 'Server error. Please try again later.';
-      } else if (data.error) {
-        errorMessage = data.error;
+      if (error.message.includes('not found')) {
+        errorMessage = 'Payment function not deployed. Please run: supabase functions deploy create-razorpay-order';
+      } else if (error.message) {
+        errorMessage = error.message;
       }
 
       return {
         success: false,
         error: errorMessage,
+        details: error
+      };
+    }
+
+    if (!data || !data.success || !data.order) {
+      console.error('❌ Invalid response from create-razorpay-order:', data);
+      return {
+        success: false,
+        error: data?.error || 'Failed to create order',
         details: data
       };
     }
@@ -85,9 +78,7 @@ export async function createRazorpayOrder(
 
     let errorMessage = 'Unknown error occurred';
 
-    if (error instanceof TypeError && error.message.includes('Network request failed')) {
-      errorMessage = 'Cannot connect to payment server. Please check if backend is running.';
-    } else if (error instanceof Error) {
+    if (error instanceof Error) {
       errorMessage = error.message;
     }
 
@@ -100,7 +91,7 @@ export async function createRazorpayOrder(
 }
 
 /**
- * Verify payment via Express backend
+ * Verify payment via Supabase Edge Function
  */
 export async function verifyRazorpayPayment(
   orderId: string,
@@ -118,34 +109,32 @@ export async function verifyRazorpayPayment(
 
     console.log('🔵 Verifying payment:', paymentId);
 
-    const response = await fetch(`${PAYMENT_API_URL}/verify-payment`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    // Call Supabase Edge Function
+    const { data, error } = await supabase.functions.invoke('verify-razorpay-payment', {
+      body: {
         razorpay_order_id: orderId,
         razorpay_payment_id: paymentId,
         razorpay_signature: signature,
-        userId: session.user.id,
-      }),
+      },
     });
 
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      console.error('❌ Error verifying payment:', data);
+    if (error) {
+      console.error('❌ Error verifying payment:', error);
       return {
         success: false,
-        message: data.message || 'Payment verification failed'
+        message: error.message || 'Payment verification failed'
       };
     }
 
-    console.log('✅ Payment verified successfully');
+    if (!data || !data.success) {
+      console.error('❌ Payment verification failed:', data);
+      return {
+        success: false,
+        message: data?.error || data?.message || 'Payment verification failed'
+      };
+    }
 
-    // TODO: Update user's pro status in Supabase
-    // For now, the backend just verifies the signature
-    // You'll need to add database update logic
+    console.log('✅ Payment verified successfully. Pro access granted!');
 
     return {
       success: true,
@@ -156,9 +145,7 @@ export async function verifyRazorpayPayment(
 
     let errorMessage = 'Unknown error occurred';
 
-    if (error instanceof TypeError && error.message.includes('Network request failed')) {
-      errorMessage = 'Cannot connect to payment server';
-    } else if (error instanceof Error) {
+    if (error instanceof Error) {
       errorMessage = error.message;
     }
 
