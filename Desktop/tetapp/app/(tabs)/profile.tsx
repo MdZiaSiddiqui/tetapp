@@ -1,9 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../lib/auth-context';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Profile() {
   const router = useRouter();
@@ -26,203 +28,172 @@ export default function Profile() {
 
   const handleSignOut = async () => {
     Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
+      'Log Out',
+      'Are you sure you want to log out?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Sign Out',
+          text: 'Log Out',
           style: 'destructive',
           onPress: async () => {
             await signOut();
-            // Navigate to home after sign out
-            router.replace('/(tabs)/home');
+            router.replace('/login');
           },
         },
       ]
     );
   };
 
-  // Show sign-in prompt if not authenticated
+  const handleWhatsAppPress = () => {
+    const phoneNumber = '916304102415';
+    const url = `whatsapp://send?phone=${phoneNumber}`;
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          return Linking.openURL(url);
+        } else {
+          Alert.alert('Error', 'WhatsApp is not installed on your device');
+        }
+      })
+      .catch((err) => console.error('Error opening WhatsApp:', err));
+  };
+
+  const handleEmailPress = () => {
+    const email = 'support@supacharge.me';
+    const url = `mailto:${email}`;
+    Linking.openURL(url).catch((err) => console.error('Error opening email:', err));
+  };
+
+  const handlePrivacyPolicy = () => {
+    Alert.alert('Privacy Policy', 'Privacy policy content will be displayed here.');
+  };
+
+  const handleTermsOfService = () => {
+    Alert.alert('Terms of Service', 'Terms of service content will be displayed here.');
+  };
+
+  // Redirect to login if not authenticated
   if (!user && !loading) {
-    return (
-      <ScrollView className="flex-1 bg-white">
-        <StatusBar style="dark" />
-
-        <View className="px-6 pt-16 pb-6">
-          <Text className="text-3xl font-bold text-gray-800 mb-6">
-            Profile
-          </Text>
-
-          {/* Guest User Card */}
-          <View className="bg-blue-50 p-8 rounded-2xl mb-6 items-center">
-            <View className="w-24 h-24 bg-gray-300 rounded-full items-center justify-center mb-4">
-              <Text className="text-white text-4xl">👤</Text>
-            </View>
-
-            <Text className="text-2xl font-bold text-gray-800 mb-2">
-              Guest User
-            </Text>
-            <Text className="text-gray-600 text-center mb-6">
-              Sign in to save your progress and sync across devices
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => router.push('/login')}
-              className="bg-blue-500 py-4 px-8 rounded-xl w-full"
-            >
-              <Text className="text-white text-center text-lg font-semibold">
-                Sign In with Google
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* About Section */}
-          <View className="border-t border-gray-200 pt-6">
-            <TouchableOpacity className="py-3">
-              <Text className="text-gray-700 text-base">Help & Support</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="py-3">
-              <Text className="text-gray-700 text-base">Privacy Policy</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="py-3">
-              <Text className="text-gray-700 text-base">Terms of Service</Text>
-            </TouchableOpacity>
-
-            <View className="py-3">
-              <Text className="text-gray-500 text-sm">Version 1.0.0</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    );
+    router.replace('/login');
+    return null;
   }
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
 
-      <View className="px-6 pt-16 pb-6">
-        <Text className="text-3xl font-bold text-gray-800 mb-6">
-          Profile
-        </Text>
-
-        {/* User Info Card */}
-        <View className="bg-blue-50 p-6 rounded-2xl mb-6">
-          <View className="items-center mb-4">
-            <View className="w-24 h-24 bg-blue-500 rounded-full items-center justify-center mb-4">
-              <Text className="text-white text-4xl">
-                {profile?.full_name?.charAt(0).toUpperCase() || '?'}
-              </Text>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 40, paddingTop: 60 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* User Info Card - Minimalist Design */}
+        <View className="bg-white mx-6 mt-6 rounded-3xl p-6 border border-gray-100">
+          {/* Email and Log Out */}
+          <View className="mb-4">
+            <Text className="text-xs text-gray-400 mb-2">Email</Text>
+            <View className="flex-row items-center justify-between">
+              <Text className="text-sm text-gray-700 flex-1">{user?.email || 'email@example.com'}</Text>
+              <TouchableOpacity
+                onPress={handleSignOut}
+                className="bg-gray-100 px-4 py-2 rounded-full ml-3"
+              >
+                <Text className="text-gray-900 font-medium text-xs">Log Out</Text>
+              </TouchableOpacity>
             </View>
+          </View>
 
-            <Text className="text-2xl font-bold text-gray-800">
-              {profile?.full_name || 'User'}
+          {/* Phone/Number placeholder */}
+          <View>
+            <Text className="text-xs text-gray-400 mb-2">Number</Text>
+            <Text className="text-sm text-gray-700">
+              {profile?.phone || 'Not provided'}
             </Text>
-            <Text className="text-gray-600 mt-1">{user?.email}</Text>
-          </View>
-
-          <View className="flex-row justify-around pt-4 border-t border-blue-200">
-            <View className="items-center">
-              <Text className="text-3xl font-bold text-blue-500">
-                {profile?.level || 1}
-              </Text>
-              <Text className="text-gray-600 text-sm mt-1">Level</Text>
-            </View>
-
-            <View className="w-px bg-blue-200" />
-
-            <View className="items-center">
-              <Text className="text-3xl font-bold text-blue-500">
-                {profile?.total_questions_attempted || 0}
-              </Text>
-              <Text className="text-gray-600 text-sm mt-1">Questions</Text>
-            </View>
           </View>
         </View>
 
-        {/* Options */}
-        <View className="space-y-3 mb-6">
-          <TouchableOpacity className="bg-gray-50 p-4 rounded-xl flex-row justify-between items-center">
-            <View>
-              <Text className="text-lg font-semibold text-gray-800">
-                Edit Profile
-              </Text>
-              <Text className="text-gray-500 text-sm mt-1">
-                Update your personal information
-              </Text>
+        {/* Unlock Pro Button - Prominent */}
+        <TouchableOpacity
+          className="mx-6 mt-6 bg-gray-900 rounded-2xl p-6 shadow-lg"
+          activeOpacity={0.8}
+        >
+          <View className="flex-row items-center justify-between">
+            <View className="flex-1">
+              <Text className="text-white text-xl font-bold mb-1">Unlock Pro</Text>
+              <Text className="text-gray-300 text-sm">Get unlimited access to all features</Text>
             </View>
-            <Text className="text-gray-400 text-2xl">›</Text>
+            <Ionicons name="arrow-forward" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+
+        {/* Contact Support Section - Modern Minimal */}
+        <View className="bg-white mx-6 mt-6 rounded-3xl p-6 border border-gray-100">
+          <Text className="text-xs text-gray-400 mb-4">Contact Support</Text>
+
+          {/* WhatsApp */}
+          <TouchableOpacity
+            onPress={handleWhatsAppPress}
+            className="flex-row items-center py-3 border-b border-gray-100"
+            activeOpacity={0.7}
+          >
+            <View className="w-10 h-10 bg-green-500 rounded-full items-center justify-center mr-3">
+              <Ionicons name="logo-whatsapp" size={20} color="white" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-gray-900 text-base font-medium">WhatsApp</Text>
+              <Text className="text-gray-500 text-xs">+91 6304102415</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="bg-gray-50 p-4 rounded-xl flex-row justify-between items-center mt-3">
-            <View>
-              <Text className="text-lg font-semibold text-gray-800">
-                Notifications
-              </Text>
-              <Text className="text-gray-500 text-sm mt-1">
-                Manage notification preferences
-              </Text>
+          {/* Email */}
+          <TouchableOpacity
+            onPress={handleEmailPress}
+            className="flex-row items-center py-3"
+            activeOpacity={0.7}
+          >
+            <View className="w-10 h-10 bg-blue-500 rounded-full items-center justify-center mr-3">
+              <Ionicons name="mail" size={20} color="white" />
             </View>
-            <Text className="text-gray-400 text-2xl">›</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-gray-50 p-4 rounded-xl flex-row justify-between items-center mt-3">
-            <View>
-              <Text className="text-lg font-semibold text-gray-800">
-                Study Reminders
-              </Text>
-              <Text className="text-gray-500 text-sm mt-1">
-                Set up daily study reminders
-              </Text>
+            <View className="flex-1">
+              <Text className="text-gray-900 text-base font-medium">Email</Text>
+              <Text className="text-gray-500 text-xs">support@supacharge.me</Text>
             </View>
-            <Text className="text-gray-400 text-2xl">›</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-gray-50 p-4 rounded-xl flex-row justify-between items-center mt-3">
-            <View>
-              <Text className="text-lg font-semibold text-gray-800">
-                Dark Mode
-              </Text>
-              <Text className="text-gray-500 text-sm mt-1">
-                Toggle dark mode theme
-              </Text>
-            </View>
-            <Text className="text-gray-400 text-2xl">›</Text>
+            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
         </View>
 
-        {/* About Section */}
-        <View className="border-t border-gray-200 pt-6">
-          <TouchableOpacity className="py-3">
-            <Text className="text-gray-700 text-base">Help & Support</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="py-3">
-            <Text className="text-gray-700 text-base">Privacy Policy</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="py-3">
+        {/* Links Section - Ultra Minimal */}
+        <View className="mx-6 mt-6">
+          <TouchableOpacity
+            onPress={handleTermsOfService}
+            className="py-4"
+            activeOpacity={0.7}
+          >
             <Text className="text-gray-700 text-base">Terms of Service</Text>
           </TouchableOpacity>
 
-          <View className="py-3">
-            <Text className="text-gray-500 text-sm">Version 1.0.0</Text>
-          </View>
+          <TouchableOpacity
+            onPress={handlePrivacyPolicy}
+            className="py-4"
+            activeOpacity={0.7}
+          >
+            <Text className="text-gray-700 text-base">Privacy Policy</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Sign Out Button */}
-        <TouchableOpacity
-          onPress={handleSignOut}
-          className="bg-red-500 py-4 px-8 rounded-xl mt-6"
-        >
-          <Text className="text-white text-center text-lg font-semibold">
-            Sign Out
+        {/* Version Info */}
+        <View className="mx-6 mt-8">
+          <Text className="text-gray-400 text-xs text-center">
+            Version 1.0.0
           </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </LinearGradient>
   );
 }

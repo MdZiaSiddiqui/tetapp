@@ -209,6 +209,85 @@ export default function SubjectDetail() {
 
       <ScrollView className="flex-1">
         <View className="px-6 py-6">
+          {/* Notes Section */}
+          {(() => {
+            // Map subject IDs to note prefixes and display names for book covers
+            const subjectToNoteData: Record<string, { prefix: string; displayName: string }> = {
+              'mathematics': { prefix: 'maths', displayName: 'Mathematics' },
+              'child-development': { prefix: 'development', displayName: 'Child Development & Pedagogy' },
+              'environmental': { prefix: 'evs', displayName: 'Environmental Studies' },
+              'social': { prefix: 'social', displayName: 'Social Studies' },
+              'science': { prefix: 'physics', displayName: 'Physical Science' }, // Default to physics for science
+              'english': { prefix: 'english', displayName: 'English' },
+            };
+
+            const noteData = subjectToNoteData[subjectId.toLowerCase()];
+
+            // Only show notes if we have a mapping for this subject
+            if (!noteData) return null;
+
+            const { prefix: notePrefix, displayName: bookCoverSubject } = noteData;
+
+            // Get the book cover image for this subject
+            const bookCoverImage = getBookCover(bookCoverSubject);
+
+            // Filter languages - for Hindi paper, only show English notes
+            const notesLanguages = isHindiPaper ? ['English'] : availableLanguages;
+
+            return (
+              <View className="mb-8">
+                <Text className="text-gray-800 font-bold text-lg mb-4">Study Notes</Text>
+
+                <View className="flex-row flex-wrap justify-between">
+                  {notesLanguages.map((lang) => {
+                    const handleNotesPress = () => {
+                      // Map language to note suffix
+                      const langSuffix = lang.toLowerCase() === 'english' || lang.toLowerCase() === 'hindi'
+                        ? 'eng'
+                        : lang.toLowerCase() === 'telugu'
+                        ? 'tel'
+                        : 'urdu';
+
+                      const noteId = `${notePrefix}-${langSuffix}`;
+
+                      // Navigate to notes viewer
+                      router.push({
+                        pathname: '/notes/viewer',
+                        params: { noteId },
+                      });
+                    };
+
+                    return (
+                      <TouchableOpacity
+                        key={lang}
+                        onPress={handleNotesPress}
+                        className="w-[48%] mb-4 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100"
+                      >
+                        {/* Display book cover image if available, otherwise show gradient */}
+                        {bookCoverImage ? (
+                          <Image
+                            source={bookCoverImage}
+                            className="w-full h-60"
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <View className="bg-gradient-to-br from-purple-500 to-purple-600 h-60 items-center justify-center">
+                            <Ionicons name="book-outline" size={48} color="white" />
+                          </View>
+                        )}
+                        <View className="p-3">
+                          <Text className="text-gray-700 font-semibold text-center text-sm">
+                            {lang}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </View>
+            );
+          })()}
+
           {/* Language Toggle (only for non-language subjects and non-Hindi papers) */}
           {showLanguageSelector && (
             <View className="mb-6">
@@ -298,92 +377,13 @@ export default function SubjectDetail() {
           )}
 
           {fetchingQuestions && (
-            <View className="mt-4 bg-blue-50 p-4 rounded-xl">
+            <View className="mt-4 bg-blue-50 p-4 rounded-xl mb-20">
               <ActivityIndicator size="small" color="#3b82f6" />
               <Text className="text-blue-600 text-center mt-2 text-sm">
                 Fetching questions...
               </Text>
             </View>
           )}
-
-          {/* Notes Section */}
-          {(() => {
-            // Map subject IDs to note prefixes and display names for book covers
-            const subjectToNoteData: Record<string, { prefix: string; displayName: string }> = {
-              'mathematics': { prefix: 'maths', displayName: 'Mathematics' },
-              'child-development': { prefix: 'development', displayName: 'Child Development & Pedagogy' },
-              'environmental': { prefix: 'evs', displayName: 'Environmental Studies' },
-              'social': { prefix: 'social', displayName: 'Social Studies' },
-              'science': { prefix: 'physics', displayName: 'Physical Science' }, // Default to physics for science
-              'english': { prefix: 'english', displayName: 'English' },
-            };
-
-            const noteData = subjectToNoteData[subjectId.toLowerCase()];
-
-            // Only show notes if we have a mapping for this subject
-            if (!noteData) return null;
-
-            const { prefix: notePrefix, displayName: bookCoverSubject } = noteData;
-
-            // Get the book cover image for this subject
-            const bookCoverImage = getBookCover(bookCoverSubject);
-
-            // Filter languages - for Hindi paper, only show English notes
-            const notesLanguages = isHindiPaper ? ['English'] : availableLanguages;
-
-            return (
-              <View className="mt-8 mb-20">
-                <Text className="text-gray-800 font-bold text-lg mb-4">Study Notes</Text>
-
-                <View className="flex-row flex-wrap justify-between">
-                  {notesLanguages.map((lang) => {
-                    const handleNotesPress = () => {
-                      // Map language to note suffix
-                      const langSuffix = lang.toLowerCase() === 'english' || lang.toLowerCase() === 'hindi'
-                        ? 'eng'
-                        : lang.toLowerCase() === 'telugu'
-                        ? 'tel'
-                        : 'urdu';
-
-                      const noteId = `${notePrefix}-${langSuffix}`;
-
-                      // Navigate to notes viewer
-                      router.push({
-                        pathname: '/notes/viewer',
-                        params: { noteId },
-                      });
-                    };
-
-                    return (
-                      <TouchableOpacity
-                        key={lang}
-                        onPress={handleNotesPress}
-                        className="w-[48%] mb-4 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100"
-                      >
-                        {/* Display book cover image if available, otherwise show gradient */}
-                        {bookCoverImage ? (
-                          <Image
-                            source={bookCoverImage}
-                            className="w-full h-60"
-                            resizeMode="cover"
-                          />
-                        ) : (
-                          <View className="bg-gradient-to-br from-purple-500 to-purple-600 h-60 items-center justify-center">
-                            <Ionicons name="book-outline" size={48} color="white" />
-                          </View>
-                        )}
-                        <View className="p-3">
-                          <Text className="text-gray-700 font-semibold text-center text-sm">
-                            {lang}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-            );
-          })()}
         </View>
       </ScrollView>
 

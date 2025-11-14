@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSubjectsWithStats } from '../../hooks/useSupabaseData';
@@ -71,11 +71,22 @@ function getFilteredSubjects(
 
 export default function Home() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const [selectedPaper, setSelectedPaper] = useState(PAPER_OPTIONS[0]);
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Fetch subjects with statistics using our custom hook
   const { data: subjects, isLoading, error } = useSubjectsWithStats();
+
+  // Auto-open paper selector for new users after authentication
+  useEffect(() => {
+    if (params.showPaperSelector === 'true') {
+      // Small delay to ensure smooth transition
+      setTimeout(() => {
+        setShowDropdown(true);
+      }, 300);
+    }
+  }, [params.showPaperSelector]);
 
   // Filter subjects based on selected paper
   const filteredSubjects =

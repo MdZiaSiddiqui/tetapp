@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Revision() {
   const router = useRouter();
@@ -39,8 +40,14 @@ export default function Revision() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
+      <ScrollView className="flex-1">
 
       <View className="px-4 pt-16 pb-6">
         <Text className="text-3xl font-bold text-gray-800 mb-2">
@@ -132,6 +139,7 @@ export default function Revision() {
           </Text>
         </View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </LinearGradient>
   );
 }

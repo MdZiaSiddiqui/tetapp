@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import RazorpayCheckout from '../../components/payment/RazorpayCheckout';
 import { useProAccess } from '../../hooks/useProAccess';
 import type { TierType, PackageType } from '../../lib/pricing-config';
@@ -70,12 +71,18 @@ export default function PricingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.container}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
         {/* Current Pro Status */}
         {isProActive && (
           <View style={styles.proStatusBanner}>
@@ -185,24 +192,27 @@ export default function PricingScreen() {
             All plans include access to comprehensive study materials and mock tests
           </Text>
         </View>
-      </ScrollView>
+        </ScrollView>
 
-      {/* Razorpay Payment Modal */}
-      <RazorpayCheckout
-        tier={selectedTier}
-        package={selectedPackage}
-        visible={showPayment}
-        onClose={() => setShowPayment(false)}
-        onSuccess={handlePaymentSuccess}
-      />
-    </SafeAreaView>
+        {/* Razorpay Payment Modal */}
+        <RazorpayCheckout
+          tier={selectedTier}
+          package={selectedPackage}
+          visible={showPayment}
+          onClose={() => setShowPayment(false)}
+          onSuccess={handlePaymentSuccess}
+        />
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9fafb',
+  },
+  safeArea: {
+    flex: 1,
   },
   scrollView: {
     flex: 1,
