@@ -6,6 +6,8 @@ import { useAuth } from '../../lib/auth-context';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
+import { useProAccess } from '../../hooks/useProAccess';
+import { TIER_NAMES } from '../../lib/pricing-config';
 
 export default function Profile() {
   const router = useRouter();
@@ -25,6 +27,17 @@ export default function Profile() {
     },
     enabled: !!user?.id,
   });
+
+  // Get pro access details
+  const {
+    tier,
+    isProActive,
+    isFree,
+    expiresAt,
+    daysRemaining,
+    packageType,
+    loading: proLoading,
+  } = useProAccess();
 
   const handleSignOut = async () => {
     Alert.alert(
@@ -117,19 +130,101 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* Unlock Pro Button - Prominent */}
-        <TouchableOpacity
-          className="mx-6 mt-6 bg-gray-900 rounded-2xl p-6 shadow-lg"
-          activeOpacity={0.8}
-        >
-          <View className="flex-row items-center justify-between">
-            <View className="flex-1">
-              <Text className="text-white text-xl font-bold mb-1">Unlock Pro</Text>
-              <Text className="text-gray-300 text-sm">Get unlimited access to all features</Text>
+        {/* Your Plan Section */}
+        <View className="mx-6 mt-6 bg-white rounded-3xl p-6 border border-gray-100">
+          <Text className="text-xs text-gray-400 mb-4">Your Plan</Text>
+
+          {/* Plan Details */}
+          <View className="mb-4">
+            <View className="flex-row items-center justify-between mb-2">
+              <Text className="text-gray-900 text-lg font-bold">
+                {isFree ? 'Free Plan' : TIER_NAMES[tier]}
+              </Text>
+              {isProActive && (
+                <View className="bg-green-100 px-3 py-1 rounded-full">
+                  <Text className="text-green-700 text-xs font-medium">Active</Text>
+                </View>
+              )}
             </View>
-            <Ionicons name="arrow-forward" size={24} color="white" />
+
+            {/* Plan Description */}
+            <Text className="text-gray-600 text-sm mb-3">
+              {isFree
+                ? 'Limited access to practice questions'
+                : isProActive
+                ? tier === 'both'
+                  ? 'Full access to Paper-1 & Paper-2'
+                  : tier === 'paper1'
+                  ? 'Full access to Paper-1'
+                  : 'Full access to Paper-2'
+                : 'Plan expired'}
+            </Text>
+
+            {/* Validity Information */}
+            {!isFree && (
+              <View className="bg-gray-50 p-4 rounded-xl">
+                {isProActive ? (
+                  <>
+                    <View className="flex-row items-center mb-2">
+                      <Ionicons name="calendar-outline" size={16} color="#6B7280" />
+                      <Text className="text-gray-600 text-xs ml-2">Valid Until</Text>
+                    </View>
+                    <Text className="text-gray-900 text-base font-medium mb-1">
+                      {expiresAt?.toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                    <Text className="text-gray-500 text-xs">
+                      {daysRemaining !== null &&
+                        `${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} remaining`}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <View className="flex-row items-center mb-2">
+                      <Ionicons name="warning-outline" size={16} color="#DC2626" />
+                      <Text className="text-red-600 text-xs ml-2 font-medium">Plan Expired</Text>
+                    </View>
+                    <Text className="text-gray-600 text-sm">
+                      Your subscription expired on{' '}
+                      {expiresAt?.toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                  </>
+                )}
+              </View>
+            )}
+
+            {/* Package Type for Active Plans */}
+            {isProActive && packageType && (
+              <View className="mt-3 flex-row items-center">
+                <Ionicons name="time-outline" size={14} color="#6B7280" />
+                <Text className="text-gray-500 text-xs ml-1">
+                  {packageType === '3_months' ? '3 Months' : '1 Year'} Plan
+                </Text>
+              </View>
+            )}
           </View>
-        </TouchableOpacity>
+
+          {/* Upgrade/Renew Button */}
+          {(isFree || !isProActive) && (
+            <TouchableOpacity
+              className="bg-gray-900 rounded-xl p-4 flex-row items-center justify-between"
+              activeOpacity={0.8}
+              onPress={() => router.push('/(tabs)/notes')}
+            >
+              <Text className="text-white font-semibold text-base">
+                {isFree ? 'Upgrade to Pro' : 'Renew Subscription'}
+              </Text>
+              <Ionicons name="arrow-forward" size={20} color="white" />
+            </TouchableOpacity>
+          )}
+        </View>
 
         {/* Contact Support Section - Modern Minimal */}
         <View className="bg-white mx-6 mt-6 rounded-3xl p-6 border border-gray-100">
