@@ -30,15 +30,9 @@ export default {
       favicon: "./assets/favicon.png",
       bundler: "metro"
     },
-    scheme: "tgtet",
+    scheme: "tetapp",
     plugins: [
-      "expo-router",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME || "com.googleusercontent.apps.YOUR_IOS_CLIENT_ID_REVERSED"
-        }
-      ]
+      "expo-router"
     ],
     experiments: {
       typedRoutes: true

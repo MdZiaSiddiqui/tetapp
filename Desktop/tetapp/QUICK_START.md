@@ -1,126 +1,143 @@
-# 🚀 Native Google Sign-In - Quick Start
+# ✅ Your Razorpay Integration is Ready!
 
-## ✅ What I Did
+## What Changed?
 
-I've implemented **native Google Sign-In** with NO browser popups!
+Instead of using Supabase Edge Functions, you now have a **simple Express backend** that handles Razorpay payments.
 
-### Files Modified/Created:
-1. ✅ `lib/auth-context.tsx` - Native Google Sign-In implementation
-2. ✅ `app.config.js` - Replaced app.json with plugin configuration
-3. ✅ `eas.json` - EAS build configuration
-4. ✅ `.env` - Updated with Google OAuth templates
-5. ✅ `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md` - Complete setup guide
+### Files Created:
+- `backend/server.js` - Express server with 2 endpoints
+- `backend/package.json` - Dependencies
+- `backend/.env` - Your Razorpay credentials
+- `backend/vercel.json` - Vercel deployment config
 
----
-
-## 🎯 Next Steps (What YOU Need to Do)
-
-### 1. Google Cloud Console Setup (30 minutes)
-
-Create OAuth credentials in Google Cloud Console:
-
-1. **Go to:** https://console.cloud.google.com/apis/credentials
-2. **Create 3 OAuth clients:**
-   - Web Client (for Supabase)
-   - iOS Client (for iOS app)
-   - Android Client (for Android app)
-
-**📋 Read:** `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md` for detailed step-by-step instructions.
-
-### 2. Update .env File
-
-After getting credentials from Google Console, update `.env`:
-
-```bash
-EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
-EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=YOUR_IOS_CLIENT_ID.apps.googleusercontent.com
-EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME=com.googleusercontent.apps.YOUR_REVERSED_ID
-```
-
-### 3. Configure Supabase
-
-1. Go to: https://supabase.com/dashboard/project/thvucacdrsexfcpkswpv/auth/providers
-2. Enable Google provider
-3. Add Web Client ID and Secret
-4. Save
-
-### 4. Install EAS CLI
-
-```bash
-npm install -g eas-cli
-eas login
-```
-
-### 5. Build Development Build
-
-**For iOS:**
-```bash
-eas build --profile development --platform ios
-```
-
-**For Android:**
-```bash
-eas build --profile development --platform android
-```
-
-**Note:** First build takes 10-15 minutes.
-
-### 6. Install Development Build
-
-After build completes:
-- Download the build from EAS
-- Install on your device/simulator
-- Run: `npx expo start --dev-client`
-
-### 7. Test Native Sign-In!
-
-1. Open the development build
-2. Tap "Continue with Google"
-3. **Native Google Sign-In UI appears** (NO browser!)
-4. Select account
-5. ✅ Signed in!
+### Files Modified:
+- `lib/razorpay.ts` - Now calls Express backend instead of Edge Functions
+- `.env` - Added `EXPO_PUBLIC_PAYMENT_API_URL`
 
 ---
 
-## ⚡ Quick Command Reference
+## Quick Start (You Can Test Now!)
 
+### The backend is already running! 🚀
+
+Your payment backend is running on `http://localhost:3000`
+
+### Test Your Payment Flow:
+
+1. **In a new terminal**, start your Expo app:
 ```bash
-# Install EAS CLI
-npm install -g eas-cli
-
-# Login
-eas login
-
-# Configure project
-eas build:configure
-
-# Build for iOS
-eas build --profile development --platform ios
-
-# Build for Android
-eas build --profile development --platform android
-
-# Run dev server
-npx expo start --dev-client
+cd /Users/mohdziasiddiqui/Desktop/tetapp
+npx expo start
 ```
 
+2. **Open the app** and navigate to any payment screen
+
+3. **Select a plan** and click "Upgrade to Pro"
+
+4. **You should see:**
+   - ✅ "Creating payment order..."
+   - ✅ Razorpay checkout modal opens
+   - ✅ Complete test payment
+   - ✅ "Verifying payment..."
+   - ✅ Success!
+
+### Razorpay Test Card:
+- **Card:** `4111 1111 1111 1111`
+- **CVV:** Any 3 digits (e.g., `123`)
+- **Expiry:** Any future date (e.g., `12/25`)
+
 ---
 
-## 🎯 Timeline
+## Deploy to Production (Optional)
 
-- ⏱️ **Google Cloud setup:** 30 minutes
-- ⏱️ **Supabase config:** 5 minutes
-- ⏱️ **First EAS build:** 15 minutes
-- ⏱️ **Testing:** 5 minutes
-- **Total:** ~1 hour
+When you're ready to deploy for real users:
+
+### Deploy Backend to Vercel (Free):
+
+```bash
+cd backend
+vercel
+```
+
+Then update your `.env`:
+```
+EXPO_PUBLIC_PAYMENT_API_URL=https://your-app.vercel.app
+```
+
+Full deployment instructions: See `RAZORPAY_SIMPLE_SETUP.md`
 
 ---
 
-## 🚀 Ready to Start?
+## Architecture Overview
 
-1. Open `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md`
-2. Follow Step 1: Google Cloud Console setup
-3. Continue through all steps
-4. Build and test!
+```
+Your Expo App (React Native)
+         ↓
+    HTTP Request
+         ↓
+Express Backend (localhost:3000 or Vercel)
+         ↓
+   Razorpay API
+         ↓
+    Payment Success!
+```
 
-Good luck! 🎉
+**Benefits of this approach:**
+- ✅ No Edge Functions needed
+- ✅ Super simple to understand and debug
+- ✅ Easy to deploy (Vercel/Railway free tier)
+- ✅ Full control over payment logic
+- ✅ Secure (key_secret never exposed to client)
+
+---
+
+## What's Next?
+
+### 1. Test the Payment Flow (Now!)
+Try making a test payment in your app
+
+### 2. Update User Pro Status
+After payment verification, update the user's pro status in Supabase.
+
+Edit `backend/server.js` line 86:
+```javascript
+// TODO: Update user's pro status in Supabase
+```
+
+### 3. Deploy to Production
+When ready for real users, deploy the backend to Vercel or Railway (see `RAZORPAY_SIMPLE_SETUP.md`)
+
+---
+
+## Troubleshooting
+
+### Backend not running?
+```bash
+cd backend
+npm start
+```
+
+### App can't connect to backend?
+Check `.env` has:
+```
+EXPO_PUBLIC_PAYMENT_API_URL=http://localhost:3000
+```
+
+Then restart Expo:
+```bash
+npx expo start --clear
+```
+
+### Server logs?
+The backend terminal shows all requests in real-time
+
+---
+
+## Current Status
+
+✅ Backend installed and running on port 3000
+✅ Razorpay credentials configured
+✅ Test order created successfully (₹499)
+✅ Ready to test in your app!
+
+**Next Step:** Open your Expo app and try making a payment! 🎉

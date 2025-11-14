@@ -83,6 +83,129 @@ export interface ChapterWithStats extends Chapter {
   languages?: ('English' | 'Telugu' | 'Urdu')[];
 }
 
+// User Profile with Pro Access
+export interface UserProfile {
+  id: string; // UUID - references auth.users(id)
+  email: string;
+  full_name?: string;
+  avatar_url?: string;
+
+  // Subscription tier management (legacy)
+  tier: 'free' | 'pro';
+  subscription_status?: 'active' | 'cancelled' | 'expired' | 'trial';
+  subscription_start_date?: string;
+  subscription_end_date?: string;
+
+  // Pro Access Management (new)
+  pro_tier: 'free' | 'paper1' | 'paper2' | 'both';
+  pro_access_paper: string[]; // ['paper1', 'paper2']
+  pro_package_type?: '3_months' | '1_year';
+  pro_purchased_at?: string;
+  pro_expires_at?: string;
+  razorpay_payment_id?: string;
+  razorpay_order_id?: string;
+
+  // OAuth provider info
+  provider?: string;
+  provider_id?: string;
+
+  // Usage tracking for free tier limits
+  practice_sessions_count?: number;
+  test_sessions_count?: number;
+  monthly_sessions_limit?: number;
+  last_session_reset_date?: string;
+
+  // User stats (from profile query)
+  level?: number;
+  total_questions_attempted?: number;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+}
+
+// Payment Transaction
+export interface Payment {
+  id: string; // UUID
+  user_id: string; // UUID - references auth.users(id)
+
+  // Razorpay IDs
+  order_id: string;
+  payment_id?: string;
+  razorpay_signature?: string;
+
+  // Purchase details
+  tier: 'paper1' | 'paper2' | 'both';
+  package_type: '3_months' | '1_year';
+  amount: number; // in paisa
+  currency: string; // 'INR'
+
+  // Payment status
+  status: 'created' | 'authorized' | 'captured' | 'failed' | 'refunded';
+  payment_method?: string;
+
+  // Metadata
+  notes?: Record<string, any>;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+  paid_at?: string;
+}
+
+// User Pro Status (from view)
+export interface UserProStatus {
+  user_id: string;
+  email: string;
+  full_name?: string;
+  pro_tier: 'free' | 'paper1' | 'paper2' | 'both';
+  pro_access_paper: string[];
+  pro_package_type?: '3_months' | '1_year';
+  pro_purchased_at?: string;
+  pro_expires_at?: string;
+  pro_status?: 'active' | 'expired' | 'inactive' | null;
+  days_remaining?: number | null;
+  razorpay_payment_id?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Razorpay Order Creation Request
+export interface CreateOrderRequest {
+  tier: 'paper1' | 'paper2' | 'both';
+  package: '3_months' | '1_year';
+}
+
+// Razorpay Order Response
+export interface RazorpayOrder {
+  id: string;
+  entity: 'order';
+  amount: number;
+  amount_paid: number;
+  amount_due: number;
+  currency: string;
+  receipt: string;
+  status: 'created' | 'attempted' | 'paid';
+  attempts: number;
+  notes: Record<string, string>;
+  created_at: number;
+}
+
+// Payment Verification Request
+export interface VerifyPaymentRequest {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+// Payment Verification Response
+export interface VerifyPaymentResponse {
+  success: boolean;
+  message: string;
+  user?: UserProfile;
+  payment?: Payment;
+}
+
 // Database response types
 export type DbResult<T> = {
   data: T | null;

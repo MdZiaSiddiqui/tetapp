@@ -38,6 +38,7 @@ export default function RootLayout() {
             <Stack.Screen name="subjects/[id]" />
             <Stack.Screen name="practice" />
             <Stack.Screen name="revision/session" />
+            <Stack.Screen name="payment-success" />
           </Stack>
         </AuthProvider>
       </QueryClientProvider>

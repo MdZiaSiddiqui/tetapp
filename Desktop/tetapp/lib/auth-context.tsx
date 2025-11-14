@@ -1,21 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import { Platform } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri } from 'expo-auth-session';
 
-type GoogleSigninType = typeof import('@react-native-google-signin/google-signin')['GoogleSignin'];
-
-let GoogleSignin: GoogleSigninType | undefined;
-
-// Lazily require the native Google Sign-In module so Expo Go/web builds do not crash.
-if (Platform.OS !== 'web') {
-  try {
-    const googleSigninModule = require('@react-native-google-signin/google-signin');
-    GoogleSignin = googleSigninModule.GoogleSignin as GoogleSigninType;
-  } catch (error) {
-    console.warn('⚠️ Google Sign-In native module is not available. Falling back to Supabase only auth.', error);
-  }
-}
+// Complete the web browser session when auth is done
+WebBrowser.maybeCompleteAuthSession();
 
 type AuthContextType = {
   user: User | null;
@@ -37,45 +27,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
-    // Configure Google Sign-In
-    const configureGoogleSignIn = async () => {
-      try {
-        const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
-        const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID;
-
-        if (!webClientId) {
-          console.error('⚠️ EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID is not set in .env file');
-          console.error('📋 Please follow NATIVE_GOOGLE_SIGNIN_SETUP.md for setup instructions');
-          return;
-        }
-
-        if (!GoogleSignin) {
-          console.info('ℹ️ Skipping Google Sign-In configuration because the native module is unavailable.');
-          return;
-        }
-
-        GoogleSignin.configure({
-          webClientId: webClientId,
-          iosClientId: iosClientId, // Optional for iOS
-          offlineAccess: true,
-          scopes: ['profile', 'email'],
-        });
-
-        setIsConfigured(true);
-        console.log('✅ Google Sign-In configured successfully');
-        console.log('📱 Platform:', Platform.OS);
-        console.log('🔑 Web Client ID:', webClientId ? 'Set' : 'Missing');
-        console.log('🍎 iOS Client ID:', iosClientId ? 'Set' : 'Not set (optional)');
-      } catch (error) {
-        console.error('❌ Error configuring Google Sign-In:', error);
-      }
-    };
-
-    configureGoogleSignIn();
-
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -96,11 +49,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      // Sign out from Google
-      if (GoogleSignin) {
-        await GoogleSignin.signOut();
-      }
-
       // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
       if (error) {
@@ -117,103 +65,120 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
     try {
-      if (!isConfigured) {
-        return {
-          success: false,
-          error: 'Google Sign-In not configured. Check your .env file and follow NATIVE_GOOGLE_SIGNIN_SETUP.md',
-        };
-      }
+      console.log('🚀 Starting browser-based Google Sign-In...');
 
-      if (!GoogleSignin) {
-        return {
-          success: false,
-          error:
-            'Google Sign-In native module is not available in this build. Please run on a native build with @react-native-google-signin configured or use Supabase OAuth via the web flow.',
-        };
-      }
+      // Create a redirect URI for the app
+      const redirectTo = makeRedirectUri({
+        scheme: 'tetapp',
+        path: 'auth/callback',
+      });
 
-      console.log('🚀 Starting native Google Sign-In...');
-      console.log('📱 Platform:', Platform.OS);
+      console.log('🔗 Redirect URI:', redirectTo);
 
-      // Check if device has Google Play Services (Android only)
-      if (Platform.OS === 'android') {
-        await GoogleSignin.hasPlayServices({
-          showPlayServicesUpdateDialog: true,
-        });
-      }
-
-      // Sign in with Google - NATIVE UI, NO BROWSER!
-      console.log('📝 Presenting native Google Sign-In UI...');
-      const userInfo = await GoogleSignin.signIn();
-      console.log('✅ Google Sign-In successful!');
-      console.log('👤 User:', userInfo.user.email);
-
-      // Get the ID token
-      console.log('🔑 Getting ID token...');
-      const tokens = await GoogleSignin.getTokens();
-      const { idToken } = tokens;
-
-      if (!idToken) {
-        return {
-          success: false,
-          error: 'No ID token received from Google',
-        };
-      }
-
-      console.log('✅ ID token received');
-      console.log('🔐 Signing in to Supabase with ID token...');
-
-      // Sign in to Supabase using the Google ID token
-      const { data, error } = await supabase.auth.signInWithIdToken({
+      // Sign in with Google using Supabase's OAuth (opens browser)
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        token: idToken,
+        options: {
+          redirectTo,
+          skipBrowserRedirect: false,
+        },
       });
 
       if (error) {
-        console.error('❌ Supabase sign-in error:', error);
+        console.error('❌ OAuth error:', error);
         return {
           success: false,
           error: error.message,
         };
       }
 
-      if (!data.session) {
+      if (!data.url) {
         return {
           success: false,
-          error: 'No session created',
+          error: 'No OAuth URL generated',
         };
       }
 
-      console.log('✅ Signed in to Supabase successfully!');
-      console.log('👤 Supabase User:', data.user?.email);
-      console.log('🎉 Authentication complete!');
+      console.log('🌐 Opening browser for authentication...');
+      console.log('OAuth URL:', data.url);
 
-      return { success: true };
-    } catch (error: any) {
-      console.error('❌ Google Sign-In error:', error);
+      // Open the OAuth URL in the browser
+      const result = await WebBrowser.openAuthSessionAsync(
+        data.url,
+        redirectTo
+      );
 
-      // Handle specific error cases
-      if (error.code === 'SIGN_IN_CANCELLED') {
+      console.log('Browser result type:', result.type);
+
+      if (result.type === 'success' && result.url) {
+        console.log('✅ Browser returned with URL:', result.url);
+
+        // Extract tokens from the URL
+        const url = result.url;
+        let access_token: string | null = null;
+        let refresh_token: string | null = null;
+
+        // Check for hash fragment (#access_token=...)
+        if (url.includes('#')) {
+          const hashPart = url.split('#')[1];
+          const hashParams = new URLSearchParams(hashPart);
+          access_token = hashParams.get('access_token');
+          refresh_token = hashParams.get('refresh_token');
+        }
+
+        // Check for query params (?access_token=...)
+        if (!access_token && url.includes('?')) {
+          const queryPart = url.split('?')[1]?.split('#')[0];
+          const queryParams = new URLSearchParams(queryPart);
+          access_token = queryParams.get('access_token');
+          refresh_token = queryParams.get('refresh_token');
+        }
+
+        console.log('Access token found:', !!access_token);
+        console.log('Refresh token found:', !!refresh_token);
+
+        if (access_token && refresh_token) {
+          // Set the session with the tokens
+          const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+            access_token,
+            refresh_token,
+          });
+
+          if (sessionError) {
+            console.error('❌ Error setting session:', sessionError);
+            return {
+              success: false,
+              error: sessionError.message,
+            };
+          }
+
+          if (sessionData.session) {
+            console.log('✅ Session created successfully!');
+            console.log('User:', sessionData.session.user.email);
+            return { success: true };
+          }
+        }
+
+        console.error('❌ No tokens found in callback URL');
+        return {
+          success: false,
+          error: 'Authentication failed - no tokens received',
+        };
+      } else if (result.type === 'cancel') {
+        console.log('⚠️ User cancelled sign in');
         return {
           success: false,
           error: 'Sign in cancelled',
         };
-      }
-
-      if (error.code === 'IN_PROGRESS') {
+      } else {
+        console.error('❌ Unexpected browser result:', result);
         return {
           success: false,
-          error: 'Sign in already in progress',
+          error: 'Authentication failed',
         };
       }
-
-      if (error.code === 'PLAY_SERVICES_NOT_AVAILABLE') {
-        return {
-          success: false,
-          error: 'Google Play Services not available. Please update Google Play Services.',
-        };
-      }
-
+    } catch (error: any) {
+      console.error('❌ Google Sign-In error:', error);
       return {
         success: false,
         error: error.message || 'Failed to sign in with Google',

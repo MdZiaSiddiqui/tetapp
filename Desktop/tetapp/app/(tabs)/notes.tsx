@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import RazorpayCheckout from '../../components/payment/RazorpayCheckout';
+import { useProAccess } from '../../hooks/useProAccess';
+import type { TierType, PackageType } from '../../lib/pricing-config';
 
 type PricingPlan = {
   title: string;
@@ -50,6 +53,22 @@ const pricingData: PricingPlan[] = [
 ];
 
 export default function PricingScreen() {
+  const { tier: currentTier, isProActive, daysRemaining, refresh } = useProAccess();
+  const [showPayment, setShowPayment] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<TierType>('paper1');
+  const [selectedPackage, setSelectedPackage] = useState<PackageType>('3_months');
+
+  const handleSelectPlan = (tier: TierType, packageType: PackageType) => {
+    setSelectedTier(tier);
+    setSelectedPackage(packageType);
+    setShowPayment(true);
+  };
+
+  const handlePaymentSuccess = () => {
+    // Refresh pro access status
+    refresh();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -57,9 +76,32 @@ export default function PricingScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Current Pro Status */}
+        {isProActive && (
+          <View style={styles.proStatusBanner}>
+            <View style={styles.proStatusContent}>
+              <Text style={styles.proStatusBadge}>✨ PRO</Text>
+              <View style={styles.proStatusText}>
+                <Text style={styles.proStatusTitle}>
+                  {currentTier === 'paper1' && 'Paper-1 Pro Active'}
+                  {currentTier === 'paper2' && 'Paper-2 Pro Active'}
+                  {currentTier === 'both' && 'Full Access Pro Active'}
+                </Text>
+                {daysRemaining !== null && daysRemaining > 0 && (
+                  <Text style={styles.proStatusSubtitle}>
+                    {daysRemaining} days remaining
+                  </Text>
+                )}
+              </View>
+            </View>
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Choose Your Plan</Text>
+          <Text style={styles.headerTitle}>
+            {isProActive ? 'Upgrade Your Plan' : 'Choose Your Plan'}
+          </Text>
           <Text style={styles.headerSubtitle}>
             Select the best plan for your TET preparation
           </Text>
@@ -97,7 +139,24 @@ export default function PricingScreen() {
                         <Text style={styles.duration}>{option.duration}</Text>
                         <Text style={styles.price}>₹{option.price}/-</Text>
                       </View>
-                      <TouchableOpacity style={styles.selectButton}>
+                      <TouchableOpacity
+                        style={styles.selectButton}
+                        onPress={() => {
+                          const tierMap: Record<string, TierType> = {
+                            'TS-TET Paper-1': 'paper1',
+                            'TS-TET Paper-2': 'paper2',
+                            'TS-TET Paper-1 + Paper-2': 'both',
+                          };
+                          const packageMap: Record<string, PackageType> = {
+                            '3 Months': '3_months',
+                            '1 Year': '1_year',
+                          };
+                          handleSelectPlan(
+                            tierMap[plan.title],
+                            packageMap[option.duration]
+                          );
+                        }}
+                      >
                         <Text style={styles.selectButtonText}>Select</Text>
                       </TouchableOpacity>
                     </View>
@@ -127,6 +186,15 @@ export default function PricingScreen() {
           </Text>
         </View>
       </ScrollView>
+
+      {/* Razorpay Payment Modal */}
+      <RazorpayCheckout
+        tier={selectedTier}
+        package={selectedPackage}
+        visible={showPayment}
+        onClose={() => setShowPayment(false)}
+        onSuccess={handlePaymentSuccess}
+      />
     </SafeAreaView>
   );
 }
@@ -271,5 +339,35 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  // Pro Status Banner Styles
+  proStatusBanner: {
+    backgroundColor: '#eff6ff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: '#3b82f6',
+  },
+  proStatusContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  proStatusBadge: {
+    fontSize: 24,
+  },
+  proStatusText: {
+    flex: 1,
+  },
+  proStatusTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1e40af',
+    marginBottom: 2,
+  },
+  proStatusSubtitle: {
+    fontSize: 14,
+    color: '#3b82f6',
   },
 });
