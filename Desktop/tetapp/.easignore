@@ -1,0 +1,13 @@
+# Exclude all parent directory contents
+../../*
+
+# Standard ignores
+.git
+node_modules
+.expo
+.DS_Store
+
+# Explicitly allow this project directory
+!.
+!./*
+!./**/*
