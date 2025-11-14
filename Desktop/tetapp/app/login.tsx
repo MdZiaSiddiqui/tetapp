@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '../lib/auth-context';
@@ -11,10 +11,11 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   // Redirect to home if already logged in
-  if (user) {
-    router.replace('/(tabs)/home');
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      router.replace('/(tabs)/home');
+    }
+  }, [user]);
 
   const handleGoogleSignIn = async () => {
     try {

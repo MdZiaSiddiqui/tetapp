@@ -40,7 +40,7 @@ export default {
     },
     extra: {
       eas: {
-        projectId: process.env.EAS_PROJECT_ID || "YOUR_EAS_PROJECT_ID"
+        projectId: "41217559-723c-4449-a10b-46de693b6e84"
       },
       EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
     }

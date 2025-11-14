@@ -453,3 +453,7 @@ router.push({
 // Go back
 router.back();
 ```
+
+
+To open emulator : emulator -avd Medium_Phone_API_36.1
+
