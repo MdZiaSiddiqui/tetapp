@@ -1,185 +1,126 @@
-# Quick Start Guide - Questions Database Setup
+# 🚀 Native Google Sign-In - Quick Start
 
-## 📋 What Was Created
+## ✅ What I Did
 
-### 1. **Database Files**
-- ✅ `supabase-migrations.sql` - Complete database schema and setup
-- ✅ `biochemistry-enzyme-questions.json` - 10 sample enzyme questions
+I've implemented **native Google Sign-In** with NO browser popups!
 
-### 2. **Code Files**
-- ✅ `lib/types/database.types.ts` - TypeScript type definitions
-- ✅ `lib/api/questions.ts` - Helper functions for fetching questions
-- ✅ `scripts/seed-questions.ts` - Updated to include enzyme questions
-
-### 3. **Documentation**
-- ✅ `SETUP_INSTRUCTIONS.md` - Detailed setup guide
-- ✅ `USAGE_EXAMPLE.tsx` - React component examples
-- ✅ `QUICK_START.md` - This file
+### Files Modified/Created:
+1. ✅ `lib/auth-context.tsx` - Native Google Sign-In implementation
+2. ✅ `app.config.js` - Replaced app.json with plugin configuration
+3. ✅ `eas.json` - EAS build configuration
+4. ✅ `.env` - Updated with Google OAuth templates
+5. ✅ `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md` - Complete setup guide
 
 ---
 
-## 🚀 3-Step Setup
+## 🎯 Next Steps (What YOU Need to Do)
 
-### Step 1: Run Database Migration
+### 1. Google Cloud Console Setup (30 minutes)
+
+Create OAuth credentials in Google Cloud Console:
+
+1. **Go to:** https://console.cloud.google.com/apis/credentials
+2. **Create 3 OAuth clients:**
+   - Web Client (for Supabase)
+   - iOS Client (for iOS app)
+   - Android Client (for Android app)
+
+**📋 Read:** `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md` for detailed step-by-step instructions.
+
+### 2. Update .env File
+
+After getting credentials from Google Console, update `.env`:
+
 ```bash
-# Copy supabase-migrations.sql content
-# Paste in Supabase SQL Editor > Run
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=YOUR_IOS_CLIENT_ID.apps.googleusercontent.com
+EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME=com.googleusercontent.apps.YOUR_REVERSED_ID
 ```
 
-### Step 2: Seed Questions
+### 3. Configure Supabase
+
+1. Go to: https://supabase.com/dashboard/project/thvucacdrsexfcpkswpv/auth/providers
+2. Enable Google provider
+3. Add Web Client ID and Secret
+4. Save
+
+### 4. Install EAS CLI
+
 ```bash
-npm run seed
+npm install -g eas-cli
+eas login
 ```
 
-### Step 3: Verify
-- Check Supabase Table Editor → `questions` table
-- Should see 20 total questions (10 general + 10 enzyme)
+### 5. Build Development Build
+
+**For iOS:**
+```bash
+eas build --profile development --platform ios
+```
+
+**For Android:**
+```bash
+eas build --profile development --platform android
+```
+
+**Note:** First build takes 10-15 minutes.
+
+### 6. Install Development Build
+
+After build completes:
+- Download the build from EAS
+- Install on your device/simulator
+- Run: `npx expo start --dev-client`
+
+### 7. Test Native Sign-In!
+
+1. Open the development build
+2. Tap "Continue with Google"
+3. **Native Google Sign-In UI appears** (NO browser!)
+4. Select account
+5. ✅ Signed in!
 
 ---
 
-## 💡 How to Use in Your App
+## ⚡ Quick Command Reference
 
-### Fetch Questions by Chapter
-```typescript
-import { getQuestionsByChapter } from './lib/api/questions';
+```bash
+# Install EAS CLI
+npm install -g eas-cli
 
-// When user clicks "Enzymes" chapter
-const { data } = await getQuestionsByChapter('Biochemistry', 'Enzymes');
-// Returns: 10 enzyme questions
-```
+# Login
+eas login
 
-### Use in React Component
-```typescript
-import { useQuery } from '@tanstack/react-query';
+# Configure project
+eas build:configure
 
-const { data: questions } = useQuery({
-  queryKey: ['questions', 'Biochemistry', 'Enzymes'],
-  queryFn: async () => {
-    const result = await getQuestionsByChapter('Biochemistry', 'Enzymes');
-    if (result.error) throw result.error;
-    return result.data;
-  },
-});
-```
+# Build for iOS
+eas build --profile development --platform ios
 
----
+# Build for Android
+eas build --profile development --platform android
 
-## 📊 Database Structure
-
-```
-subjects (already exists)
-  ↓
-chapters (already exists)
-  ↓
-questions (NEW!)
-  - id, subject_id, chapter_id
-  - question, options[], solutions
-  - difficulty, tag, image_url
-  - filters (metadata)
-```
-
----
-
-## 🧪 Sample Enzyme Questions Include
-
-1. Competitive inhibition (Km, Vmax)
-2. Non-competitive inhibition
-3. Michaelis constant (Km)
-4. Clinical case - cofactor deficiency
-5. Coenzymes (NAD+, FAD)
-6. Enzyme regulation (phosphorylation)
-7. Allosteric enzymes (sigmoidal kinetics)
-8. Suicide inhibition (aspirin/COX)
-9. Enzyme classification (transferases)
-10. Transition state stabilization
-
-All questions have:
-- ✅ 4 multiple choice options
-- ✅ Detailed explanations
-- ✅ Difficulty levels (easy/medium/difficult)
-- ✅ Tags (enzyme-kinetics, clinical-enzymology, etc.)
-
----
-
-## 📁 File Locations
-
-```
-tet/
-├── supabase-migrations.sql          ← Run this in Supabase
-├── biochemistry-enzyme-questions.json
-├── scripts/
-│   └── seed-questions.ts             ← Updated seeding script
-├── lib/
-│   ├── types/
-│   │   └── database.types.ts         ← TypeScript types
-│   └── api/
-│       └── questions.ts              ← API helpers
-├── SETUP_INSTRUCTIONS.md             ← Full documentation
-├── USAGE_EXAMPLE.tsx                 ← Code examples
-└── QUICK_START.md                    ← This file
+# Run dev server
+npx expo start --dev-client
 ```
 
 ---
 
-## 🎯 Next Steps
+## 🎯 Timeline
 
-1. ✅ **Done**: Database schema created
-2. ✅ **Done**: Sample questions ready
-3. **TODO**: Integrate into your app UI
-4. **TODO**: Add more questions as needed
-5. **TODO**: Upload images to storage bucket
-
----
-
-## 🔍 Useful Queries
-
-### Get all enzyme questions:
-```typescript
-const { data } = await getQuestionsByChapter('Biochemistry', 'Enzymes');
-```
-
-### Get questions by difficulty:
-```typescript
-import { getQuestions } from './lib/api/questions';
-
-const { data } = await getQuestions({
-  chapter_id: 'some-chapter-id',
-  difficulty: 'medium'
-});
-```
-
-### Get random questions for practice:
-```typescript
-import { getRandomQuestions } from './lib/api/questions';
-
-const { data } = await getRandomQuestions({
-  subject_id: 'biochemistry',
-  count: 10
-});
-```
+- ⏱️ **Google Cloud setup:** 30 minutes
+- ⏱️ **Supabase config:** 5 minutes
+- ⏱️ **First EAS build:** 15 minutes
+- ⏱️ **Testing:** 5 minutes
+- **Total:** ~1 hour
 
 ---
 
-## ❓ Need Help?
+## 🚀 Ready to Start?
 
-- Check `SETUP_INSTRUCTIONS.md` for detailed steps
-- See `USAGE_EXAMPLE.tsx` for component examples
-- Review Supabase dashboard for data verification
+1. Open `NATIVE_GOOGLE_SIGNIN_COMPLETE_SETUP.md`
+2. Follow Step 1: Google Cloud Console setup
+3. Continue through all steps
+4. Build and test!
 
----
-
-## ✨ Features
-
-✅ Proper foreign key relationships
-✅ Row Level Security (RLS) enabled
-✅ Indexed for fast queries
-✅ Image storage bucket ready
-✅ TypeScript type safety
-✅ React Query integration examples
-✅ Auto-updating timestamps
-✅ Difficulty levels and tags
-✅ 20 sample questions included
-
----
-
-**Ready to go!** 🎉
+Good luck! 🎉
