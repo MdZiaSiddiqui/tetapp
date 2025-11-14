@@ -30,9 +30,10 @@ export default {
       favicon: "./assets/favicon.png",
       bundler: "metro"
     },
-    scheme: "tetapp",
+    scheme: "tgtet",
     plugins: [
-      "expo-router"
+      "expo-router",
+      "@react-native-google-signin/google-signin"
     ],
     experiments: {
       typedRoutes: true
@@ -40,7 +41,8 @@ export default {
     extra: {
       eas: {
         projectId: process.env.EAS_PROJECT_ID || "YOUR_EAS_PROJECT_ID"
-      }
+      },
+      EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
     }
   }
 };

@@ -1,252 +1,0 @@
-[dotenv@17.2.3] injecting env (5) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
-🌱 Starting TET Questions Seeding Process...
-
-📁 Processing 29 data files
-
-
-📖 Processing: childDevelopmentPaper1Data.ts
-   Subject: Child Development | Paper: Paper 1 | Language: English
-   ✅ Loaded 510 questions
-   🔄 Transformed 510 questions
-   💾 Inserting questions...
-✅ Inserted 50/510 questions✅ Inserted 100/510 questions✅ Inserted 150/510 questions✅ Inserted 200/510 questions✅ Inserted 250/510 questions✅ Inserted 300/510 questions✅ Inserted 350/510 questions✅ Inserted 400/510 questions✅ Inserted 450/510 questions✅ Inserted 500/510 questions✅ Inserted 510/510 questions
-   ✅ Success: 510 | ❌ Errors: 0
-
-📖 Processing: childDevelopmentPaper1DataTelugu.ts
-   Subject: Child Development | Paper: Paper 1 | Language: Telugu
-   ✅ Loaded 510 questions
-   🔄 Transformed 510 questions
-   💾 Inserting questions...
-✅ Inserted 50/510 questions✅ Inserted 100/510 questions✅ Inserted 150/510 questions✅ Inserted 200/510 questions✅ Inserted 250/510 questions✅ Inserted 300/510 questions✅ Inserted 350/510 questions✅ Inserted 400/510 questions✅ Inserted 450/510 questions✅ Inserted 500/510 questions✅ Inserted 510/510 questions
-   ✅ Success: 510 | ❌ Errors: 0
-
-📖 Processing: childDevelopmentPaper1DataUrdu.ts
-   Subject: Child Development | Paper: Paper 1 | Language: Urdu
-   ✅ Loaded 510 questions
-   🔄 Transformed 510 questions
-   💾 Inserting questions...
-✅ Inserted 50/510 questions✅ Inserted 100/510 questions✅ Inserted 150/510 questions✅ Inserted 200/510 questions✅ Inserted 250/510 questions✅ Inserted 300/510 questions✅ Inserted 350/510 questions✅ Inserted 400/510 questions✅ Inserted 450/510 questions✅ Inserted 500/510 questions✅ Inserted 510/510 questions
-   ✅ Success: 510 | ❌ Errors: 0
-
-📖 Processing: childDevelopmentPaper2Data.ts
-   Subject: Child Development | Paper: Paper 2 | Language: English
-   ✅ Loaded 657 questions
-   🔄 Transformed 657 questions
-   💾 Inserting questions...
-✅ Inserted 50/657 questions✅ Inserted 100/657 questions✅ Inserted 150/657 questions✅ Inserted 200/657 questions✅ Inserted 250/657 questions✅ Inserted 300/657 questions✅ Inserted 350/657 questions✅ Inserted 400/657 questions✅ Inserted 450/657 questions✅ Inserted 500/657 questions✅ Inserted 550/657 questions✅ Inserted 600/657 questions✅ Inserted 650/657 questions✅ Inserted 657/657 questions
-   ✅ Success: 657 | ❌ Errors: 0
-
-📖 Processing: childDevelopmentPaper2DataTelugu.ts
-   Subject: Child Development | Paper: Paper 2 | Language: Telugu
-   ✅ Loaded 691 questions
-   🔄 Transformed 691 questions
-   💾 Inserting questions...
-✅ Inserted 50/691 questions✅ Inserted 100/691 questions✅ Inserted 150/691 questions✅ Inserted 200/691 questions✅ Inserted 250/691 questions✅ Inserted 300/691 questions✅ Inserted 350/691 questions✅ Inserted 400/691 questions✅ Inserted 450/691 questions✅ Inserted 500/691 questions✅ Inserted 550/691 questions✅ Inserted 600/691 questions✅ Inserted 650/691 questions✅ Inserted 691/691 questions
-   ✅ Success: 691 | ❌ Errors: 0
-
-📖 Processing: childDevelopmentPaper2DataUrdu.ts
-   Subject: Child Development | Paper: Paper 2 | Language: Urdu
-   ✅ Loaded 659 questions
-   🔄 Transformed 659 questions
-   💾 Inserting questions...
-✅ Inserted 50/659 questions✅ Inserted 100/659 questions✅ Inserted 150/659 questions✅ Inserted 200/659 questions✅ Inserted 250/659 questions✅ Inserted 300/659 questions✅ Inserted 350/659 questions✅ Inserted 400/659 questions✅ Inserted 450/659 questions✅ Inserted 500/659 questions✅ Inserted 550/659 questions✅ Inserted 600/659 questions✅ Inserted 650/659 questions✅ Inserted 659/659 questions
-   ✅ Success: 659 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper1Data.ts
-   Subject: Mathematics | Paper: Paper 1 | Language: English
-   ✅ Loaded 540 questions
-   🔄 Transformed 540 questions
-   💾 Inserting questions...
-✅ Inserted 50/540 questions✅ Inserted 100/540 questions✅ Inserted 150/540 questions✅ Inserted 200/540 questions✅ Inserted 250/540 questions✅ Inserted 300/540 questions✅ Inserted 350/540 questions✅ Inserted 400/540 questions✅ Inserted 450/540 questions✅ Inserted 500/540 questions✅ Inserted 540/540 questions
-   ✅ Success: 540 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper1DataTelugu.ts
-   Subject: Mathematics | Paper: Paper 1 | Language: Telugu
-   ✅ Loaded 520 questions
-   🔄 Transformed 520 questions
-   💾 Inserting questions...
-✅ Inserted 50/520 questions✅ Inserted 100/520 questions✅ Inserted 150/520 questions✅ Inserted 200/520 questions✅ Inserted 250/520 questions✅ Inserted 300/520 questions✅ Inserted 350/520 questions✅ Inserted 400/520 questions✅ Inserted 450/520 questions✅ Inserted 500/520 questions✅ Inserted 520/520 questions
-   ✅ Success: 520 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper1DataUrdu.ts
-   Subject: Mathematics | Paper: Paper 1 | Language: Urdu
-   ✅ Loaded 522 questions
-   🔄 Transformed 522 questions
-   💾 Inserting questions...
-✅ Inserted 50/522 questions✅ Inserted 100/522 questions✅ Inserted 150/522 questions✅ Inserted 200/522 questions✅ Inserted 250/522 questions✅ Inserted 300/522 questions✅ Inserted 350/522 questions✅ Inserted 400/522 questions✅ Inserted 450/522 questions✅ Inserted 500/522 questions✅ Inserted 522/522 questions
-   ✅ Success: 522 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper2Data.ts
-   Subject: Mathematics | Paper: Paper 2 | Language: English
-   ✅ Loaded 719 questions
-   🔄 Transformed 719 questions
-   💾 Inserting questions...
-✅ Inserted 50/719 questions✅ Inserted 100/719 questions✅ Inserted 150/719 questions✅ Inserted 200/719 questions✅ Inserted 250/719 questions✅ Inserted 300/719 questions✅ Inserted 350/719 questions✅ Inserted 400/719 questions✅ Inserted 450/719 questions✅ Inserted 500/719 questions✅ Inserted 550/719 questions✅ Inserted 600/719 questions✅ Inserted 650/719 questions✅ Inserted 700/719 questions✅ Inserted 719/719 questions
-   ✅ Success: 719 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper2DataTelugu.ts
-   Subject: Mathematics | Paper: Paper 2 | Language: Telugu
-   ✅ Loaded 714 questions
-   🔄 Transformed 714 questions
-   💾 Inserting questions...
-✅ Inserted 50/714 questions✅ Inserted 100/714 questions✅ Inserted 150/714 questions✅ Inserted 200/714 questions✅ Inserted 250/714 questions✅ Inserted 300/714 questions✅ Inserted 350/714 questions✅ Inserted 400/714 questions✅ Inserted 450/714 questions✅ Inserted 500/714 questions✅ Inserted 550/714 questions✅ Inserted 600/714 questions✅ Inserted 650/714 questions✅ Inserted 700/714 questions✅ Inserted 714/714 questions
-   ✅ Success: 714 | ❌ Errors: 0
-
-📖 Processing: mathematicsPaper2DataUrdu.ts
-   Subject: Mathematics | Paper: Paper 2 | Language: Urdu
-   ✅ Loaded 706 questions
-   🔄 Transformed 706 questions
-   💾 Inserting questions...
-✅ Inserted 50/706 questions✅ Inserted 100/706 questions✅ Inserted 150/706 questions✅ Inserted 200/706 questions✅ Inserted 250/706 questions✅ Inserted 300/706 questions✅ Inserted 350/706 questions✅ Inserted 400/706 questions✅ Inserted 450/706 questions✅ Inserted 500/706 questions✅ Inserted 550/706 questions✅ Inserted 600/706 questions✅ Inserted 650/706 questions✅ Inserted 700/706 questions✅ Inserted 706/706 questions
-   ✅ Success: 706 | ❌ Errors: 0
-
-📖 Processing: sciencePaper2Data.ts
-   Subject: Science | Paper: Paper 2 | Language: English
-   ✅ Loaded 686 questions
-   🔄 Transformed 686 questions
-   💾 Inserting questions...
-✅ Inserted 50/686 questions✅ Inserted 100/686 questions✅ Inserted 150/686 questions✅ Inserted 200/686 questions✅ Inserted 250/686 questions✅ Inserted 300/686 questions✅ Inserted 350/686 questions✅ Inserted 400/686 questions✅ Inserted 450/686 questions✅ Inserted 500/686 questions✅ Inserted 550/686 questions✅ Inserted 600/686 questions✅ Inserted 650/686 questions✅ Inserted 686/686 questions
-   ✅ Success: 686 | ❌ Errors: 0
-
-📖 Processing: sciencePaper2DataTelugu.ts
-   Subject: Science | Paper: Paper 2 | Language: Telugu
-   ✅ Loaded 688 questions
-   🔄 Transformed 688 questions
-   💾 Inserting questions...
-✅ Inserted 50/688 questions✅ Inserted 100/688 questions✅ Inserted 150/688 questions✅ Inserted 200/688 questions✅ Inserted 250/688 questions✅ Inserted 300/688 questions✅ Inserted 350/688 questions✅ Inserted 400/688 questions✅ Inserted 450/688 questions✅ Inserted 500/688 questions✅ Inserted 550/688 questions✅ Inserted 600/688 questions✅ Inserted 650/688 questions✅ Inserted 688/688 questions
-   ✅ Success: 688 | ❌ Errors: 0
-
-📖 Processing: sciencePaper2DataUrdu.ts
-   Subject: Science | Paper: Paper 2 | Language: Urdu
-   ✅ Loaded 685 questions
-   🔄 Transformed 685 questions
-   💾 Inserting questions...
-✅ Inserted 50/685 questions✅ Inserted 100/685 questions✅ Inserted 150/685 questions✅ Inserted 200/685 questions✅ Inserted 250/685 questions✅ Inserted 300/685 questions✅ Inserted 350/685 questions✅ Inserted 400/685 questions✅ Inserted 450/685 questions✅ Inserted 500/685 questions✅ Inserted 550/685 questions✅ Inserted 600/685 questions✅ Inserted 650/685 questions✅ Inserted 685/685 questions
-   ✅ Success: 685 | ❌ Errors: 0
-
-📖 Processing: socialPaper2Data.ts
-   Subject: Social Studies | Paper: Paper 2 | Language: English
-   ✅ Loaded 1039 questions
-   🔄 Transformed 1039 questions
-   💾 Inserting questions...
-✅ Inserted 50/1039 questions✅ Inserted 100/1039 questions✅ Inserted 150/1039 questions✅ Inserted 200/1039 questions✅ Inserted 250/1039 questions✅ Inserted 300/1039 questions✅ Inserted 350/1039 questions✅ Inserted 400/1039 questions✅ Inserted 450/1039 questions✅ Inserted 500/1039 questions✅ Inserted 550/1039 questions✅ Inserted 600/1039 questions✅ Inserted 650/1039 questions✅ Inserted 700/1039 questions✅ Inserted 750/1039 questions✅ Inserted 800/1039 questions✅ Inserted 850/1039 questions✅ Inserted 900/1039 questions✅ Inserted 950/1039 questions✅ Inserted 1000/1039 questions✅ Inserted 1039/1039 questions
-   ✅ Success: 1039 | ❌ Errors: 0
-
-📖 Processing: socialPaper2DataTelugu.ts
-   Subject: Social Studies | Paper: Paper 2 | Language: Telugu
-   ✅ Loaded 485 questions
-   🔄 Transformed 485 questions
-   💾 Inserting questions...
-✅ Inserted 50/485 questions✅ Inserted 100/485 questions✅ Inserted 150/485 questions✅ Inserted 200/485 questions✅ Inserted 250/485 questions✅ Inserted 300/485 questions✅ Inserted 350/485 questions✅ Inserted 400/485 questions✅ Inserted 450/485 questions✅ Inserted 485/485 questions
-   ✅ Success: 485 | ❌ Errors: 0
-
-📖 Processing: socialPaper2DataUrdu.ts
-   Subject: Social Studies | Paper: Paper 2 | Language: Urdu
-   ✅ Loaded 1040 questions
-   🔄 Transformed 1040 questions
-   💾 Inserting questions...
-✅ Inserted 50/1040 questions✅ Inserted 100/1040 questions✅ Inserted 150/1040 questions✅ Inserted 200/1040 questions✅ Inserted 250/1040 questions✅ Inserted 300/1040 questions✅ Inserted 350/1040 questions✅ Inserted 400/1040 questions✅ Inserted 450/1040 questions✅ Inserted 500/1040 questions✅ Inserted 550/1040 questions✅ Inserted 600/1040 questions✅ Inserted 650/1040 questions✅ Inserted 700/1040 questions✅ Inserted 750/1040 questions✅ Inserted 800/1040 questions✅ Inserted 850/1040 questions✅ Inserted 900/1040 questions✅ Inserted 950/1040 questions✅ Inserted 1000/1040 questions✅ Inserted 1040/1040 questions
-   ✅ Success: 1040 | ❌ Errors: 0
-
-📖 Processing: englishPaper1Data.ts
-   Subject: English | Paper: Paper 1 | Language: English
-   ✅ Loaded 500 questions
-   🔄 Transformed 500 questions
-   💾 Inserting questions...
-✅ Inserted 50/500 questions❌ Error inserting batch 2/10: null value in column "correct_answer" of relation "questions" violates not-null constraint
-✅ Inserted 100/500 questions✅ Inserted 150/500 questions✅ Inserted 200/500 questions✅ Inserted 250/500 questions✅ Inserted 300/500 questions✅ Inserted 350/500 questions✅ Inserted 400/500 questions✅ Inserted 450/500 questions
-   ✅ Success: 450 | ❌ Errors: 50
-
-📖 Processing: englishPaper2Data.ts
-   Subject: English | Paper: Paper 2 | Language: English
-   ✅ Loaded 549 questions
-   🔄 Transformed 549 questions
-   💾 Inserting questions...
-✅ Inserted 50/549 questions✅ Inserted 100/549 questions✅ Inserted 150/549 questions✅ Inserted 200/549 questions✅ Inserted 250/549 questions✅ Inserted 300/549 questions✅ Inserted 350/549 questions✅ Inserted 400/549 questions✅ Inserted 450/549 questions✅ Inserted 500/549 questions✅ Inserted 549/549 questions
-   ✅ Success: 549 | ❌ Errors: 0
-
-📖 Processing: environmentalPaper1Data.ts
-   Subject: Environmental Studies | Paper: Paper 1 | Language: English
-   ✅ Loaded 477 questions
-   🔄 Transformed 477 questions
-   💾 Inserting questions...
-✅ Inserted 50/477 questions✅ Inserted 100/477 questions✅ Inserted 150/477 questions✅ Inserted 200/477 questions✅ Inserted 250/477 questions✅ Inserted 300/477 questions✅ Inserted 350/477 questions✅ Inserted 400/477 questions✅ Inserted 450/477 questions✅ Inserted 477/477 questions
-   ✅ Success: 477 | ❌ Errors: 0
-
-📖 Processing: environmentalPaper1DataTelugu.ts
-   Subject: Environmental Studies | Paper: Paper 1 | Language: Telugu
-   ✅ Loaded 477 questions
-   🔄 Transformed 477 questions
-   💾 Inserting questions...
-✅ Inserted 50/477 questions✅ Inserted 100/477 questions✅ Inserted 150/477 questions✅ Inserted 200/477 questions✅ Inserted 250/477 questions✅ Inserted 300/477 questions✅ Inserted 350/477 questions✅ Inserted 400/477 questions✅ Inserted 450/477 questions✅ Inserted 477/477 questions
-   ✅ Success: 477 | ❌ Errors: 0
-
-📖 Processing: environmentalPaper1DataUrdu.ts
-   Subject: Environmental Studies | Paper: Paper 1 | Language: Urdu
-   ✅ Loaded 477 questions
-   🔄 Transformed 477 questions
-   💾 Inserting questions...
-✅ Inserted 50/477 questions✅ Inserted 100/477 questions✅ Inserted 150/477 questions✅ Inserted 200/477 questions✅ Inserted 250/477 questions✅ Inserted 300/477 questions✅ Inserted 350/477 questions✅ Inserted 400/477 questions✅ Inserted 450/477 questions✅ Inserted 477/477 questions
-   ✅ Success: 477 | ❌ Errors: 0
-
-📖 Processing: hindiPaper1Data.ts
-   Subject: Hindi | Paper: Paper 1 | Language: English
-   ✅ Loaded 140 questions
-   🔄 Transformed 140 questions
-   💾 Inserting questions...
-✅ Inserted 50/140 questions✅ Inserted 100/140 questions✅ Inserted 140/140 questions
-   ✅ Success: 140 | ❌ Errors: 0
-
-📖 Processing: hindiPaper2Data.ts
-   Subject: Hindi | Paper: Paper 2 | Language: English
-   ✅ Loaded 180 questions
-   🔄 Transformed 180 questions
-   💾 Inserting questions...
-✅ Inserted 50/180 questions✅ Inserted 100/180 questions✅ Inserted 150/180 questions✅ Inserted 180/180 questions
-   ✅ Success: 180 | ❌ Errors: 0
-
-📖 Processing: urduPaper1Data.ts
-   Subject: Urdu | Paper: Paper 1 | Language: English
-   ✅ Loaded 359 questions
-   🔄 Transformed 359 questions
-   💾 Inserting questions...
-✅ Inserted 50/359 questions✅ Inserted 100/359 questions✅ Inserted 150/359 questions✅ Inserted 200/359 questions✅ Inserted 250/359 questions✅ Inserted 300/359 questions✅ Inserted 350/359 questions✅ Inserted 359/359 questions
-   ✅ Success: 359 | ❌ Errors: 0
-
-📖 Processing: urduPaper2Data.ts
-   Subject: Urdu | Paper: Paper 2 | Language: English
-   ✅ Loaded 390 questions
-   🔄 Transformed 390 questions
-   💾 Inserting questions...
-✅ Inserted 50/390 questions✅ Inserted 100/390 questions✅ Inserted 150/390 questions✅ Inserted 200/390 questions✅ Inserted 250/390 questions✅ Inserted 300/390 questions✅ Inserted 350/390 questions✅ Inserted 390/390 questions
-   ✅ Success: 390 | ❌ Errors: 0
-
-📖 Processing: teluguPaper1Data.ts
-   Subject: Telugu | Paper: Paper 1 | Language: Telugu
-   ✅ Loaded 259 questions
-   🔄 Transformed 259 questions
-   💾 Inserting questions...
-✅ Inserted 50/259 questions✅ Inserted 100/259 questions✅ Inserted 150/259 questions✅ Inserted 200/259 questions✅ Inserted 250/259 questions✅ Inserted 259/259 questions
-   ✅ Success: 259 | ❌ Errors: 0
-
-📖 Processing: teluguPaper2Data.ts
-   Subject: Telugu | Paper: Paper 2 | Language: Telugu
-   ✅ Loaded 378 questions
-   🔄 Transformed 378 questions
-   💾 Inserting questions...
-✅ Inserted 50/378 questions✅ Inserted 100/378 questions✅ Inserted 150/378 questions✅ Inserted 200/378 questions✅ Inserted 250/378 questions✅ Inserted 300/378 questions✅ Inserted 350/378 questions✅ Inserted 378/378 questions
-   ✅ Success: 378 | ❌ Errors: 0
-
-
-🎉 TET QUESTIONS SEEDING COMPLETED!
-═══════════════════════════════════════
-📊 Total Files Processed: 29
-📝 Total Questions: 16067
-✅ Successfully Inserted: 16017
-❌ Errors: 50
-📈 Success Rate: 99.69%
-═══════════════════════════════════════
-
-🔍 Verifying data in database...
-
-✅ Total questions in database: 1000

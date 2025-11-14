@@ -1,11 +1,15 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri } from 'expo-auth-session';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import Constants from 'expo-constants';
 
-// Complete the web browser session when auth is done
-WebBrowser.maybeCompleteAuthSession();
+// Configure Google Sign-In
+GoogleSignin.configure({
+  webClientId: Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  scopes: ['profile', 'email'],
+  offlineAccess: true,
+});
 
 type AuthContextType = {
   user: User | null;
@@ -65,120 +69,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('🚀 Starting browser-based Google Sign-In...');
+      console.log('🚀 Starting Native Google Sign-In...');
 
-      // Create a redirect URI for the app
-      const redirectTo = makeRedirectUri({
-        scheme: 'tetapp',
-        path: 'auth/callback',
-      });
+      // Check if Google Play services are available (Android)
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-      console.log('🔗 Redirect URI:', redirectTo);
+      // Sign in with Google - shows native bottom sheet popup
+      const userInfo = await GoogleSignin.signIn();
+      console.log('✅ Google Sign-In successful:', userInfo.data?.user.email);
 
-      // Sign in with Google using Supabase's OAuth (opens browser)
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      // Get the ID token from Google
+      const idToken = userInfo.data?.idToken;
+      if (!idToken) {
+        console.error('❌ No ID token received from Google');
+        return {
+          success: false,
+          error: 'No ID token received from Google',
+        };
+      }
+
+      console.log('🔑 Got ID token, signing in to Supabase...');
+
+      // Sign in to Supabase using the Google ID token
+      const { data, error } = await supabase.auth.signInWithIdToken({
         provider: 'google',
-        options: {
-          redirectTo,
-          skipBrowserRedirect: false,
-        },
+        token: idToken,
       });
 
       if (error) {
-        console.error('❌ OAuth error:', error);
+        console.error('❌ Supabase sign-in error:', error);
         return {
           success: false,
           error: error.message,
         };
       }
 
-      if (!data.url) {
-        return {
-          success: false,
-          error: 'No OAuth URL generated',
-        };
+      if (data.session) {
+        console.log('✅ Supabase session created successfully!');
+        console.log('User:', data.session.user.email);
+        return { success: true };
       }
 
-      console.log('🌐 Opening browser for authentication...');
-      console.log('OAuth URL:', data.url);
+      return {
+        success: false,
+        error: 'Failed to create session',
+      };
+    } catch (error: any) {
+      console.error('❌ Google Sign-In error:', error);
 
-      // Open the OAuth URL in the browser
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url,
-        redirectTo
-      );
-
-      console.log('Browser result type:', result.type);
-
-      if (result.type === 'success' && result.url) {
-        console.log('✅ Browser returned with URL:', result.url);
-
-        // Extract tokens from the URL
-        const url = result.url;
-        let access_token: string | null = null;
-        let refresh_token: string | null = null;
-
-        // Check for hash fragment (#access_token=...)
-        if (url.includes('#')) {
-          const hashPart = url.split('#')[1];
-          const hashParams = new URLSearchParams(hashPart);
-          access_token = hashParams.get('access_token');
-          refresh_token = hashParams.get('refresh_token');
-        }
-
-        // Check for query params (?access_token=...)
-        if (!access_token && url.includes('?')) {
-          const queryPart = url.split('?')[1]?.split('#')[0];
-          const queryParams = new URLSearchParams(queryPart);
-          access_token = queryParams.get('access_token');
-          refresh_token = queryParams.get('refresh_token');
-        }
-
-        console.log('Access token found:', !!access_token);
-        console.log('Refresh token found:', !!refresh_token);
-
-        if (access_token && refresh_token) {
-          // Set the session with the tokens
-          const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-            access_token,
-            refresh_token,
-          });
-
-          if (sessionError) {
-            console.error('❌ Error setting session:', sessionError);
-            return {
-              success: false,
-              error: sessionError.message,
-            };
-          }
-
-          if (sessionData.session) {
-            console.log('✅ Session created successfully!');
-            console.log('User:', sessionData.session.user.email);
-            return { success: true };
-          }
-        }
-
-        console.error('❌ No tokens found in callback URL');
-        return {
-          success: false,
-          error: 'Authentication failed - no tokens received',
-        };
-      } else if (result.type === 'cancel') {
+      // Handle user cancellation
+      if (error.code === 'SIGN_IN_CANCELLED') {
         console.log('⚠️ User cancelled sign in');
         return {
           success: false,
           error: 'Sign in cancelled',
         };
-      } else {
-        console.error('❌ Unexpected browser result:', result);
-        return {
-          success: false,
-          error: 'Authentication failed',
-        };
       }
-    } catch (error: any) {
-      console.error('❌ Google Sign-In error:', error);
+
       return {
         success: false,
         error: error.message || 'Failed to sign in with Google',
