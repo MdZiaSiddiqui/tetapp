@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSubject } from '../../hooks/useSupabaseData';
 import { getQuestionsBySubjectAndMode } from '../../lib/api/questions';
 import { getBookCover } from '../../lib/notes-data';
+import { useProAccess } from '../../hooks/useProAccess';
 
 // Language subjects that don't need language toggle
 const LANGUAGE_SUBJECTS = ['english', 'hindi', 'telugu', 'urdu'];
@@ -23,6 +24,9 @@ export default function SubjectDetail() {
 
   // Fetch subject details
   const { data: subject, isLoading, error } = useSubject(subjectId);
+
+  // Get premium access information
+  const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
 
   // Determine available languages based on selected paper
   const isHindiPaper = selectedPaperParam?.includes('Hindi');
@@ -61,6 +65,16 @@ export default function SubjectDetail() {
 
   // If no selection is made, show both (backward compatibility)
   const showBothPapers = !selectedPaperParam;
+
+  // Determine if user has access to the currently selected paper
+  // Paper 1 corresponds to "UltraThink" tier (hasPaper1Access)
+  // Paper 2 corresponds to other subjects
+  const currentPaperAccess = showPaper1 ? hasPaper1Access : hasPaper2Access;
+  const isPremiumLocked = !currentPaperAccess;
+
+  const handleLockedPress = () => {
+    router.push('/pricing');
+  };
 
   const handleModePress = async (paper: 'Paper 1' | 'Paper 2', mode: 'practice' | 'test' | 'notes') => {
     try {
@@ -195,17 +209,27 @@ export default function SubjectDetail() {
   }
 
   return (
-    <View className="flex-1 bg-white">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="px-6 pt-16 pb-6 bg-blue-500">
+      <LinearGradient
+        colors={['#9333ea', '#7e22ce']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="px-6 pt-16 pb-6"
+      >
         <View className="items-center">
           <Text className="text-xl font-medium text-white">
             {subject?.name || subjectName} & Pedagogy
           </Text>
         </View>
-      </View>
+      </LinearGradient>
 
       <ScrollView className="flex-1">
         <View className="px-6 py-6">
@@ -241,6 +265,12 @@ export default function SubjectDetail() {
                 <View className="flex-row flex-wrap justify-between">
                   {notesLanguages.map((lang) => {
                     const handleNotesPress = () => {
+                      // If locked, redirect to pricing
+                      if (isPremiumLocked) {
+                        handleLockedPress();
+                        return;
+                      }
+
                       // Map language to note suffix
                       const langSuffix = lang.toLowerCase() === 'english' || lang.toLowerCase() === 'hindi'
                         ? 'eng'
@@ -261,24 +291,45 @@ export default function SubjectDetail() {
                       <TouchableOpacity
                         key={lang}
                         onPress={handleNotesPress}
-                        className="w-[48%] mb-4 bg-white rounded-xl shadow-md overflow-hidden border border-gray-100"
+                        className="w-[48%] mb-4"
                       >
-                        {/* Display book cover image if available, otherwise show gradient */}
-                        {bookCoverImage ? (
-                          <Image
-                            source={bookCoverImage}
-                            className="w-full h-60"
-                            resizeMode="cover"
-                          />
-                        ) : (
-                          <View className="bg-gradient-to-br from-purple-500 to-purple-600 h-60 items-center justify-center">
-                            <Ionicons name="book-outline" size={48} color="white" />
+                        <View style={{ position: 'relative' }} className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                          {/* Display book cover image if available, otherwise show gradient */}
+                          {bookCoverImage ? (
+                            <Image
+                              source={bookCoverImage}
+                              className="w-full h-60"
+                              resizeMode="cover"
+                            />
+                          ) : (
+                            <View className="bg-gradient-to-br from-purple-500 to-purple-600 h-60 items-center justify-center">
+                              <Ionicons name="book-outline" size={48} color="white" />
+                            </View>
+                          )}
+                          <View className="p-3">
+                            <Text className="text-gray-700 font-semibold text-center text-sm">
+                              {lang}
+                            </Text>
                           </View>
-                        )}
-                        <View className="p-3">
-                          <Text className="text-gray-700 font-semibold text-center text-sm">
-                            {lang}
-                          </Text>
+
+                          {/* Lock Icon Overlay */}
+                          {isPremiumLocked && (
+                            <View
+                              style={{
+                                position: 'absolute',
+                                bottom: 50,
+                                right: 8,
+                                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                                borderRadius: 12,
+                                width: 24,
+                                height: 24,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <Ionicons name="lock-closed" size={14} color="#fbbf24" />
+                            </View>
+                          )}
                         </View>
                       </TouchableOpacity>
                     );
@@ -301,7 +352,7 @@ export default function SubjectDetail() {
                     onPress={() => setSelectedLanguage(lang)}
                     className={`flex-1 py-2.5 px-3 rounded-lg border-2 ${
                       selectedLanguage === lang
-                        ? 'bg-blue-500 border-blue-500'
+                        ? 'bg-purple-600 border-purple-600'
                         : 'bg-white border-gray-300'
                     }`}
                   >
@@ -318,63 +369,154 @@ export default function SubjectDetail() {
             </View>
           )}
 
-          {/* Paper 1 Section - Show based on selection and subject availability */}
-          {!PAPER_2_ONLY_SUBJECTS.includes(subjectId.toLowerCase()) && (showPaper1 || showBothPapers) && (
-            <View className="mb-6">
-              <Text className="text-gray-800 font-bold text-lg mb-3">Paper 1</Text>
+          {/* Practice & Test Sessions Grid */}
+          <View className="mb-6">
+            <Text className="text-gray-800 font-bold text-xl mb-5">Practice & Test Sessions</Text>
 
-              {/* Practice Button */}
-              <TouchableOpacity
-                onPress={() => handleModePress('Paper 1', 'practice')}
-                disabled={fetchingQuestions}
-                className="bg-green-500 py-3 px-4 rounded-lg shadow-sm active:bg-green-600 mb-2"
-              >
-                <Text className="text-white text-center font-semibold text-sm">
-                  Practice
-                </Text>
-              </TouchableOpacity>
+            {/* Generate 50 rows of Practice and Test */}
+            {Array.from({ length: 50 }, (_, index) => {
+              const sessionNumber = index + 1;
+              const isLocked = isPremiumLocked;
 
-              {/* Test Button */}
-              <TouchableOpacity
-                onPress={() => handleModePress('Paper 1', 'test')}
-                disabled={fetchingQuestions}
-                className="bg-orange-500 py-3 px-4 rounded-lg shadow-sm active:bg-orange-600"
-              >
-                <Text className="text-white text-center font-semibold text-sm">
-                  Test
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+              return (
+                <View key={sessionNumber} className="flex-row justify-between mb-4">
+                  {/* Practice Box */}
+                  <TouchableOpacity
+                    onPress={isLocked ? handleLockedPress : () => handleModePress('Paper 1', 'practice')}
+                    disabled={fetchingQuestions}
+                    activeOpacity={0.7}
+                    className="flex-1 mr-2"
+                  >
+                    <View style={{ position: 'relative' }}>
+                      <LinearGradient
+                        colors={['#06b6d4', '#0891b2']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        className="p-4 shadow-lg"
+                        style={{
+                          borderRadius: 20,
+                          shadowColor: '#06b6d4',
+                          shadowOffset: { width: 0, height: 4 },
+                          shadowOpacity: 0.3,
+                          shadowRadius: 8,
+                          elevation: 6,
+                        }}
+                      >
+                        {/* Icon */}
+                        <View className="flex-row items-center justify-between mb-2">
+                          <View className="bg-white/20 rounded-full p-2">
+                            <Ionicons name="pencil" size={20} color="white" />
+                          </View>
+                          <View className="bg-white/25 rounded-full px-3 py-1">
+                            <Text className="text-white text-xs font-bold">30Q</Text>
+                          </View>
+                        </View>
 
-          {/* Paper 2 Section - Show based on selection */}
-          {(showPaper2 || showBothPapers) && (
-            <View className="mb-4">
-              <Text className="text-gray-800 font-bold text-lg mb-3">Paper 2</Text>
+                        {/* Title */}
+                        <Text className="text-white font-bold text-lg mb-1">
+                          Practice-{sessionNumber}
+                        </Text>
 
-              {/* Practice Button */}
-              <TouchableOpacity
-                onPress={() => handleModePress('Paper 2', 'practice')}
-                disabled={fetchingQuestions}
-                className="bg-green-500 py-3 px-4 rounded-lg shadow-sm active:bg-green-600 mb-2"
-              >
-                <Text className="text-white text-center font-semibold text-sm">
-                  Practice
-                </Text>
-              </TouchableOpacity>
+                        {/* Subtitle */}
+                        <View className="flex-row items-center">
+                          <Ionicons name="checkmark-circle" size={14} color="rgba(255,255,255,0.8)" />
+                          <Text className="text-white/80 text-xs ml-1">
+                            Instant Feedback
+                          </Text>
+                        </View>
+                      </LinearGradient>
 
-              {/* Test Button */}
-              <TouchableOpacity
-                onPress={() => handleModePress('Paper 2', 'test')}
-                disabled={fetchingQuestions}
-                className="bg-orange-500 py-3 px-4 rounded-lg shadow-sm active:bg-orange-600"
-              >
-                <Text className="text-white text-center font-semibold text-sm">
-                  Test
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+                      {/* Lock Icon Overlay */}
+                      {isLocked && (
+                        <View
+                          style={{
+                            position: 'absolute',
+                            bottom: 8,
+                            right: 8,
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                            borderRadius: 12,
+                            width: 24,
+                            height: 24,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Ionicons name="lock-closed" size={14} color="#fbbf24" />
+                        </View>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+
+                  {/* Test Box */}
+                  <TouchableOpacity
+                    onPress={isLocked ? handleLockedPress : () => handleModePress('Paper 1', 'test')}
+                    disabled={fetchingQuestions}
+                    activeOpacity={0.7}
+                    className="flex-1 ml-2"
+                  >
+                    <View style={{ position: 'relative' }}>
+                      <LinearGradient
+                        colors={['#8b5cf6', '#7c3aed']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        className="p-4 shadow-lg"
+                        style={{
+                          borderRadius: 20,
+                          shadowColor: '#8b5cf6',
+                          shadowOffset: { width: 0, height: 4 },
+                          shadowOpacity: 0.3,
+                          shadowRadius: 8,
+                          elevation: 6,
+                        }}
+                      >
+                        {/* Icon */}
+                        <View className="flex-row items-center justify-between mb-2">
+                          <View className="bg-white/20 rounded-full p-2">
+                            <Ionicons name="timer" size={20} color="white" />
+                          </View>
+                          <View className="bg-white/25 rounded-full px-3 py-1">
+                            <Text className="text-white text-xs font-bold">30Q</Text>
+                          </View>
+                        </View>
+
+                        {/* Title */}
+                        <Text className="text-white font-bold text-lg mb-1">
+                          Test-{sessionNumber}
+                        </Text>
+
+                        {/* Subtitle */}
+                        <View className="flex-row items-center">
+                          <Ionicons name="trophy" size={14} color="rgba(255,255,255,0.8)" />
+                          <Text className="text-white/80 text-xs ml-1">
+                            Timed Challenge
+                          </Text>
+                        </View>
+                      </LinearGradient>
+
+                      {/* Lock Icon Overlay */}
+                      {isLocked && (
+                        <View
+                          style={{
+                            position: 'absolute',
+                            bottom: 8,
+                            right: 8,
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                            borderRadius: 12,
+                            width: 24,
+                            height: 24,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Ionicons name="lock-closed" size={14} color="#fbbf24" />
+                        </View>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
 
           {fetchingQuestions && (
             <View className="mt-4 bg-blue-50 p-4 rounded-xl mb-20">
@@ -389,30 +531,23 @@ export default function SubjectDetail() {
 
       {/* Floating Back Button - Bottom Right */}
       <View className="absolute bottom-8 right-6" style={{ zIndex: 1000 }}>
-        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.8}>
-          <LinearGradient
-            colors={['rgba(59, 130, 246, 0.9)', 'rgba(37, 99, 235, 0.8)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={{
-              width: 56,
-              height: 56,
-              borderRadius: 28,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 2,
-              borderColor: 'rgba(255, 255, 255, 0.5)',
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 8,
-            }}
-          >
-            <Ionicons name="chevron-back" size={28} color="white" />
-          </LinearGradient>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          activeOpacity={0.8}
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            backgroundColor: 'rgba(156, 163, 175, 0.3)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 1,
+            borderColor: 'rgba(255, 255, 255, 0.4)',
+          }}
+        >
+          <Ionicons name="chevron-back" size={28} color="#000000" />
         </TouchableOpacity>
       </View>
-    </View>
+    </LinearGradient>
   );
 }

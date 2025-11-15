@@ -15,6 +15,8 @@ import { getNoteById } from '@/lib/notes-data';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import { addRecentNote, saveProgress } from '@/lib/notes-storage';
+import { useProAccess } from '@/hooks/useProAccess';
+import UpgradePrompt from '@/components/premium/UpgradePrompt';
 
 export default function NotesViewer() {
   const router = useRouter();
@@ -23,6 +25,7 @@ export default function NotesViewer() {
   const [loading, setLoading] = useState(true);
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [showTOC, setShowTOC] = useState(false);
+  const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
 
   const noteId = typeof params.noteId === 'string' ? params.noteId : '';
   const note = getNoteById(noteId);
@@ -376,6 +379,23 @@ export default function NotesViewer() {
     // Inject CSS before closing </head> tag
     return modifiedHtml.replace('</head>', `${mobileCSS}</head>`);
   };
+
+  // Pro access check - Loading state
+  if (proLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#9333ea" />
+          <Text style={styles.loadingText}>Checking access...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // Pro access check - No access (require either paper1 or paper2)
+  if (!hasPaper1Access && !hasPaper2Access) {
+    return <UpgradePrompt tier="paper1" feature="Notes" />;
+  }
 
   if (!note) {
     return (

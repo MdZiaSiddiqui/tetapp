@@ -7,8 +7,11 @@ export default function Revision() {
   const router = useRouter();
 
   const handlePaperPress = (paperId: string, paperName: string) => {
-    // TODO: Navigate to paper-specific screen
-    console.log(`Selected: ${paperName}`);
+    // Navigate to home page with selected paper
+    router.push({
+      pathname: '/(tabs)/home',
+      params: { selectedPaper: paperName }
+    });
   };
 
   const renderPaperCard = (
@@ -17,11 +20,14 @@ export default function Revision() {
     languages: string,
     bgColor: string = 'bg-blue-500'
   ) => {
+    // Construct full paper name in the format used in home page
+    const fullPaperName = `${paperName} (${languages.replace(' / ', '/')})`;
+
     return (
       <TouchableOpacity
         key={paperId}
         className="w-full mb-3 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
-        onPress={() => handlePaperPress(paperId, paperName)}
+        onPress={() => handlePaperPress(paperId, fullPaperName)}
       >
         <View className="flex-row items-center p-4">
           <View className={`${bgColor} w-12 h-12 rounded-lg items-center justify-center mr-4`}>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Modal, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
@@ -78,6 +78,16 @@ export default function Home() {
   // Fetch subjects with statistics using our custom hook
   const { data: subjects, isLoading, error } = useSubjectsWithStats();
 
+  // Handle paper selection from revision tab
+  useEffect(() => {
+    if (params.selectedPaper && typeof params.selectedPaper === 'string') {
+      // Check if the paper is in the available options
+      if (PAPER_OPTIONS.includes(params.selectedPaper)) {
+        setSelectedPaper(params.selectedPaper);
+      }
+    }
+  }, [params.selectedPaper]);
+
   // Auto-open paper selector for new users after authentication
   useEffect(() => {
     if (params.showPaperSelector === 'true') {
@@ -106,19 +116,103 @@ export default function Home() {
   };
 
   const renderSubjectCard = (subject: SubjectWithStats) => {
+    const isSocialStudies = subject.id === 'social';
+    const isScience = subject.id === 'science';
+    const isChildDevelopment = subject.id === 'child-development';
+    const isMathematics = subject.id === 'mathematics';
+    const isUrdu = subject.id === 'urdu';
+    const isTelugu = subject.id === 'telugu';
+    const isEnglish = subject.id === 'english';
+    const isHindi = subject.id === 'hindi';
+    const isEnvironmental = subject.id === 'environmental';
+
     return (
       <TouchableOpacity
         key={subject.id}
         className="w-[48%] mb-4 bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
         onPress={() => handleSubjectPress(subject)}
       >
-        <View className="bg-gradient-to-br from-blue-500 to-blue-600 h-32 items-center justify-center">
-          <Text className="text-white text-3xl font-bold">
-            {subject.name.substring(0, 2).toUpperCase()}
-          </Text>
-        </View>
+        {isSocialStudies ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../Circle Crop Image (17)-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isScience ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../Gemini Generated Image (58)-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isChildDevelopment ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../Gemini Generated Image (58) copy-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isMathematics ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_02_42 PM-modified (1).png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isUrdu ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_07_14 PM-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isTelugu ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_09_19 PM-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isEnglish ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_20_40 PM-modified (1).png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isHindi ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_08_14 PM-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : isEnvironmental ? (
+          <View className="h-32 items-center justify-center bg-white">
+            <Image
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_21_50 PM-modified.png')}
+              className="w-24 h-24"
+              resizeMode="contain"
+            />
+          </View>
+        ) : (
+          <View className="bg-gradient-to-br from-purple-500 to-purple-600 h-32 items-center justify-center">
+            <Text className="text-white text-3xl font-bold">
+              {subject.name.substring(0, 2).toUpperCase()}
+            </Text>
+          </View>
+        )}
         <View className="p-4">
-          <Text className="text-gray-800 font-semibold text-center" numberOfLines={2}>
+          <Text className="text-gray-800 font-semibold text-center text-base" numberOfLines={2}>
             {subject.name} & Pedagogy
           </Text>
         </View>
@@ -181,54 +275,87 @@ export default function Home() {
         {/* Paper Selector */}
         <View className="mb-6">
           <TouchableOpacity
-            onPress={() => setShowDropdown(true)}
-            className="bg-white rounded-xl px-6 py-5 shadow-sm border border-gray-200 flex-row items-center justify-between"
+            onPress={() => {
+              console.log('Paper selector clicked, opening dropdown...');
+              setShowDropdown(true);
+            }}
+            activeOpacity={0.7}
+            className="bg-purple-600 rounded-2xl px-8 py-7 shadow-lg flex-row items-center justify-between"
           >
-            <Text className="text-2xl font-bold text-gray-800 flex-1 text-center">
-              {selectedPaper}
-            </Text>
-            <Ionicons name="chevron-down" size={24} color="#4B5563" />
+            <View className="flex-row items-center flex-shrink justify-center gap-2">
+              <Text className="text-xl font-bold text-white text-center" numberOfLines={2}>
+                {selectedPaper}
+              </Text>
+            </View>
+            <View className="ml-3">
+              <Ionicons name="chevron-down" size={28} color="#FFFFFF" />
+            </View>
           </TouchableOpacity>
         </View>
 
         {/* Dropdown Modal */}
+        {showDropdown && console.log('Modal should be visible now')}
         <Modal
           visible={showDropdown}
           transparent={true}
           animationType="fade"
-          onRequestClose={() => setShowDropdown(false)}
+          onRequestClose={() => {
+            console.log('Modal close requested');
+            setShowDropdown(false);
+          }}
         >
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setShowDropdown(false)}
+            onPress={() => {
+              console.log('Overlay clicked, closing modal');
+              setShowDropdown(false);
+            }}
             className="flex-1 bg-black/50 justify-center items-center px-6"
           >
-            <View className="bg-white rounded-2xl w-full max-w-md shadow-xl">
-              <ScrollView className="max-h-[700px]">
-                {PAPER_OPTIONS.map((option, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setSelectedPaper(option);
-                      setShowDropdown(false);
-                    }}
-                    className={`px-6 py-5 border-b border-gray-100 ${
-                      selectedPaper === option ? 'bg-blue-50' : ''
-                    }`}
-                  >
-                    <Text
-                      className={`text-lg ${
-                        selectedPaper === option
-                          ? 'text-blue-600 font-bold'
-                          : 'text-gray-700 font-medium'
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={(e) => {
+                e.stopPropagation();
+                console.log('Modal content clicked, not closing');
+              }}
+              className="bg-white rounded-2xl w-full max-w-md shadow-xl"
+            >
+              <View className="py-4 px-6 border-b border-gray-200">
+                <Text className="text-xl font-bold text-gray-800 text-center">
+                  Select Paper Type
+                </Text>
+              </View>
+              <ScrollView className="max-h-[600px]">
+                {PAPER_OPTIONS.map((option, index) => {
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        console.log('Paper option selected:', option);
+                        setSelectedPaper(option);
+                        setShowDropdown(false);
+                      }}
+                      className={`px-6 py-5 border-b border-gray-100 ${
+                        selectedPaper === option ? 'bg-blue-50' : ''
                       }`}
                     >
-                      {option}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <View className="flex-row items-center justify-between">
+                        <Text
+                          className={`text-base flex-1 ${
+                            selectedPaper === option
+                              ? 'text-blue-600 font-bold'
+                              : 'text-gray-700 font-medium'
+                          }`}
+                          numberOfLines={2}
+                        >
+                          {option}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
-            </View>
+            </TouchableOpacity>
           </TouchableOpacity>
         </Modal>
 

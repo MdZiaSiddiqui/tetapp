@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Linking, Share } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -78,12 +78,13 @@ export default function Profile() {
   };
 
   const handlePrivacyPolicy = () => {
-    Alert.alert('Privacy Policy', 'Privacy policy content will be displayed here.');
+    router.push('/legal/privacy');
   };
 
   const handleTermsOfService = () => {
-    Alert.alert('Terms of Service', 'Terms of service content will be displayed here.');
+    router.push('/legal/terms');
   };
+
 
   // Redirect to login if not authenticated
   if (!user && !loading) {

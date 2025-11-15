@@ -8,7 +8,8 @@ import '../global.css';
 // Suppress known dependency warnings
 LogBox.ignoreLogs([
   'SafeAreaView has been deprecated',
-  'Reduced motion setting is enabled'
+  'Reduced motion setting is enabled',
+  'Unable to activate keep awake'
 ]);
 
 const queryClient = new QueryClient({
@@ -38,7 +39,9 @@ export default function RootLayout() {
             <Stack.Screen name="subjects/[id]" />
             <Stack.Screen name="practice" />
             <Stack.Screen name="revision/session" />
+            <Stack.Screen name="pricing" />
             <Stack.Screen name="payment-success" />
+            <Stack.Screen name="legal/[type]" />
           </Stack>
         </AuthProvider>
       </QueryClientProvider>

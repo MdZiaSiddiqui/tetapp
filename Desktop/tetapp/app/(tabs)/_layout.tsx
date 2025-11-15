@@ -1,5 +1,6 @@
 import { Tabs, Redirect } from 'expo-router';
-import { Text, View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../lib/auth-context';
 
 export default function TabLayout() {
@@ -35,8 +36,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>🏠</Text>
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={24}
+              color={color}
+            />
           ),
           tabBarLabel: '',
         }}
@@ -44,8 +49,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="revision"
         options={{
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>🔄</Text>
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'document-text' : 'document-text-outline'}
+              size={24}
+              color={color}
+            />
           ),
           tabBarLabel: '',
         }}
@@ -53,8 +62,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="notes"
         options={{
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>💳</Text>
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'gift' : 'gift-outline'}
+              size={24}
+              color={color}
+            />
           ),
           tabBarLabel: '',
         }}
@@ -62,8 +75,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 24 }}>👤</Text>
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={24}
+              color={color}
+            />
           ),
           tabBarLabel: '',
         }}

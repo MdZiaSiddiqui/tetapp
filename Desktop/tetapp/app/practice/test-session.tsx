@@ -13,6 +13,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
+import { useProAccess } from '../../hooks/useProAccess';
+import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import { useTestTimer } from '../../hooks/useTestTimer';
 import { useQuestionStats } from '../../hooks/useQuestionStats';
 import { useTestSession } from '../../hooks/useTestSession';
@@ -58,6 +60,7 @@ export default function TestSession() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { user } = useAuth();
+  const { hasPaper1Access, loading: proLoading } = useProAccess();
 
   // Font size control
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
@@ -417,6 +420,20 @@ export default function TestSession() {
       return acc;
     }, {} as { [key: string]: string });
   }, [currentQuestion]);
+
+  // Pro access check - Loading state
+  if (proLoading) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <Text className="text-gray-600">Checking access...</Text>
+      </View>
+    );
+  }
+
+  // Pro access check - No access
+  if (!hasPaper1Access) {
+    return <UpgradePrompt tier="paper1" feature="Test Mode" />;
+  }
 
   // Error handling
   if (questionsError) {

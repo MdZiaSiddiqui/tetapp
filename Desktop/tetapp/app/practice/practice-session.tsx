@@ -15,6 +15,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
+import { useProAccess } from '../../hooks/useProAccess';
+import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -67,6 +69,7 @@ export default function PracticeSession() {
   const params = useLocalSearchParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { hasPaper1Access, loading: proLoading } = useProAccess();
 
   // Session state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -409,6 +412,21 @@ export default function PracticeSession() {
       opacity: showIndicator ? interpolate(translateX.value, [-80, -10], [1, 0], Extrapolation.CLAMP) : 0,
     };
   });
+
+  // Pro access check - Loading state
+  if (proLoading) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <ActivityIndicator size="large" color="#9333ea" />
+        <Text className="text-gray-600 mt-4 text-lg">Checking access...</Text>
+      </View>
+    );
+  }
+
+  // Pro access check - No access
+  if (!hasPaper1Access) {
+    return <UpgradePrompt tier="paper1" feature="Practice Mode" />;
+  }
 
   // Loading state
   if (isLoading) {

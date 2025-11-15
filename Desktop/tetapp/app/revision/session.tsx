@@ -12,6 +12,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
+import { useProAccess } from '../../hooks/useProAccess';
+import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import MathText from '../../components/MathText';
 
 interface Question {
@@ -31,6 +33,7 @@ export default function RevisionSession() {
   const params = useLocalSearchParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { hasPaper2Access, loading: proLoading } = useProAccess();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -256,6 +259,20 @@ export default function RevisionSession() {
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  // Pro access check - Loading state
+  if (proLoading) {
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <Text className="text-gray-600">Checking access...</Text>
+      </View>
+    );
+  }
+
+  // Pro access check - No access
+  if (!hasPaper2Access) {
+    return <UpgradePrompt tier="paper2" feature="Revision Mode" />;
+  }
 
   if (isLoading || !questions) {
     return (
