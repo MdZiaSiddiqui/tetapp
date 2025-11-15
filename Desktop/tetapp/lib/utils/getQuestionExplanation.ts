@@ -44,15 +44,27 @@ const normalizeExplanationValue = (value: unknown): string | null => {
   }
 
   if (Array.isArray(value)) {
-    const parts = value
-      .map((item) => normalizeExplanationValue(item))
-      .filter((part): part is string => !!part);
+    // Remove duplicates before joining
+    const uniqueParts = new Set<string>();
 
-    if (parts.length === 0) {
+    value.forEach((item) => {
+      const normalized = normalizeExplanationValue(item);
+      if (normalized) {
+        uniqueParts.add(normalized);
+      }
+    });
+
+    if (uniqueParts.size === 0) {
       return null;
     }
 
-    const joined = parts.join('\n');
+    // If there's only one unique part, return it directly (no newlines)
+    if (uniqueParts.size === 1) {
+      return Array.from(uniqueParts)[0];
+    }
+
+    // Join unique parts with newlines
+    const joined = Array.from(uniqueParts).join('\n');
     return joined.trim().length > 0 ? joined : null;
   }
 
@@ -73,11 +85,69 @@ export const getQuestionExplanation = (question: GenericQuestion): string | null
     return null;
   }
 
+  // Maximum reasonable explanation length (3,000 characters)
+  // Typical explanations: 200-1000 chars
+  // Detailed explanations: 1000-2000 chars
+  // Very detailed: 2000-3000 chars
+  // Anything beyond 3000 is likely a data issue
+  const MAX_EXPLANATION_LENGTH = 3000;
+
   for (const key of EXPLANATION_KEYS) {
     if (key in question) {
       const candidate = (question as Record<string, unknown>)[key] as PossibleExplanation;
+
+      // DEBUG: Log raw data type and structure
+      if (candidate !== null && candidate !== undefined) {
+        const dataType = Array.isArray(candidate) ? 'array' : typeof candidate;
+        const arrayLength = Array.isArray(candidate) ? candidate.length : 'N/A';
+        const preview = typeof candidate === 'string'
+          ? candidate.substring(0, 100)
+          : Array.isArray(candidate)
+            ? `Array(${arrayLength}): ${JSON.stringify(candidate.slice(0, 3))}...`
+            : JSON.stringify(candidate).substring(0, 100);
+
+        console.log(`[getQuestionExplanation] Found key "${key}":`, {
+          type: dataType,
+          arrayLength,
+          preview,
+          questionId: (question as any).id || 'unknown'
+        });
+      }
+
       const normalized = normalizeExplanationValue(candidate);
       if (normalized) {
+        // Log explanation length for all explanations
+        console.log(
+          `[getQuestionExplanation] Normalized explanation length: ${normalized.length} chars ` +
+          `(Key: "${key}", Question ID: ${(question as any).id || 'unknown'})`
+        );
+
+        // Check for suspiciously long explanations (possible data issue)
+        if (normalized.length > MAX_EXPLANATION_LENGTH) {
+          console.warn(
+            `getQuestionExplanation: Explanation exceeds max length (${normalized.length} chars). ` +
+            `Truncating. Key: "${key}", Question ID: ${(question as any).id || 'unknown'}`,
+            '\nFirst 200 chars:', normalized.substring(0, 200),
+            '\n...Last 200 chars:', normalized.substring(normalized.length - 200)
+          );
+
+          // Smart truncation - try to cut at sentence or paragraph boundary
+          let truncated = normalized.substring(0, MAX_EXPLANATION_LENGTH);
+
+          // Try to find last sentence ending (period, question mark, or exclamation)
+          const lastSentence = Math.max(
+            truncated.lastIndexOf('. '),
+            truncated.lastIndexOf('? '),
+            truncated.lastIndexOf('! ')
+          );
+
+          // If we found a sentence boundary in the last 20% of the truncated text, use it
+          if (lastSentence > MAX_EXPLANATION_LENGTH * 0.8) {
+            truncated = truncated.substring(0, lastSentence + 1);
+          }
+
+          return truncated + '\n\n[Content truncated - explanation too long]';
+        }
         return normalized;
       }
     }

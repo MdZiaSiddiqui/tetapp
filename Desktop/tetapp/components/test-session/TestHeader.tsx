@@ -45,15 +45,6 @@ export const TestHeader = memo(function TestHeader({
           </Text>
         </View>
       </View>
-
-      <View className="bg-gray-300 h-2 rounded-full overflow-hidden">
-        <View
-          className="bg-blue-600 h-full rounded-full"
-          style={{
-            width: `${(currentQuestionNumber / totalQuestions) * 100}%`,
-          }}
-        />
-      </View>
     </View>
   );
 });

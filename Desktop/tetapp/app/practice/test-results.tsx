@@ -9,6 +9,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import MathText from '../../components/MathText';
 import getQuestionExplanation from '../../lib/utils/getQuestionExplanation';
 
@@ -56,9 +57,46 @@ export default function TestResults() {
   const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
 
   // Parse questions data
-  const questionsData: Question[] = params.questions
-    ? JSON.parse(params.questions as string)
-    : [];
+  const questionsData: Question[] = (() => {
+    try {
+      if (!params.questions) {
+        console.warn('[test-results] No questions param found');
+        return [];
+      }
+
+      const rawParam = params.questions as string;
+      console.log('[test-results] Questions param length:', rawParam.length, 'chars');
+      console.log('[test-results] First 200 chars:', rawParam.substring(0, 200));
+      console.log('[test-results] Last 200 chars:', rawParam.substring(rawParam.length - 200));
+
+      const parsed = JSON.parse(rawParam);
+
+      if (!Array.isArray(parsed)) {
+        console.error('[test-results] Parsed questions is not an array:', typeof parsed);
+        return [];
+      }
+
+      console.log('[test-results] Successfully parsed', parsed.length, 'questions');
+
+      // Log first question's explanation field types
+      if (parsed.length > 0) {
+        const firstQ = parsed[0];
+        console.log('[test-results] First question explanation fields:', {
+          id: firstQ.id,
+          solutions_type: typeof firstQ.solutions,
+          solutions_isArray: Array.isArray(firstQ.solutions),
+          solutions_length: Array.isArray(firstQ.solutions) ? firstQ.solutions.length : firstQ.solutions?.length,
+          explanation_type: typeof firstQ.explanation,
+          solution_type: typeof firstQ.solution,
+        });
+      }
+
+      return parsed;
+    } catch (error) {
+      console.error('[test-results] Error parsing questions:', error);
+      return [];
+    }
+  })();
 
   // Parse user answers (format: { "0": "A", "1": "B", ... })
   const userAnswers: { [key: number]: string } = params.userAnswers
@@ -263,24 +301,63 @@ export default function TestResults() {
               const resolvedExplanation = getQuestionExplanation(question);
               const hasExplanation = typeof resolvedExplanation === 'string' && resolvedExplanation.trim().length > 0;
 
+              // Debug: Log explanation length
+              if (hasExplanation && resolvedExplanation) {
+                const length = resolvedExplanation.length;
+                if (length > 5000) {
+                  console.warn(`Question ${index + 1} has very long explanation: ${length} chars`, {
+                    questionId: question.id,
+                    firstChars: resolvedExplanation.substring(0, 100)
+                  });
+                }
+              }
+
               if (!hasExplanation) {
                 return null;
               }
 
-              return (
-                <View className="bg-blue-50 p-4 rounded-xl border border-blue-200" style={{ minHeight: 80 }}>
-                  <Text className="text-xs font-semibold text-blue-900 mb-2">
-                    EXPLANATION
-                  </Text>
-                  <View style={{ width: '100%' }}>
-                    <MathText
-                      text={resolvedExplanation}
-                      fontSize="small"
-                      color="#111827"
-                      style={{ width: '100%', flex: 1 }}
-                    />
+              // Green border for correct answers
+              if (question.status === 'correct') {
+                return (
+                  <View className="bg-white p-4 rounded-xl border-2 border-green-500" style={{ minHeight: 80 }}>
+                    <Text className="text-xs font-semibold text-gray-700 mb-2">
+                      EXPLANATION
+                    </Text>
+                    <View style={{ width: '100%' }}>
+                      <MathText
+                        text={resolvedExplanation}
+                        fontSize="small"
+                        color="#111827"
+                        style={{ width: '100%', flex: 1 }}
+                      />
+                    </View>
                   </View>
-                </View>
+                );
+              }
+
+              // Purple gradient border for incorrect answers
+              return (
+                <LinearGradient
+                  colors={['#9333ea', '#c084fc', '#9333ea']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  className="rounded-xl p-0.5"
+                  style={{ minHeight: 80 }}
+                >
+                  <View className="bg-white p-4 rounded-xl h-full">
+                    <Text className="text-xs font-semibold text-gray-700 mb-2">
+                      EXPLANATION
+                    </Text>
+                    <View style={{ width: '100%' }}>
+                      <MathText
+                        text={resolvedExplanation}
+                        fontSize="small"
+                        color="#111827"
+                        style={{ width: '100%', flex: 1 }}
+                      />
+                    </View>
+                  </View>
+                </LinearGradient>
               );
             })()}
           </View>

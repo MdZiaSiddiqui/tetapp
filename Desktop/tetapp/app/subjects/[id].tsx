@@ -15,6 +15,44 @@ const LANGUAGE_SUBJECTS = ['english', 'hindi', 'telugu', 'urdu'];
 // Subjects that only have Paper 2 (no Paper 1)
 const PAPER_2_ONLY_SUBJECTS = ['social', 'science'];
 
+// Vertical Connector Component - always visible with card colors
+const VerticalConnector = ({ type }: { type: 'practice' | 'test' }) => {
+  // Colors matching the card gradients
+  const baseColor = type === 'practice' ? '#06b6d4' : '#8b5cf6';
+  const lightColor = type === 'practice' ? '#0891b2' : '#7c3aed';
+
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        bottom: -16,
+        left: '50%',
+        marginLeft: -2,
+        width: 4,
+        height: 16,
+        zIndex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {/* Colored connector line - always visible */}
+      <View
+        style={{
+          position: 'absolute',
+          width: 4,
+          height: '100%',
+          backgroundColor: baseColor,
+          shadowColor: baseColor,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.6,
+          shadowRadius: 8,
+          elevation: 4,
+        }}
+      />
+    </View>
+  );
+};
+
 export default function SubjectDetail() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -72,8 +110,11 @@ export default function SubjectDetail() {
   const currentPaperAccess = showPaper1 ? hasPaper1Access : hasPaper2Access;
   const isPremiumLocked = !currentPaperAccess;
 
+  // Determine which paper to use for practice/test sessions
+  const currentPaper: 'Paper 1' | 'Paper 2' = showPaper2 ? 'Paper 2' : 'Paper 1';
+
   const handleLockedPress = () => {
-    router.push('/pricing');
+    router.push('/(tabs)/notes');
   };
 
   const handleModePress = async (paper: 'Paper 1' | 'Paper 2', mode: 'practice' | 'test' | 'notes') => {
@@ -97,12 +138,16 @@ export default function SubjectDetail() {
         language = selectedLanguage === 'Hindi' ? 'English' : selectedLanguage;
       }
 
-      // Fetch 30 random questions
+      // Determine question count: 60 for social subject, 30 for others
+      const questionCount = subjectId === 'social' ? 60 : 30;
+
+      // Fetch random questions
       const { data: questions, error } = await getQuestionsBySubjectAndMode(
         subjectId,
         language,
         paper,
-        mode
+        mode,
+        questionCount
       );
 
       setFetchingQuestions(false);
@@ -377,12 +422,15 @@ export default function SubjectDetail() {
             {Array.from({ length: 50 }, (_, index) => {
               const sessionNumber = index + 1;
               const isLocked = isPremiumLocked;
+              const isLastItem = index === 49; // Check if this is the last item
+              const questionBadge = subjectId === 'social' ? '60Q' : '30Q'; // Dynamic badge based on subject
 
               return (
-                <View key={sessionNumber} className="flex-row justify-between mb-4">
+                <View key={sessionNumber} className="mb-4">
+                  <View className="flex-row justify-between">
                   {/* Practice Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress('Paper 1', 'practice')}
+                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'practice')}
                     disabled={fetchingQuestions}
                     activeOpacity={0.7}
                     className="flex-1 mr-2"
@@ -408,7 +456,7 @@ export default function SubjectDetail() {
                             <Ionicons name="pencil" size={20} color="white" />
                           </View>
                           <View className="bg-white/25 rounded-full px-3 py-1">
-                            <Text className="text-white text-xs font-bold">30Q</Text>
+                            <Text className="text-white text-xs font-bold">{questionBadge}</Text>
                           </View>
                         </View>
 
@@ -444,12 +492,15 @@ export default function SubjectDetail() {
                           <Ionicons name="lock-closed" size={14} color="#fbbf24" />
                         </View>
                       )}
+
+                      {/* Vertical Connector - Practice to Practice */}
+                      {!isLastItem && <VerticalConnector type="practice" />}
                     </View>
                   </TouchableOpacity>
 
                   {/* Test Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress('Paper 1', 'test')}
+                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'test')}
                     disabled={fetchingQuestions}
                     activeOpacity={0.7}
                     className="flex-1 ml-2"
@@ -475,7 +526,7 @@ export default function SubjectDetail() {
                             <Ionicons name="timer" size={20} color="white" />
                           </View>
                           <View className="bg-white/25 rounded-full px-3 py-1">
-                            <Text className="text-white text-xs font-bold">30Q</Text>
+                            <Text className="text-white text-xs font-bold">{questionBadge}</Text>
                           </View>
                         </View>
 
@@ -511,8 +562,12 @@ export default function SubjectDetail() {
                           <Ionicons name="lock-closed" size={14} color="#fbbf24" />
                         </View>
                       )}
+
+                      {/* Vertical Connector - Test to Test */}
+                      {!isLastItem && <VerticalConnector type="test" />}
                     </View>
                   </TouchableOpacity>
+                  </View>
                 </View>
               );
             })}

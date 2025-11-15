@@ -1,22 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
-  Alert,
   Image,
   ActivityIndicator,
   Dimensions,
   Vibration,
+  BackHandler,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
+import ExitConfirmationModal from '../../components/ExitConfirmationModal';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -31,6 +32,7 @@ import { HomeShape, InvertedHomeShape } from '../../components/PentagonShapes';
 import { Ionicons } from '@expo/vector-icons';
 import MathText from '../../components/MathText';
 import getQuestionExplanation from '../../lib/utils/getQuestionExplanation';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SWIPE_THRESHOLD = 50; // Optimized threshold for smooth gestures
@@ -69,7 +71,14 @@ export default function PracticeSession() {
   const params = useLocalSearchParams();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { hasPaper1Access, loading: proLoading } = useProAccess();
+  const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
+
+  // Determine which paper access to check based on params
+  const paperParam = params.paper as string | undefined;
+  const isPaper1 = paperParam?.includes('Paper 1') || paperParam?.includes('Paper-1');
+  const isPaper2 = paperParam?.includes('Paper 2') || paperParam?.includes('Paper-2');
+  const hasRequiredAccess = isPaper2 ? hasPaper2Access : hasPaper1Access;
+  const requiredTier = isPaper2 ? 'paper2' : 'paper1';
 
   // Session state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -82,6 +91,8 @@ export default function PracticeSession() {
   const [questionExplanations, setQuestionExplanations] = useState<{ [key: number]: boolean }>({});
   // Font size control
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
+  // Exit confirmation modal
+  const [showExitModal, setShowExitModal] = useState(false);
 
   // Gesture animation values
   const translateX = useSharedValue(0);
@@ -294,15 +305,30 @@ export default function PracticeSession() {
 
   // Handle exit
   const handleExit = () => {
-    Alert.alert(
-      'Exit Practice',
-      'Are you sure you want to exit? Your progress will be saved.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Exit', style: 'destructive', onPress: () => router.back() },
-      ]
-    );
+    setShowExitModal(true);
   };
+
+  const handleConfirmExit = () => {
+    setShowExitModal(false);
+    router.back();
+  };
+
+  // Handle hardware back button - show exit confirmation
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        setShowExitModal(true);
+        return true; // Prevent default back behavior
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
 
   // Handle swipe to previous question
   const handleSwipePrevious = () => {
@@ -424,8 +450,8 @@ export default function PracticeSession() {
   }
 
   // Pro access check - No access
-  if (!hasPaper1Access) {
-    return <UpgradePrompt tier="paper1" feature="Practice Mode" />;
+  if (!hasRequiredAccess) {
+    return <UpgradePrompt tier={requiredTier} feature="Practice Mode" />;
   }
 
   // Loading state
@@ -512,6 +538,40 @@ export default function PracticeSession() {
     setQuestionStartTime(Date.now());
   };
 
+  // Get question font size (exactly 14% larger than options)
+  const getQuestionFontSize = (): number => {
+    // Map fontSize to pixel values
+    const fontSizeMap = {
+      'xs': 14,
+      'small': 16,
+      'medium': 18,
+      'large': 22,
+      'xl': 26,
+      '2xl': 30,
+      '3xl': 36,
+    };
+
+    const baseFontSize = fontSizeMap[fontSize] || 18;
+    // Return exactly 14% larger
+    return baseFontSize * 1.14;
+  };
+
+  // Get explanation font size (10% larger than base)
+  const getExplanationFontSize = (): number => {
+    const fontSizeMap = {
+      'xs': 14,
+      'small': 16,
+      'medium': 18,
+      'large': 22,
+      'xl': 26,
+      '2xl': 30,
+      '3xl': 36,
+    };
+
+    const baseFontSize = fontSizeMap[fontSize] || 18;
+    return baseFontSize * 1.1;
+  };
+
   // Get font size classes based on fontSize state
   const getQuestionFontSizeClass = () => {
     switch (fontSize) {
@@ -582,8 +642,11 @@ export default function PracticeSession() {
 
         {/* Progress bar */}
         <View className="bg-gray-200 h-2 rounded-full overflow-hidden">
-          <View
-            className="bg-blue-500 h-full"
+          <LinearGradient
+            colors={['#7c3aed', '#a855f7']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className="h-full"
             style={{ width: `${progress}%` }}
           />
         </View>
@@ -641,7 +704,7 @@ export default function PracticeSession() {
             )}
             <MathText
               text={currentQuestion.question}
-              fontSize={fontSize}
+              fontSize={getQuestionFontSize()}
               color="#111827"
               style={{ fontWeight: 'bold' }}
             />
@@ -655,16 +718,9 @@ export default function PracticeSession() {
               const showCorrect = showExplanation && isCorrectOption;
               const showWrong = showExplanation && isSelected && !isCorrect;
 
-              // Hide non-relevant options when explanation is shown
-              if (showExplanation) {
-                // If answer was correct, only show the correct option
-                if (isCorrect && !isCorrectOption) {
-                  return null;
-                }
-                // If answer was wrong, only show selected wrong option and correct option
-                if (!isCorrect && !isSelected && !isCorrectOption) {
-                  return null;
-                }
+              // When explanation is shown, only show correct option and selected wrong option
+              if (showExplanation && !isCorrectOption && !isSelected) {
+                return null;
               }
 
               let containerStyle = 'bg-white border-gray-100 shadow-md';
@@ -674,7 +730,7 @@ export default function PracticeSession() {
                 containerStyle = 'bg-green-100 border-gray-100 shadow-lg';
                 textStyle = 'text-black font-semibold';
               } else if (showWrong) {
-                containerStyle = 'bg-red-100 border-gray-100 shadow-lg';
+                containerStyle = 'bg-red-200 border-gray-100 shadow-lg';
                 textStyle = 'text-black font-semibold';
               } else if (isSelected) {
                 containerStyle = 'bg-blue-500 border-blue-500 shadow-lg';
@@ -686,7 +742,7 @@ export default function PracticeSession() {
                   key={key}
                   onPress={() => handleAnswerSelect(key)}
                   disabled={showExplanation}
-                  className={`p-4 rounded-2xl mb-3 border ${containerStyle}`}
+                  className={`p-4 rounded-2xl mb-5 border ${containerStyle}`}
                   activeOpacity={0.7}
                 >
                   <View className="flex-row items-center">
@@ -703,8 +759,8 @@ export default function PracticeSession() {
           </View>
 
           {/* Explanation */}
-          {showExplanation && (
-            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md">
+          {showExplanation && isCorrect && (
+            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500">
               <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
               <View style={{ width: '100%' }}>
                 {(() => {
@@ -715,7 +771,7 @@ export default function PracticeSession() {
                   return hasExplanation ? (
                     <MathText
                       text={explanationText}
-                      fontSize={fontSize}
+                      fontSize={getExplanationFontSize()}
                       color="#111827"
                       style={{ width: '100%' }}
                     />
@@ -728,6 +784,38 @@ export default function PracticeSession() {
               </View>
             </View>
           )}
+          {showExplanation && !isCorrect && (
+            <LinearGradient
+              colors={['#9333ea', '#c084fc', '#9333ea']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="mt-0 rounded-2xl shadow-md p-0.5"
+            >
+              <View className="bg-white p-4 rounded-2xl">
+                <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
+                <View style={{ width: '100%' }}>
+                  {(() => {
+                    // Check for both 'solutions' and 'explanation' fields (data sources use different names)
+                    const explanationText = getQuestionExplanation(currentQuestion);
+                    const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
+
+                    return hasExplanation ? (
+                      <MathText
+                        text={explanationText}
+                        fontSize={getExplanationFontSize()}
+                        color="#111827"
+                        style={{ width: '100%' }}
+                      />
+                    ) : (
+                      <Text className="text-gray-500 italic text-sm">
+                        No explanation available for this question.
+                      </Text>
+                    );
+                  })()}
+                </View>
+              </View>
+            </LinearGradient>
+          )}
 
           {/* Other incorrect options - shown below explanation */}
           {showExplanation && (
@@ -736,43 +824,27 @@ export default function PracticeSession() {
                 const isSelected = selectedAnswer === key;
                 const isCorrectOption = key === correctAnswerKey;
 
-                // Only show options that were hidden earlier (other incorrect options)
-                if (isCorrect && !isCorrectOption) {
-                  // When correct, show all other options (incorrect ones in red)
-                  return (
-                    <View
-                      key={key}
-                      className="p-4 rounded-2xl mb-3 bg-red-100 border border-gray-100 shadow-md"
-                    >
-                      <View className="flex-row items-center">
-                        <MathText
-                          text={value}
-                          fontSize={fontSize}
-                          color="#111827"
-                          style={{ flex: 1, fontWeight: '600' }}
-                        />
-                      </View>
-                    </View>
-                  );
-                } else if (!isCorrect && !isSelected && !isCorrectOption) {
-                  // When wrong, show other incorrect options
-                  return (
-                    <View
-                      key={key}
-                      className="p-4 rounded-2xl mb-3 bg-red-100 border border-gray-100 shadow-md"
-                    >
-                      <View className="flex-row items-center">
-                        <MathText
-                          text={value}
-                          fontSize={fontSize}
-                          color="#111827"
-                          style={{ flex: 1, fontWeight: '600' }}
-                        />
-                      </View>
-                    </View>
-                  );
+                // Skip the correct option and selected option (already shown above)
+                if (isCorrectOption || isSelected) {
+                  return null;
                 }
-                return null;
+
+                // Show all other incorrect options
+                return (
+                  <View
+                    key={key}
+                    className="p-4 rounded-2xl mb-5 bg-red-100 border border-gray-100 shadow-md"
+                  >
+                    <View className="flex-row items-center">
+                      <MathText
+                        text={value}
+                        fontSize={fontSize}
+                        color="#111827"
+                        style={{ flex: 1, fontWeight: '600' }}
+                      />
+                    </View>
+                  </View>
+                );
               })}
             </View>
           )}
@@ -866,7 +938,7 @@ export default function PracticeSession() {
                   }}
                   disabled={fontSize === 'xs'}
                   className={`w-10 h-10 rounded-full items-center justify-center ${
-                    fontSize === 'xs' ? 'bg-gray-200' : 'bg-blue-500'
+                    fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
                   }`}
                   activeOpacity={0.7}
                 >
@@ -886,7 +958,7 @@ export default function PracticeSession() {
                   }}
                   disabled={fontSize === '3xl'}
                   className={`w-10 h-10 rounded-full items-center justify-center ${
-                    fontSize === '3xl' ? 'bg-gray-200' : 'bg-blue-500'
+                    fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
                   }`}
                   activeOpacity={0.7}
                 >
@@ -908,41 +980,66 @@ export default function PracticeSession() {
           <TouchableOpacity
             onPress={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
-            className={`flex-1 py-3 rounded-lg ${
-              currentQuestionIndex === 0 ? 'bg-gray-300' : 'bg-blue-500'
-            }`}
+            className="flex-1 rounded-lg overflow-hidden"
             activeOpacity={0.8}
           >
-            <View className="flex-row items-center justify-center gap-1">
-              <Ionicons
-                name="chevron-back"
-                size={18}
-                color="white"
-              />
-              <Text className="text-white text-center text-base font-semibold">
-                Previous
-              </Text>
-            </View>
+            {currentQuestionIndex === 0 ? (
+              <View className="bg-gray-300 py-3">
+                <View className="flex-row items-center justify-center gap-1">
+                  <Ionicons name="chevron-back" size={18} color="white" />
+                  <Text className="text-white text-center text-base font-semibold">
+                    Previous
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              <LinearGradient
+                colors={['#312e81', '#7c3aed']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                className="py-3"
+              >
+                <View className="flex-row items-center justify-center gap-1">
+                  <Ionicons name="chevron-back" size={18} color="white" />
+                  <Text className="text-white text-center text-base font-semibold">
+                    Previous
+                  </Text>
+                </View>
+              </LinearGradient>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={handleNextQuestion}
-            className="flex-1 bg-blue-500 py-3 rounded-lg"
+            className="flex-1 rounded-lg overflow-hidden"
             activeOpacity={0.8}
           >
-            <View className="flex-row items-center justify-center gap-1">
-              <Text className="text-white text-center text-base font-semibold">
-                {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
-              </Text>
-              {currentQuestionIndex < questions.length - 1 ? (
-                <Ionicons name="chevron-forward" size={18} color="white" />
-              ) : (
-                <Text className="text-white text-base">✓</Text>
-              )}
-            </View>
+            <LinearGradient
+              colors={currentQuestionIndex < questions.length - 1 ? ['#8b5cf6', '#a855f7'] : ['#f59e0b', '#eab308']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              className="py-3"
+            >
+              <View className="flex-row items-center justify-center gap-1">
+                <Text className="text-white text-center text-base font-semibold">
+                  {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Finish'}
+                </Text>
+                {currentQuestionIndex < questions.length - 1 && (
+                  <Ionicons name="chevron-forward" size={18} color="white" />
+                )}
+              </View>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        visible={showExitModal}
+        onCancel={() => setShowExitModal(false)}
+        onConfirm={handleConfirmExit}
+        mode="practice"
+      />
       </View>
     </GestureHandlerRootView>
   );

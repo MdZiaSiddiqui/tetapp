@@ -414,18 +414,20 @@ export async function getQuestionStats(subjectId: string): Promise<{
 }
 
 /**
- * Get 30 random questions for a subject by mode (Practice, Test, or Notes)
+ * Get random questions for a subject by mode (Practice, Test, or Notes)
  * @param subjectId - Subject ID
  * @param language - Language filter (English, Telugu, or Urdu)
  * @param paper - Paper filter ('Paper 1' or 'Paper 2')
  * @param mode - Mode type ('practice', 'test', or 'notes')
- * @returns 30 random questions for the subject
+ * @param count - Number of questions to fetch (default: 30, social subject gets 60)
+ * @returns Random questions for the subject
  */
 export async function getQuestionsBySubjectAndMode(
   subjectId: string,
   language: 'English' | 'Telugu' | 'Urdu',
   paper: 'Paper 1' | 'Paper 2',
-  mode: 'practice' | 'test' | 'notes'
+  mode: 'practice' | 'test' | 'notes',
+  count: number = 30
 ): Promise<{ data: Question[] | null; error: Error | null }> {
   try {
     // Fetch all questions for this subject, language, and paper
@@ -449,8 +451,8 @@ export async function getQuestionsBySubjectAndMode(
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // Take 30 questions (or all available if less than 30)
-    const selected = shuffled.slice(0, Math.min(30, shuffled.length));
+    // Take the specified number of questions (or all available if less than count)
+    const selected = shuffled.slice(0, Math.min(count, shuffled.length));
 
     return { data: selected, error: null };
   } catch (error) {

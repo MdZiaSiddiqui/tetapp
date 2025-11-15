@@ -4,6 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSubjectsWithStats } from '../../hooks/useSupabaseData';
 import type { SubjectWithStats } from '../../lib/types/database.types';
 
@@ -78,6 +79,22 @@ export default function Home() {
   // Fetch subjects with statistics using our custom hook
   const { data: subjects, isLoading, error } = useSubjectsWithStats();
 
+  // Load saved paper selection on mount
+  useEffect(() => {
+    const loadPaperSelection = async () => {
+      try {
+        const savedPaper = await AsyncStorage.getItem('selectedPaper');
+        if (savedPaper && PAPER_OPTIONS.includes(savedPaper)) {
+          console.log('Loaded saved paper selection:', savedPaper);
+          setSelectedPaper(savedPaper);
+        }
+      } catch (error) {
+        console.error('Error loading paper selection:', error);
+      }
+    };
+    loadPaperSelection();
+  }, []);
+
   // Handle paper selection from revision tab
   useEffect(() => {
     if (params.selectedPaper && typeof params.selectedPaper === 'string') {
@@ -87,6 +104,20 @@ export default function Home() {
       }
     }
   }, [params.selectedPaper]);
+
+  // Save selected paper to AsyncStorage whenever it changes
+  useEffect(() => {
+    const savePaperSelection = async () => {
+      try {
+        console.log('Saving selected paper to AsyncStorage:', selectedPaper);
+        await AsyncStorage.setItem('selectedPaper', selectedPaper);
+        console.log('Selected paper saved successfully');
+      } catch (error) {
+        console.error('Error saving paper selection:', error);
+      }
+    };
+    savePaperSelection();
+  }, [selectedPaper]);
 
   // Auto-open paper selector for new users after authentication
   useEffect(() => {
@@ -199,7 +230,7 @@ export default function Home() {
         ) : isEnvironmental ? (
           <View className="h-32 items-center justify-center bg-white">
             <Image
-              source={require('../../ChatGPT Image Nov 15, 2025, 05_21_50 PM-modified.png')}
+              source={require('../../ChatGPT Image Nov 15, 2025, 05_36_34 PM-modified.png')}
               className="w-24 h-24"
               resizeMode="contain"
             />

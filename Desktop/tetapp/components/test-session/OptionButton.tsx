@@ -46,7 +46,7 @@ export const OptionButton = memo(function OptionButton({
       onPress={() => onPress(optionKey)}
       disabled={disabled}
       activeOpacity={0.7}
-      className={`p-4 rounded-2xl mb-3 border ${
+      className={`p-4 rounded-2xl mb-5 border ${
         isSelected
           ? 'bg-blue-500 border-blue-500 shadow-lg'
           : 'bg-white border-gray-100 shadow-md'

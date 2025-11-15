@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from '../../components/payment/RazorpayCheckout';
 import { useProAccess } from '../../hooks/useProAccess';
 import type { TierType, PackageType } from '../../lib/pricing-config';
@@ -40,9 +42,9 @@ const pricingData: PricingPlan[] = [
     gradient: ['#ffffff', '#ffffff'],
     plans: [
       { duration: '3 Months', price: '499' },
-      { duration: '1 Year', price: '799', savings: 'Save ₹297' },
+      { duration: '1 Year', price: '799' },
     ],
-    features: ['Complete Paper-1 syllabus', 'Practice tests', 'Progress tracking', 'Video explanations'],
+    features: ['Complete Paper-1 syllabus', 'Practice tests', 'Progress tracking'],
   },
   {
     title: 'TS-TET Paper-2',
@@ -51,7 +53,7 @@ const pricingData: PricingPlan[] = [
     gradient: ['#ffffff', '#ffffff'],
     plans: [
       { duration: '3 Months', price: '699' },
-      { duration: '1 Year', price: '999', savings: 'Save ₹397' },
+      { duration: '1 Year', price: '999' },
     ],
     features: ['Complete Paper-2 syllabus', 'Advanced practice tests', 'Detailed analytics', 'Expert guidance'],
   },
@@ -62,7 +64,7 @@ const pricingData: PricingPlan[] = [
     gradient: ['#ffffff', '#ffffff'],
     plans: [
       { duration: '3 Months', price: '999' },
-      { duration: '1 Year', price: '1499', savings: 'Save ₹497' },
+      { duration: '1 Year', price: '1499' },
     ],
     features: ['Both Paper-1 & Paper-2', 'All practice tests', 'Priority support', 'Unlimited access', 'Best value package'],
   },
@@ -81,6 +83,58 @@ export default function PricingScreen() {
   const [showPayment, setShowPayment] = useState(false);
   const [selectedTier, setSelectedTier] = useState<TierType>('paper1');
   const [selectedPackage, setSelectedPackage] = useState<PackageType>('3_months');
+  const [orderedPricingData, setOrderedPricingData] = useState(pricingData);
+
+  // Load selected paper from AsyncStorage and reorder pricing cards
+  // Use useFocusEffect to reload when tab comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      const loadPaperSelection = async () => {
+        try {
+          const selectedPaper = await AsyncStorage.getItem('selectedPaper');
+          console.log('Loaded selected paper from AsyncStorage:', selectedPaper);
+
+          if (selectedPaper) {
+            // Check if user selected Paper-1 or Paper-2
+            const isPaper1 = selectedPaper.includes('Paper-1');
+            const isPaper2MathScience = selectedPaper.includes('Math & Science');
+            const isPaper2Social = selectedPaper.includes('Social Studies');
+
+            console.log('Paper type detected:', { isPaper1, isPaper2MathScience, isPaper2Social });
+
+            // Reorder pricing data based on selection
+            let reordered = [...pricingData];
+
+            if (isPaper1) {
+              // Show Paper-1 first (already default order, but explicit for clarity)
+              console.log('Setting Paper-1 first order');
+              reordered = [
+                pricingData[0], // TS-TET Paper-1
+                pricingData[2], // Both
+                pricingData[1], // TS-TET Paper-2
+              ];
+            } else if (isPaper2MathScience || isPaper2Social) {
+              // Show Paper-2 first
+              console.log('Setting Paper-2 first order');
+              reordered = [
+                pricingData[1], // TS-TET Paper-2
+                pricingData[2], // Both
+                pricingData[0], // TS-TET Paper-1
+              ];
+            }
+
+            setOrderedPricingData(reordered);
+            console.log('Pricing data reordered:', reordered.map(p => p.title));
+          } else {
+            console.log('No selected paper found in AsyncStorage');
+          }
+        } catch (error) {
+          console.error('Error loading paper selection:', error);
+        }
+      };
+      loadPaperSelection();
+    }, [])
+  );
 
   const handleSelectPlan = (tier: TierType, packageType: PackageType) => {
     setSelectedTier(tier);
@@ -205,7 +259,7 @@ export default function PricingScreen() {
 
         {/* Pricing Cards */}
         <View style={styles.cardsContainer}>
-          {pricingData.map((plan, index) => (
+          {orderedPricingData.map((plan, index) => (
             <View key={index} style={styles.cardWrapper}>
               <View style={styles.card}>
                 {/* Card Header */}
@@ -251,11 +305,10 @@ export default function PricingScreen() {
                           activeOpacity={0.8}
                         >
                           <LinearGradient
-                            colors={['#ffffff', '#f0f0f0']}
+                            colors={['#000000', '#000000']}
                             style={styles.selectButtonGradient}
                           >
                             <Text style={styles.selectButtonText}>Buy Now</Text>
-                            <Ionicons name="arrow-forward" size={16} color="#667eea" />
                           </LinearGradient>
                         </TouchableOpacity>
                       </View>
@@ -390,6 +443,7 @@ const styles = StyleSheet.create({
   },
   cardTitleContainer: {
     flex: 1,
+    alignItems: 'center',
   },
   cardTitle: {
     fontSize: 20,
@@ -397,6 +451,7 @@ const styles = StyleSheet.create({
     color: '#111827',
     marginBottom: 4,
     letterSpacing: 0.3,
+    textAlign: 'center',
   },
   cardSubtitle: {
     fontSize: 14,
@@ -491,7 +546,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   selectButtonText: {
-    color: '#667eea',
+    color: '#ffffff',
     fontSize: 15,
     fontWeight: 'bold',
   },

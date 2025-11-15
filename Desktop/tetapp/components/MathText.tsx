@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview';
 
 interface MathTextProps {
   text: string;
-  fontSize?: 'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl';
+  fontSize?: 'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl' | number;
   color?: string;
   style?: any;
 }
@@ -27,6 +27,12 @@ const MathText: React.FC<MathTextProps> = ({
 
   // Map fontSize to actual pixel sizes
   const getFontSizeValue = () => {
+    // If fontSize is a number, use it directly
+    if (typeof fontSize === 'number') {
+      return fontSize;
+    }
+
+    // Otherwise map the string to pixel size
     switch (fontSize) {
       case 'xs': return 14;
       case 'small': return 16;

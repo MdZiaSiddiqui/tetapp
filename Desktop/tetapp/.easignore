@@ -1,13 +1,52 @@
-# Exclude all parent directory contents
-../../*
+# Exclude everything outside the project directory
+../../**/*
+../**/*
 
-# Standard ignores
+# Exclude system cache and config files
+**/Library/**
+**/.bun/**
+**/.cache/**
+**/.config/**
+**/.npm/**
+**/.local/**
+**/.gradle/**
+**/.android/**
+**/.dart-tool/**
+**/.pub-cache/**
+
+# Exclude Arc browser cache
+**/Arc/**
+
+# Exclude all hidden directories in parent paths
+../../.*
+
+# Standard project ignores
 .git
 node_modules
 .expo
 .DS_Store
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
-# Explicitly allow this project directory
+# Build artifacts
+dist
+build
+.expo-shared
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Native build folders
+ios
+android
+
+# Only include files in the current project directory
 !.
-!./*
-!./**/*
+!**

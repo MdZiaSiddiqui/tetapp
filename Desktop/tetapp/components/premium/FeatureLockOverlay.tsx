@@ -18,7 +18,7 @@ export default function FeatureLockOverlay({ tier, featureName, children }: Feat
 
   const handleUnlock = () => {
     router.push({
-      pathname: '/pricing',
+      pathname: '/(tabs)/notes',
       params: { recommendedTier: tier },
     });
   };

@@ -1,29 +1,31 @@
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState, useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
-  Alert,
   Image,
   Dimensions,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
+import ExitConfirmationModal from '../../components/ExitConfirmationModal';
+import SubmitTestConfirmationModal from '../../components/SubmitTestConfirmationModal';
 import { useTestTimer } from '../../hooks/useTestTimer';
 import { useQuestionStats } from '../../hooks/useQuestionStats';
 import { useTestSession } from '../../hooks/useTestSession';
-import { TestHeader } from '../../components/test-session/TestHeader';
 import { TestActions } from '../../components/test-session/TestActions';
 import { OptionButton } from '../../components/test-session/OptionButton';
 import { QuestionStats } from '../../components/test-session/QuestionStats';
 import { QuestionGrid } from '../../components/test-session/QuestionGrid';
 import MathText from '../../components/MathText';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -60,10 +62,21 @@ export default function TestSession() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { user } = useAuth();
-  const { hasPaper1Access, loading: proLoading } = useProAccess();
+  const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
+
+  // Determine which paper access to check based on params
+  const paperParam = params.paper as string | undefined;
+  const isPaper1 = paperParam?.includes('Paper 1') || paperParam?.includes('Paper-1');
+  const isPaper2 = paperParam?.includes('Paper 2') || paperParam?.includes('Paper-2');
+  const hasRequiredAccess = isPaper2 ? hasPaper2Access : hasPaper1Access;
+  const requiredTier = isPaper2 ? 'paper2' : 'paper1';
 
   // Font size control
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
+  // Exit confirmation modal
+  const [showExitModal, setShowExitModal] = useState(false);
+  // Submit test confirmation modal
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   // Fetch questions
   const {
@@ -109,6 +122,35 @@ export default function TestSession() {
 
       const { data, error } = await query;
       if (error) throw error;
+
+      // DEBUG: Log raw data from database
+      if (data && data.length > 0) {
+        console.log('[test-session] Fetched', data.length, 'questions from database');
+        const firstQ = data[0];
+        console.log('[test-session] First question raw data:', {
+          id: firstQ.id,
+          question_preview: firstQ.question?.substring(0, 50),
+          solutions_type: typeof firstQ.solutions,
+          solutions_isArray: Array.isArray(firstQ.solutions),
+          solutions_value: Array.isArray(firstQ.solutions)
+            ? `Array(${firstQ.solutions.length}): [${firstQ.solutions.slice(0, 2).map((s: any) => typeof s)}...]`
+            : typeof firstQ.solutions === 'string'
+              ? `String(${firstQ.solutions.length} chars): ${firstQ.solutions.substring(0, 50)}...`
+              : firstQ.solutions,
+          explanation_type: typeof firstQ.explanation,
+          explanation_isArray: Array.isArray(firstQ.explanation),
+        });
+
+        // Check if any field is unexpectedly large
+        Object.keys(firstQ).forEach((key) => {
+          const value = firstQ[key];
+          if (typeof value === 'string' && value.length > 5000) {
+            console.warn(`[test-session] Field "${key}" is very large:`, value.length, 'chars');
+          } else if (Array.isArray(value) && value.length > 100) {
+            console.warn(`[test-session] Field "${key}" is a large array:`, value.length, 'elements');
+          }
+        });
+      }
 
       // Shuffle questions using Fisher-Yates algorithm for randomness
       if (data && data.length > 0) {
@@ -248,15 +290,74 @@ export default function TestSession() {
 
   // Handle exit with confirmation
   const handleExit = useCallback(() => {
-    Alert.alert(
-      'Exit Test',
-      'Are you sure you want to exit? Your progress will be saved.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Exit', style: 'destructive', onPress: () => router.back() },
-      ]
-    );
+    setShowExitModal(true);
+  }, []);
+
+  const handleConfirmExit = useCallback(() => {
+    setShowExitModal(false);
+    router.back();
   }, [router]);
+
+  // Handle finish test early - show confirmation modal
+  const handleFinishTest = useCallback(() => {
+    if (!questions) return;
+    setShowSubmitModal(true);
+  }, [questions]);
+
+  // Actually submit the test after confirmation
+  const handleConfirmSubmit = useCallback(() => {
+    if (!questions) return;
+    setShowSubmitModal(false);
+
+    // Calculate correct answers count
+    const correctCount = calculateCorrectCount(answeredQuestions);
+    const answeredCount = answeredQuestions.length;
+    const totalQuestions = questions.length;
+
+    // Skipped questions count (unanswered)
+    const skippedCount = totalQuestions - answeredCount;
+
+    // Incorrect count includes both wrong answers and skipped questions
+    const incorrectCount = (answeredCount - correctCount) + skippedCount;
+
+    // Build user answers object from answeredQuestions (format: { "0": "A", "1": "B", ... })
+    const userAnswersMap: { [key: number]: string } = {};
+    answeredQuestions.forEach((answered) => {
+      const questionIndex = parseInt(answered.questionId.replace('question-', ''));
+      userAnswersMap[questionIndex] = answered.answer;
+    });
+
+    // Navigate to test results with questions and answers data
+    router.replace({
+      pathname: '/practice/test-results',
+      params: {
+        totalQuestions: totalQuestions,
+        answeredCount: answeredCount,
+        correctCount: correctCount,
+        incorrectCount: incorrectCount,
+        skippedCount: skippedCount,
+        questions: JSON.stringify(questions),
+        userAnswers: JSON.stringify(userAnswersMap),
+      },
+    });
+  }, [questions, answeredQuestions, calculateCorrectCount, router]);
+
+  // Handle hardware back button - show exit confirmation
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        setShowExitModal(true);
+        return true; // Prevent default back behavior
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
 
   // Gesture animation values
   const translateX = useSharedValue(0);
@@ -348,9 +449,17 @@ export default function TestSession() {
 
   // Handlers with navigation only
   const onSubmitAnswer = useCallback(() => {
-    // Just navigate to next - answers stored locally
-    handleNextQuestion();
-  }, [handleNextQuestion]);
+    // Check if this is the last question
+    const isLastQuestion = currentQuestionIndex >= (questions?.length || 0) - 1;
+
+    if (isLastQuestion) {
+      // Show confirmation modal on last question
+      setShowSubmitModal(true);
+    } else {
+      // Just navigate to next - answers stored locally
+      handleNextQuestion();
+    }
+  }, [currentQuestionIndex, questions, handleNextQuestion]);
 
   const onMarkForReview = useCallback(() => {
     const currentQuestion = questions?.[currentQuestionIndex];
@@ -359,6 +468,28 @@ export default function TestSession() {
       () => {} // No-op callback since we're not saving via API during test
     );
   }, [currentQuestionIndex, questions, handleMarkForReview]);
+
+  // Get font size value for questions (14% larger than default)
+  const getQuestionFontSize = () => {
+    switch (fontSize) {
+      case 'xs':
+        return 16;  // 14 * 1.14
+      case 'small':
+        return 18;  // 16 * 1.14
+      case 'medium':
+        return 21;  // 18 * 1.14
+      case 'large':
+        return 25;  // 22 * 1.14
+      case 'xl':
+        return 30;  // 26 * 1.14
+      case '2xl':
+        return 34;  // 30 * 1.14
+      case '3xl':
+        return 41;  // 36 * 1.14
+      default:
+        return 21;
+    }
+  };
 
   // Get font size classes based on fontSize state
   const getQuestionFontSizeClass = () => {
@@ -431,8 +562,8 @@ export default function TestSession() {
   }
 
   // Pro access check - No access
-  if (!hasPaper1Access) {
-    return <UpgradePrompt tier="paper1" feature="Test Mode" />;
+  if (!hasRequiredAccess) {
+    return <UpgradePrompt tier={requiredTier} feature="Test Mode" />;
   }
 
   // Error handling
@@ -468,17 +599,34 @@ export default function TestSession() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View className="flex-1 bg-gray-50">
+      <View className="flex-1 bg-white">
         <StatusBar style="dark" />
 
-        {/* Header */}
-        <TestHeader
-          currentQuestionNumber={currentQuestionIndex + 1}
-          totalQuestions={questions.length}
-          formattedTime={formattedTime}
-          isLowTime={isLowTime}
-          onBack={handleExit}
-        />
+        {/* Custom Header with Question Number and Timer - Blue Bar Style */}
+        <View style={{ backgroundColor: '#4A7BA7', paddingVertical: 16, paddingHorizontal: 24 }}>
+          <View className="flex-row justify-between items-center">
+            {/* Question Number */}
+            <Text className="text-white text-xl font-bold">
+              Question {currentQuestionIndex + 1}/{questions.length}
+            </Text>
+
+            {/* Timer */}
+            <View style={{
+              backgroundColor: isLowTime ? '#FEE2E2' : '#FFFFFF',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderRadius: 8
+            }}>
+              <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: isLowTime ? '#DC2626' : '#1F2937'
+              }}>
+                {formattedTime}
+              </Text>
+            </View>
+          </View>
+        </View>
 
         <GestureDetector gesture={panGesture}>
           <Animated.View style={[{ flex: 1 }, animatedStyle]}>
@@ -499,7 +647,7 @@ export default function TestSession() {
               )}
               <MathText
                 text={currentQuestion?.question || ''}
-                fontSize={fontSize}
+                fontSize={getQuestionFontSize()}
                 color="#111827"
                 style={{ fontWeight: 'bold' }}
               />
@@ -532,6 +680,19 @@ export default function TestSession() {
 
               <QuestionStats stats={questionStats} />
 
+              {/* Submit Test Button */}
+              <TouchableOpacity
+                onPress={handleFinishTest}
+                className="mt-4 rounded-xl overflow-hidden bg-black"
+                activeOpacity={0.8}
+              >
+                <View className="py-3 px-6">
+                  <Text className="text-white text-center text-base font-bold">
+                    Submit Test
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
               {/* Font Size Adjustment */}
               <View className="mt-4">
                 <View className="flex-row justify-center items-center gap-3">
@@ -548,7 +709,7 @@ export default function TestSession() {
                     }}
                     disabled={fontSize === 'xs'}
                     className={`w-10 h-10 rounded-full items-center justify-center ${
-                      fontSize === 'xs' ? 'bg-gray-200' : 'bg-blue-500'
+                      fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
                     }`}
                     activeOpacity={0.7}
                   >
@@ -568,7 +729,7 @@ export default function TestSession() {
                     }}
                     disabled={fontSize === '3xl'}
                     className={`w-10 h-10 rounded-full items-center justify-center ${
-                      fontSize === '3xl' ? 'bg-gray-200' : 'bg-blue-500'
+                      fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
                     }`}
                     activeOpacity={0.7}
                   >
@@ -592,6 +753,28 @@ export default function TestSession() {
         onMarkForReview={onMarkForReview}
         onSubmit={onSubmitAnswer}
         isSubmitting={false}
+      />
+
+      {/* Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        visible={showExitModal}
+        onCancel={() => setShowExitModal(false)}
+        onConfirm={handleConfirmExit}
+        mode="test"
+      />
+
+      {/* Submit Test Confirmation Modal */}
+      <SubmitTestConfirmationModal
+        visible={showSubmitModal}
+        onCancel={() => setShowSubmitModal(false)}
+        onConfirm={handleConfirmSubmit}
+        stats={{
+          answered: questionStats.answered,
+          notAnswered: questionStats.notAnswered,
+          marked: questionStats.marked,
+          notVisited: questionStats.notVisited,
+        }}
+        totalQuestions={questions.length}
       />
     </View>
   </GestureHandlerRootView>
