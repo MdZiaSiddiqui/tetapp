@@ -46,6 +46,73 @@ export default function PracticeLayout() {
 
 ---
 
+## 🔍 Database Schema - Language Subject Storage Pattern
+
+**CRITICAL: Hindi and Urdu questions are stored with `language: 'English'` in the database**
+
+### Language Field Mapping
+
+When querying questions for language subjects:
+
+| Subject ID | Subject Name | Database `language` Field |
+|------------|--------------|---------------------------|
+| `hindi`    | Hindi        | `'English'` ⚠️            |
+| `urdu`     | Urdu         | `'English'` ⚠️            |
+| `telugu`   | Telugu       | `'Telugu'` ✅             |
+| `english`  | English      | `'English'` ✅            |
+
+### Why This Matters
+
+When fetching questions for Hindi or Urdu subjects, you MUST query with `language: 'English'`, not the subject name:
+
+```typescript
+// ✅ CORRECT - Urdu/Hindi language query
+const { data } = await supabase
+  .from('questions')
+  .select('*')
+  .eq('subject_id', 'urdu')      // Subject is 'urdu'
+  .eq('language', 'English')     // But language field is 'English'
+  .eq('paper', 'Paper 2');
+
+// ❌ WRONG - Will return 0 results
+const { data } = await supabase
+  .from('questions')
+  .select('*')
+  .eq('subject_id', 'urdu')
+  .eq('language', 'Urdu')        // This won't match anything!
+  .eq('paper', 'Paper 2');
+```
+
+### Implementation Pattern
+
+In `app/subjects/[id].tsx`, the language conversion logic:
+
+```typescript
+let language: 'English' | 'Telugu' | 'Urdu';
+if (isLanguageSubject) {
+  const subjectNameCapitalized = subjectName.charAt(0).toUpperCase() + subjectName.slice(1).toLowerCase();
+
+  // ✅ CRITICAL: Hindi and Urdu are stored as English in the database
+  if (subjectNameCapitalized === 'Hindi' || subjectNameCapitalized === 'Urdu') {
+    language = 'English';
+  } else {
+    language = subjectNameCapitalized as 'English' | 'Telugu' | 'Urdu';
+  }
+} else {
+  language = selectedLanguage === 'Hindi' ? 'English' : selectedLanguage;
+}
+```
+
+### Historical Context
+
+**Fixed: 2025-11-16**
+- **Issue:** Urdu Paper 2 questions were not being fetched
+- **Root Cause:** Code was querying `language: 'Urdu'` but database has `language: 'English'`
+- **Fix:** Updated language mapping to treat Urdu the same as Hindi (both map to 'English')
+- **Files Modified:** `app/subjects/[id].tsx:132`
+
+---
+
 ## Common Navigation Context Errors and How to Avoid Them
 
 ### 1. "Couldn't find a navigation object" Error

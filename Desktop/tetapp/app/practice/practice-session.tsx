@@ -880,8 +880,8 @@ export default function PracticeSession() {
                       }}
                       activeOpacity={0.7}
                     >
-                      <HomeShape size={48} color="#86efac">
-                        <Text className="text-green-700 font-bold text-base">
+                      <HomeShape size={48} gradient={['#86efac', '#22c55e']}>
+                        <Text className="text-green-800 font-bold text-base">
                           {index + 1}
                         </Text>
                       </HomeShape>
@@ -900,8 +900,8 @@ export default function PracticeSession() {
                       }}
                       activeOpacity={0.7}
                     >
-                      <InvertedHomeShape size={48} color="#fca5a5">
-                        <Text className="text-red-700 font-bold text-base">
+                      <InvertedHomeShape size={48} gradient={['#fca5a5', '#ef4444']}>
+                        <Text className="text-red-800 font-bold text-base">
                           {index + 1}
                         </Text>
                       </InvertedHomeShape>
@@ -921,7 +921,7 @@ export default function PracticeSession() {
                       }}
                       activeOpacity={0.7}
                     >
-                      <HomeShape size={48} color="#e5e7eb">
+                      <HomeShape size={48} gradient={['#e5e7eb', '#d1d5db']}>
                         <Text className="text-gray-700 font-bold text-base">
                           {index + 1}
                         </Text>

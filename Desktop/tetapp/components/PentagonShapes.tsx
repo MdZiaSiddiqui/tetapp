@@ -1,15 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
 
 interface ShapeProps {
   size?: number;
   color?: string;
+  gradient?: string[];
   children?: React.ReactNode;
 }
 
 // Home/House shape for "Answered" (like in screenshot - flat bottom with pointed top)
-export function HomeShape({ size = 56, color = '#22c55e', children }: ShapeProps) {
+export function HomeShape({ size = 56, color = '#22c55e', gradient, children }: ShapeProps) {
   const width = size;
   const height = size;
 
@@ -25,10 +26,20 @@ export function HomeShape({ size = 56, color = '#22c55e', children }: ShapeProps
     Z
   `;
 
+  const fillColor = gradient ? 'url(#homeGradient)' : color;
+
   return (
     <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
       <Svg width={size} height={size} viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute' }}>
-        <Path d={path} fill={color} />
+        {gradient && (
+          <Defs>
+            <SvgLinearGradient id="homeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <Stop offset="0%" stopColor={gradient[0]} stopOpacity="1" />
+              <Stop offset="100%" stopColor={gradient[1]} stopOpacity="1" />
+            </SvgLinearGradient>
+          </Defs>
+        )}
+        <Path d={path} fill={fillColor} />
       </Svg>
       {children}
     </View>
@@ -63,7 +74,7 @@ export function ShieldShape({ size = 56, color = '#ef4444', children }: ShapePro
 }
 
 // Inverted Home shape for "Not Answered" (inverted house shape - flat top, pointed bottom)
-export function InvertedHomeShape({ size = 56, color = '#ef4444', children }: ShapeProps) {
+export function InvertedHomeShape({ size = 56, color = '#ef4444', gradient, children }: ShapeProps) {
   const width = size;
   const height = size;
 
@@ -79,10 +90,20 @@ export function InvertedHomeShape({ size = 56, color = '#ef4444', children }: Sh
     Z
   `;
 
+  const fillColor = gradient ? 'url(#invertedHomeGradient)' : color;
+
   return (
     <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
       <Svg width={size} height={size} viewBox={`0 0 ${width} ${height}`} style={{ position: 'absolute' }}>
-        <Path d={path} fill={color} />
+        {gradient && (
+          <Defs>
+            <SvgLinearGradient id="invertedHomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <Stop offset="0%" stopColor={gradient[0]} stopOpacity="1" />
+              <Stop offset="100%" stopColor={gradient[1]} stopOpacity="1" />
+            </SvgLinearGradient>
+          </Defs>
+        )}
+        <Path d={path} fill={fillColor} />
       </Svg>
       {children}
     </View>
