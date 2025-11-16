@@ -28,6 +28,7 @@ export default function Revision() {
         key={paperId}
         className="w-full mb-3 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
         onPress={() => handlePaperPress(paperId, fullPaperName)}
+        activeOpacity={1}
       >
         <View className="flex-row items-center p-4">
           <View className={`${bgColor} w-12 h-12 rounded-lg items-center justify-center mr-4`}>

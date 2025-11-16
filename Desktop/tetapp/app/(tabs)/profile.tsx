@@ -81,6 +81,10 @@ export default function Profile() {
     router.push('/legal/privacy');
   };
 
+  const handleRefundPolicy = () => {
+    router.push('/legal/refund');
+  };
+
   const handleTermsOfService = () => {
     router.push('/legal/terms');
   };
@@ -116,6 +120,7 @@ export default function Profile() {
               <TouchableOpacity
                 onPress={handleSignOut}
                 className="bg-gray-100 px-4 py-2 rounded-full ml-3"
+                activeOpacity={1}
               >
                 <Text className="text-gray-900 font-medium text-xs">Log Out</Text>
               </TouchableOpacity>
@@ -216,8 +221,8 @@ export default function Profile() {
           {(isFree || !isProActive) && (
             <TouchableOpacity
               className="bg-gray-900 rounded-xl p-4 flex-row items-center justify-between"
-              activeOpacity={0.8}
-              onPress={() => router.push('/(tabs)/notes')}
+              activeOpacity={1}
+              onPress={() => router.push('/(tabs)/pricing')}
             >
               <Text className="text-white font-semibold text-base">
                 {isFree ? 'Upgrade to Pro' : 'Renew Subscription'}
@@ -235,7 +240,7 @@ export default function Profile() {
           <TouchableOpacity
             onPress={handleWhatsAppPress}
             className="flex-row items-center py-3 border-b border-gray-100"
-            activeOpacity={0.7}
+            activeOpacity={1}
           >
             <View className="w-10 h-10 bg-green-500 rounded-full items-center justify-center mr-3">
               <Ionicons name="logo-whatsapp" size={20} color="white" />
@@ -251,7 +256,7 @@ export default function Profile() {
           <TouchableOpacity
             onPress={handleEmailPress}
             className="flex-row items-center py-3"
-            activeOpacity={0.7}
+            activeOpacity={1}
           >
             <View className="w-10 h-10 bg-blue-500 rounded-full items-center justify-center mr-3">
               <Ionicons name="mail" size={20} color="white" />
@@ -265,21 +270,30 @@ export default function Profile() {
         </View>
 
         {/* Links Section - Ultra Minimal */}
-        <View className="mx-6 mt-6">
+        <View className="mx-6 mt-6 flex-row items-center justify-center">
           <TouchableOpacity
             onPress={handleTermsOfService}
-            className="py-4"
-            activeOpacity={0.7}
+            activeOpacity={1}
           >
-            <Text className="text-gray-700 text-base">Terms of Service</Text>
+            <Text className="text-gray-700 text-sm">Terms of Service</Text>
           </TouchableOpacity>
+
+          <Text className="text-gray-400 text-sm mx-2">•</Text>
 
           <TouchableOpacity
             onPress={handlePrivacyPolicy}
-            className="py-4"
-            activeOpacity={0.7}
+            activeOpacity={1}
           >
-            <Text className="text-gray-700 text-base">Privacy Policy</Text>
+            <Text className="text-gray-700 text-sm">Privacy Policy</Text>
+          </TouchableOpacity>
+
+          <Text className="text-gray-400 text-sm mx-2">•</Text>
+
+          <TouchableOpacity
+            onPress={handleRefundPolicy}
+            activeOpacity={1}
+          >
+            <Text className="text-gray-700 text-sm">Refund Policy</Text>
           </TouchableOpacity>
         </View>
 

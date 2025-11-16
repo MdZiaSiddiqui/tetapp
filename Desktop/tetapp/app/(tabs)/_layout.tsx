@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="revision"
+        name="papers"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -60,7 +60,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="notes"
+        name="pricing"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

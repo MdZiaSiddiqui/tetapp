@@ -17,6 +17,7 @@ import * as FileSystem from 'expo-file-system';
 import { addRecentNote, saveProgress } from '@/lib/notes-storage';
 import { useProAccess } from '@/hooks/useProAccess';
 import UpgradePrompt from '@/components/premium/UpgradePrompt';
+import LoadingBar from '@/components/LoadingBar';
 
 export default function NotesViewer() {
   const router = useRouter();
@@ -382,14 +383,7 @@ export default function NotesViewer() {
 
   // Pro access check - Loading state
   if (proLoading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#9333ea" />
-          <Text style={styles.loadingText}>Checking access...</Text>
-        </View>
-      </SafeAreaView>
-    );
+    return <LoadingBar message="Loading..." />;
   }
 
   // Pro access check - No access (require either paper1 or paper2)
@@ -402,7 +396,7 @@ export default function NotesViewer() {
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Note not found</Text>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backButton} onPress={() => router.back()} activeOpacity={1}>
             <Text style={styles.backButtonText}>Go Back</Text>
           </TouchableOpacity>
         </View>

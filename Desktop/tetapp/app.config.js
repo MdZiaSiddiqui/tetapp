@@ -33,7 +33,8 @@ export default {
     scheme: "tgtet",
     plugins: [
       "expo-router",
-      "@react-native-google-signin/google-signin"
+      // Temporarily using in-browser auth instead of native Google Sign-In
+      // "@react-native-google-signin/google-signin"
     ],
     experiments: {
       typedRoutes: true

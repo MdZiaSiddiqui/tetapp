@@ -17,6 +17,7 @@ import { useProAccess } from '../../hooks/useProAccess';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import ExitConfirmationModal from '../../components/ExitConfirmationModal';
 import SubmitTestConfirmationModal from '../../components/SubmitTestConfirmationModal';
+import LoadingBar from '../../components/LoadingBar';
 import { useTestTimer } from '../../hooks/useTestTimer';
 import { useQuestionStats } from '../../hooks/useQuestionStats';
 import { useTestSession } from '../../hooks/useTestSession';
@@ -68,8 +69,15 @@ export default function TestSession() {
   const paperParam = params.paper as string | undefined;
   const isPaper1 = paperParam?.includes('Paper 1') || paperParam?.includes('Paper-1');
   const isPaper2 = paperParam?.includes('Paper 2') || paperParam?.includes('Paper-2');
-  const hasRequiredAccess = isPaper2 ? hasPaper2Access : hasPaper1Access;
+  const sessionNumber = params.sessionNumber ? parseInt(params.sessionNumber as string) : 1;
+  // Session 1 is always free, others require premium access
+  const hasRequiredAccess = sessionNumber === 1 ? true : (isPaper2 ? hasPaper2Access : hasPaper1Access);
   const requiredTier = isPaper2 ? 'paper2' : 'paper1';
+
+  // Check if subject is Urdu (RTL language)
+  const subjectId = params.subjectId as string | undefined;
+  const subjectName = params.subjectName as string | undefined;
+  const isUrduSubject = subjectId?.toLowerCase() === 'urdu' || subjectName?.toLowerCase() === 'urdu';
 
   // Font size control
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
@@ -216,8 +224,8 @@ export default function TestSession() {
       // Skipped questions count (unanswered)
       const skippedCount = totalQuestions - answeredCount;
 
-      // Incorrect count includes both wrong answers and skipped questions
-      const incorrectCount = (answeredCount - correctCount) + skippedCount;
+      // Incorrect count only includes wrong answers (not skipped)
+      const incorrectCount = answeredCount - correctCount;
 
       // Build user answers object from answeredQuestions (format: { "0": "A", "1": "B", ... })
       const userAnswersMap: { [key: number]: string } = {};
@@ -246,6 +254,8 @@ export default function TestSession() {
           questions: JSON.stringify(questions),
           answers: JSON.stringify(userAnswersMap),
           markedForReview: JSON.stringify(markedForReviewIndices),
+          subjectId: subjectId || '',
+          subjectName: subjectName || '',
         },
       });
     },
@@ -253,7 +263,7 @@ export default function TestSession() {
 
   // Timer
   const { formattedTime, isLowTime } = useTestTimer({
-    initialSeconds: (parseInt(params.timerMinutes as string) || 15) * 60,
+    initialSeconds: (parseInt(params.timerMinutes as string) || 30) * 60,
     onTimeUp: async () => {
       // Calculate correct answers count
       const correctCount = calculateCorrectCount(answeredQuestions);
@@ -263,8 +273,8 @@ export default function TestSession() {
       // Skipped questions count (unanswered)
       const skippedCount = totalQuestions - answeredCount;
 
-      // Incorrect count includes both wrong answers and skipped questions
-      const incorrectCount = (answeredCount - correctCount) + skippedCount;
+      // Incorrect count only includes wrong answers (not skipped)
+      const incorrectCount = answeredCount - correctCount;
 
       // Build user answers object from answeredQuestions (format: { "0": "A", "1": "B", ... })
       const userAnswersMap: { [key: number]: string } = {};
@@ -293,6 +303,8 @@ export default function TestSession() {
           questions: JSON.stringify(questions),
           answers: JSON.stringify(userAnswersMap),
           markedForReview: JSON.stringify(markedForReviewIndices),
+          subjectId: subjectId || '',
+          subjectName: subjectName || '',
         },
       });
     },
@@ -335,8 +347,8 @@ export default function TestSession() {
     // Skipped questions count (unanswered)
     const skippedCount = totalQuestions - answeredCount;
 
-    // Incorrect count includes both wrong answers and skipped questions
-    const incorrectCount = (answeredCount - correctCount) + skippedCount;
+    // Incorrect count only includes wrong answers (not skipped)
+    const incorrectCount = answeredCount - correctCount;
 
     // Build user answers object from answeredQuestions (format: { "0": "A", "1": "B", ... })
     const userAnswersMap: { [key: number]: string } = {};
@@ -365,9 +377,11 @@ export default function TestSession() {
         questions: JSON.stringify(questions),
         answers: JSON.stringify(userAnswersMap),
         markedForReview: JSON.stringify(markedForReviewIndices),
+        subjectId: subjectId || '',
+        subjectName: subjectName || '',
       },
     });
-  }, [questions, answeredQuestions, calculateCorrectCount, router, questionStatus]);
+  }, [questions, answeredQuestions, calculateCorrectCount, router, questionStatus, subjectId, subjectName]);
 
   // Handle hardware back button - show exit confirmation
   useFocusEffect(
@@ -581,11 +595,7 @@ export default function TestSession() {
 
   // Pro access check - Loading state
   if (proLoading) {
-    return (
-      <View className="flex-1 bg-white justify-center items-center">
-        <Text className="text-gray-600">Checking access...</Text>
-      </View>
-    );
+    return <LoadingBar message="Loading..." />;
   }
 
   // Pro access check - No access
@@ -630,7 +640,7 @@ export default function TestSession() {
         <StatusBar style="dark" />
 
         {/* Custom Header with Question Number and Timer - Blue Bar Style */}
-        <View style={{ backgroundColor: '#4A7BA7', paddingVertical: 16, paddingHorizontal: 24 }}>
+        <View style={{ backgroundColor: '#4A7BA7', paddingTop: 60, paddingBottom: 16, paddingHorizontal: 24 }}>
           <View className="flex-row justify-between items-center">
             {/* Question Number */}
             <Text className="text-white text-xl font-bold">
@@ -677,6 +687,7 @@ export default function TestSession() {
                 fontSize={getQuestionFontSize()}
                 color="#111827"
                 style={{ fontWeight: 'bold' }}
+                isRTL={isUrduSubject}
               />
             </View>
 
@@ -691,12 +702,13 @@ export default function TestSession() {
                   onPress={onAnswerSelect}
                   disabled={false}
                   fontSize={getOptionFontSizeClass()}
+                  isRTL={isUrduSubject}
                 />
               ))}
             </View>
 
             {/* Statistics & Question Grid */}
-            <View className="bg-white p-4 rounded-2xl shadow-sm mb-6">
+            <View className="p-4 mb-6" style={{ backgroundColor: '#F3F4F6', borderRadius: 20 }}>
               <QuestionGrid
                 totalQuestions={questions.length}
                 currentQuestionIndex={currentQuestionIndex}
@@ -710,8 +722,9 @@ export default function TestSession() {
               {/* Submit Test Button */}
               <TouchableOpacity
                 onPress={handleFinishTest}
-                className="mt-4 rounded-xl overflow-hidden bg-black"
-                activeOpacity={0.8}
+                className="mt-4 rounded-xl overflow-hidden"
+                style={{ backgroundColor: '#4A7BA7' }}
+                activeOpacity={1}
               >
                 <View className="py-3 px-6">
                   <Text className="text-white text-center text-base font-bold">
@@ -738,7 +751,7 @@ export default function TestSession() {
                     className={`w-10 h-10 rounded-full items-center justify-center ${
                       fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
                     }`}
-                    activeOpacity={0.7}
+                    activeOpacity={1}
                   >
                     <Text className={`text-xl font-bold ${fontSize === 'xs' ? 'text-gray-400' : 'text-white'}`}>
                       −
@@ -758,7 +771,7 @@ export default function TestSession() {
                     className={`w-10 h-10 rounded-full items-center justify-center ${
                       fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
                     }`}
-                    activeOpacity={0.7}
+                    activeOpacity={1}
                   >
                     <Text className={`text-xl font-bold ${fontSize === '3xl' ? 'text-gray-400' : 'text-white'}`}>
                       +

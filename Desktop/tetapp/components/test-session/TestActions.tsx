@@ -26,12 +26,13 @@ export const TestActions = memo(function TestActions({
     <View className="border-t border-gray-300 bg-white px-4 pt-3 pb-5">
       <View className="flex-row justify-between mb-4">
         <TouchableOpacity
+          activeOpacity={1}
           onPress={onPrevious}
           disabled={isFirstQuestion}
           className={`py-3 px-3 rounded-lg mr-2 items-center justify-center ${
             isFirstQuestion
               ? 'bg-gray-300'
-              : 'bg-blue-600 active:bg-blue-700'
+              : 'bg-blue-600'
           }`}
           accessibilityRole="button"
           accessibilityLabel="Previous question"
@@ -44,6 +45,7 @@ export const TestActions = memo(function TestActions({
         </TouchableOpacity>
 
         <TouchableOpacity
+          activeOpacity={1}
           onPress={onMarkForReview}
           disabled={isSubmitting}
           className={`py-3 px-4 rounded-lg flex-1 mr-2 ${
@@ -58,10 +60,11 @@ export const TestActions = memo(function TestActions({
         </TouchableOpacity>
 
         <TouchableOpacity
+          activeOpacity={1}
           onPress={onSubmit}
           disabled={isSubmitting}
           className={`py-3 px-4 rounded-lg flex-1 ${
-            isSubmitting ? 'bg-green-300' : 'bg-green-600 active:bg-green-700'
+            isSubmitting ? 'bg-green-300' : 'bg-green-600'
           }`}
           accessibilityRole="button"
           accessibilityLabel={isLastQuestion ? 'Submit test' : 'Save and next question'}

@@ -302,7 +302,7 @@ export default function PricingScreen() {
                               packageMap[option.duration]
                             );
                           }}
-                          activeOpacity={0.8}
+                          activeOpacity={1}
                         >
                           <LinearGradient
                             colors={['#000000', '#000000']}
@@ -322,7 +322,7 @@ export default function PricingScreen() {
                     {plan.features.map((feature, featureIndex) => (
                       <View key={featureIndex} style={styles.featureRow}>
                         <View style={styles.checkmarkContainer}>
-                          <Ionicons name="checkmark-circle" size={18} color="#10b981" />
+                          <Ionicons name="checkmark-circle" size={16} color="#10b981" />
                         </View>
                         <Text style={styles.featureText}>{feature}</Text>
                       </View>
@@ -376,11 +376,11 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingTop: 10,
+    paddingTop: 60,
     paddingBottom: 40,
   },
   cardsContainer: {
-    gap: 24,
+    gap: 16,
   },
   cardWrapper: {
     position: 'relative',
@@ -413,8 +413,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   card: {
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: 16,
+    padding: 16,
     backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#e5e7eb',
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
     color: '#111827',
     marginBottom: 4,
@@ -459,13 +459,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   pricingOptions: {
-    gap: 12,
-    marginBottom: 20,
+    gap: 10,
+    marginBottom: 16,
   },
   priceOption: {
     backgroundColor: '#f9fafb',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 12,
+    padding: 12,
     borderWidth: 1,
     borderColor: '#e5e7eb',
     position: 'relative',
@@ -513,13 +513,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   priceCurrency: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#111827',
     marginTop: 4,
   },
   price: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#111827',
     letterSpacing: -1,
@@ -542,19 +542,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   selectButtonText: {
     color: '#ffffff',
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   features: {
-    gap: 10,
+    gap: 8,
     backgroundColor: '#f9fafb',
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 12,
+    padding: 12,
     borderWidth: 1,
     borderColor: '#e5e7eb',
   },
@@ -564,13 +564,13 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   checkmarkContainer: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   featureText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#374151',
     flex: 1,
     fontWeight: '500',

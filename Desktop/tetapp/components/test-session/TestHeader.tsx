@@ -25,6 +25,7 @@ export const TestHeader = memo(function TestHeader({
           className="flex items-center justify-center z-10"
           accessibilityRole="button"
           accessibilityLabel="Go back"
+          activeOpacity={1}
         >
           <Ionicons name="chevron-back" size={24} color="#000000" />
         </TouchableOpacity>

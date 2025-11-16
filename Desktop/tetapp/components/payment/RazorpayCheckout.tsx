@@ -257,10 +257,11 @@ export default function RazorpayCheckout({
             <TouchableOpacity
               style={styles.retryButton}
               onPress={() => setPaymentState({ status: 'idle' })}
+              activeOpacity={1}
             >
               <Text style={styles.retryButtonText}>Try Again</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={1}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>

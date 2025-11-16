@@ -7,13 +7,15 @@ interface MathTextProps {
   fontSize?: 'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl' | number;
   color?: string;
   style?: any;
+  isRTL?: boolean; // Support for right-to-left languages like Urdu
 }
 
 const MathText: React.FC<MathTextProps> = ({
   text,
   fontSize = 'medium',
   color = '#111827',
-  style
+  style,
+  isRTL = false
 }) => {
   // Early return for invalid or empty text
   if (!text || typeof text !== 'string' || text.trim().length === 0) {
@@ -509,18 +511,20 @@ const MathText: React.FC<MathTextProps> = ({
               overflow-x: hidden;
               overflow-y: visible;
               -webkit-text-size-adjust: 100%;
-              direction: auto;
-              unicode-bidi: plaintext;
+              direction: ${isRTL ? 'rtl' : 'auto'};
+              unicode-bidi: ${isRTL ? 'embed' : 'plaintext'};
               min-height: fit-content;
+              text-align: ${isRTL ? 'right' : 'left'};
             }
             #content {
               width: 100%;
               word-wrap: break-word;
               overflow-wrap: break-word;
               white-space: normal;
-              direction: auto;
-              unicode-bidi: plaintext;
+              direction: ${isRTL ? 'rtl' : 'auto'};
+              unicode-bidi: ${isRTL ? 'embed' : 'plaintext'};
               display: inline-block;
+              text-align: ${isRTL ? 'right' : 'left'};
             }
             /* Line break spacing */
             br {
@@ -696,7 +700,7 @@ const MathText: React.FC<MathTextProps> = ({
         </body>
       </html>
     `;
-  }, [processedContent, fontSizeValue, color]);
+  }, [processedContent, fontSizeValue, color, isRTL]);
 
   // Dynamic height based on content - start with minimal initial height
   const [webViewHeight, setWebViewHeight] = useState(60);
@@ -793,7 +797,13 @@ const MathText: React.FC<MathTextProps> = ({
 
   if (!needsWebView || usedFallback || webViewFailed) {
     return (
-      <Text style={[{ fontSize: fontSizeValue, color, lineHeight: fontSizeValue * 1.6 }, style]}>
+      <Text style={[{
+        fontSize: fontSizeValue,
+        color,
+        lineHeight: fontSizeValue * 1.6,
+        textAlign: isRTL ? 'right' : 'left',
+        writingDirection: isRTL ? 'rtl' : 'ltr',
+      }, style]}>
         {displayPlainText || 'No content available'}
       </Text>
     );

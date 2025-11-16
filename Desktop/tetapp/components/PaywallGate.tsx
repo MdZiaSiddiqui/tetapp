@@ -90,8 +90,8 @@ export default function PaywallGate({
         {/* Upgrade Button */}
         <TouchableOpacity
           style={styles.upgradeButton}
-          activeOpacity={0.8}
-          onPress={() => router.push('/(tabs)/notes')}
+          activeOpacity={1}
+          onPress={() => router.push('/(tabs)/pricing')}
         >
           <LinearGradient
             colors={['#7c3aed', '#6d28d9']}

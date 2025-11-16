@@ -95,7 +95,7 @@ export default function Home() {
     loadPaperSelection();
   }, []);
 
-  // Handle paper selection from revision tab
+  // Handle paper selection from papers tab
   useEffect(() => {
     if (params.selectedPaper && typeof params.selectedPaper === 'string') {
       // Check if the paper is in the available options
@@ -162,6 +162,7 @@ export default function Home() {
         key={subject.id}
         className="w-[48%] mb-4 bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100"
         onPress={() => handleSubjectPress(subject)}
+        activeOpacity={1}
       >
         {isSocialStudies ? (
           <View className="h-32 items-center justify-center bg-white">
@@ -285,6 +286,7 @@ export default function Home() {
           <TouchableOpacity
             className="bg-red-600 py-3 px-6 rounded-lg"
             onPress={() => window.location.reload()}
+            activeOpacity={1}
           >
             <Text className="text-white font-semibold text-center">Retry</Text>
           </TouchableOpacity>
@@ -310,7 +312,7 @@ export default function Home() {
               console.log('Paper selector clicked, opening dropdown...');
               setShowDropdown(true);
             }}
-            activeOpacity={0.7}
+            activeOpacity={1}
             className="bg-purple-600 rounded-2xl px-8 py-7 shadow-lg flex-row items-center justify-between"
           >
             <View className="flex-row items-center flex-shrink justify-center gap-2">

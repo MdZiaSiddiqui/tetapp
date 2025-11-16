@@ -54,7 +54,7 @@ export default function PracticeSettings() {
 
       <View className="px-6 pt-16 pb-6">
         {/* Header */}
-        <TouchableOpacity onPress={() => router.back()} className="mb-4">
+        <TouchableOpacity activeOpacity={1} onPress={() => router.back()} className="mb-4">
           <Text className="text-blue-500 text-lg">← Back</Text>
         </TouchableOpacity>
 
@@ -75,6 +75,7 @@ export default function PracticeSettings() {
         </Text>
         <View className="flex-row gap-3 mb-6">
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => setPracticeMode('practice')}
             className={`flex-1 p-4 rounded-2xl border ${
               practiceMode === 'practice'
@@ -99,6 +100,7 @@ export default function PracticeSettings() {
           </TouchableOpacity>
 
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => setPracticeMode('test')}
             className={`flex-1 p-4 rounded-2xl border ${
               practiceMode === 'test'
@@ -131,6 +133,7 @@ export default function PracticeSettings() {
           {(['English', 'Telugu', 'Urdu'] as Language[]).map((lang) => (
             <TouchableOpacity
               key={lang}
+              activeOpacity={1}
               onPress={() => setLanguage(lang)}
               className={`flex-1 p-4 rounded-2xl border ${
                 language === lang
@@ -175,6 +178,7 @@ export default function PracticeSettings() {
 
         {/* Start Button */}
         <TouchableOpacity
+          activeOpacity={1}
           onPress={startPractice}
           className="bg-blue-500 py-4 px-8 rounded-xl shadow-lg"
         >

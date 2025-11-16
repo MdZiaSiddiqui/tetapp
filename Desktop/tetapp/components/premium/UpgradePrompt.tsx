@@ -69,7 +69,7 @@ export default function UpgradePrompt({ tier, feature = 'this feature', fullScre
               <TouchableOpacity
                 onPress={handleUpgrade}
                 className="bg-purple-600 rounded-2xl py-4 px-6 shadow-lg mb-4"
-                activeOpacity={0.8}
+                activeOpacity={1}
               >
                 <Text className="text-white text-center font-bold text-lg">
                   Upgrade Now
@@ -80,7 +80,7 @@ export default function UpgradePrompt({ tier, feature = 'this feature', fullScre
               <TouchableOpacity
                 onPress={() => router.back()}
                 className="bg-gray-100 rounded-2xl py-4 px-6"
-                activeOpacity={0.8}
+                activeOpacity={1}
               >
                 <Text className="text-gray-700 text-center font-semibold text-lg">
                   Go Back

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import MathText from '../../components/MathText';
+import LoadingBar from '../../components/LoadingBar';
 
 interface Question {
   id: string;
@@ -46,6 +47,9 @@ export default function RevisionSession() {
   );
   const [showExplanation, setShowExplanation] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  // ScrollView ref for scrolling to top
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Fetch revision questions based on mode
   const { data: questions, isLoading } = useQuery({
@@ -239,6 +243,8 @@ export default function RevisionSession() {
       setSelectedAnswer(null);
       setShowExplanation(false);
       setQuestionStartTime(Date.now());
+      // Scroll to top
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     } else {
       handleFinishSession();
     }
@@ -262,11 +268,7 @@ export default function RevisionSession() {
 
   // Pro access check - Loading state
   if (proLoading) {
-    return (
-      <View className="flex-1 bg-white justify-center items-center">
-        <Text className="text-gray-600">Checking access...</Text>
-      </View>
-    );
+    return <LoadingBar message="Loading..." />;
   }
 
   // Pro access check - No access
@@ -295,6 +297,7 @@ export default function RevisionSession() {
         <TouchableOpacity
           onPress={() => router.back()}
           className="bg-blue-500 py-4 px-8 rounded-xl"
+          activeOpacity={1}
         >
           <Text className="text-white text-lg font-semibold">Go Back</Text>
         </TouchableOpacity>
@@ -313,7 +316,7 @@ export default function RevisionSession() {
       {/* Header */}
       <View className="px-6 pt-16 pb-4 border-b border-gray-200">
         <View className="flex-row justify-between items-center mb-3">
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={1}>
             <Text className="text-purple-500 text-lg">← Exit</Text>
           </TouchableOpacity>
 
@@ -331,6 +334,7 @@ export default function RevisionSession() {
 
           <TouchableOpacity
             onPress={() => toggleBookmark.mutate(currentQuestion.id)}
+            activeOpacity={1}
           >
             <Text className="text-2xl">{isBookmarked ? '⭐' : '☆'}</Text>
           </TouchableOpacity>
@@ -346,7 +350,7 @@ export default function RevisionSession() {
         </View>
       </View>
 
-      <ScrollView className="flex-1">
+      <ScrollView ref={scrollViewRef} className="flex-1">
         <View className="px-6 py-6">
           {/* Question */}
           <View className="mb-6">
@@ -394,6 +398,7 @@ export default function RevisionSession() {
                       ? 'bg-purple-50 border-purple-500'
                       : 'bg-gray-50 border-gray-200'
                   }`}
+                  activeOpacity={1}
                 >
                   <View className="flex-row items-center">
                     <View
@@ -457,6 +462,7 @@ export default function RevisionSession() {
             className={`py-4 px-8 rounded-xl ${
               selectedAnswer ? 'bg-purple-500' : 'bg-gray-300'
             }`}
+            activeOpacity={1}
           >
             <Text className="text-white text-center text-lg font-semibold">
               Submit Answer
@@ -466,6 +472,7 @@ export default function RevisionSession() {
           <TouchableOpacity
             onPress={handleNextQuestion}
             className="bg-purple-500 py-4 px-8 rounded-xl"
+            activeOpacity={1}
           >
             <Text className="text-white text-center text-lg font-semibold">
               {currentQuestionIndex < questions.length - 1

@@ -35,8 +35,8 @@ export const QuestionGrid = memo(function QuestionGrid({
           const isCurrentQuestion = index === currentQuestionIndex;
 
           let shapeType: 'pentagon' | 'circle' | 'square' = 'square';
-          let bgColor = '#9ca3af'; // Light-medium grey for not visited
-          let textColor = 'text-white';
+          let bgColor = '#ffffff'; // White for not visited
+          let textColor = 'text-black';
           let showGreenDot = false;
 
           if (status === 'answered') {
@@ -74,6 +74,7 @@ export const QuestionGrid = memo(function QuestionGrid({
                 style={{
                   position: 'relative',
                 }}
+                activeOpacity={1}
                 accessibilityRole="button"
                 accessibilityLabel={`Question ${index + 1}, Answered`}
               >
@@ -95,6 +96,7 @@ export const QuestionGrid = memo(function QuestionGrid({
                 style={{
                   position: 'relative',
                 }}
+                activeOpacity={1}
                 accessibilityRole="button"
                 accessibilityLabel={`Question ${index + 1}, Not Visited`}
               >
@@ -103,6 +105,7 @@ export const QuestionGrid = memo(function QuestionGrid({
                     width: 48,
                     height: 48,
                     backgroundColor: bgColor,
+                    borderRadius: 16,
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
@@ -123,6 +126,7 @@ export const QuestionGrid = memo(function QuestionGrid({
               style={{
                 position: 'relative',
               }}
+              activeOpacity={1}
               accessibilityRole="button"
               accessibilityLabel={`Question ${index + 1}${status === 'marked-for-review-answered' ? ', Marked for Review (Answered)' : status === 'marked-for-review' ? ', Marked for Review' : ''}`}
             >

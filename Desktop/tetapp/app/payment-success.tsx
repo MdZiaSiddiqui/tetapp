@@ -120,6 +120,7 @@ export default function PaymentSuccess() {
         <TouchableOpacity
           style={styles.primaryButton}
           onPress={() => router.replace('/(tabs)/home')}
+          activeOpacity={1}
         >
           <Text style={styles.primaryButtonText}>Start Learning</Text>
         </TouchableOpacity>
@@ -127,6 +128,7 @@ export default function PaymentSuccess() {
         <TouchableOpacity
           style={styles.secondaryButton}
           onPress={() => router.push('/(tabs)/profile')}
+          activeOpacity={1}
         >
           <Text style={styles.secondaryButtonText}>View Profile</Text>
         </TouchableOpacity>

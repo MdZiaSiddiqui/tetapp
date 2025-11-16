@@ -391,3 +391,275 @@ Response Time: We aim to respond to all privacy-related inquiries within 30 days
 15. CONSENT
 
 BY USING THE ULTRATHINK APP, YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD THIS PRIVACY POLICY AND CONSENT TO THE COLLECTION, USE, AND DISCLOSURE OF YOUR INFORMATION AS DESCRIBED HEREIN.`;
+
+export const REFUND_POLICY = `Last Updated: November 16, 2025
+
+1. INTRODUCTION
+
+This Refund Policy explains the circumstances under which Ultrathink may issue refunds for subscription purchases. By purchasing a subscription, you acknowledge and agree to this policy.
+
+2. GENERAL REFUND POLICY
+
+Standard Policy
+• All subscription fees are generally non-refundable
+• This includes both monthly and annual subscription plans
+• Once a subscription period begins, no refunds will be issued for unused time
+
+Exceptions
+Refunds may be considered in the following exceptional circumstances:
+• Technical issues preventing access to the service
+• Duplicate or erroneous charges
+• Subscription purchased by mistake within 48 hours
+• Service not delivered as described
+
+3. REFUND ELIGIBILITY CRITERIA
+
+Refunds may be granted if ALL of the following conditions are met:
+
+Time Requirement
+• Request submitted within 7 days of the original purchase date
+• For annual subscriptions, within 14 days of purchase
+
+Usage Requirement
+• Limited or no usage of the service after purchase
+• For refund consideration, usage should be less than 10% of available content
+
+Valid Reason
+• Clear explanation of why refund is requested
+• Evidence of technical issues, if applicable
+• Proof of duplicate charge, if applicable
+
+Account Standing
+• Account in good standing with no violations of Terms of Service
+• No history of refund abuse
+
+4. NON-REFUNDABLE CIRCUMSTANCES
+
+Refunds will NOT be issued in the following situations:
+
+Subscription Usage
+• After the subscription has been actively used
+• If more than 10% of practice questions have been accessed
+• After 50% or more of the subscription period has elapsed
+
+Change of Mind
+• Simple change of mind after using the service
+• Dissatisfaction with exam results or performance
+• Finding alternative study materials
+
+Violations
+• Account terminated due to Terms of Service violations
+• Fraudulent activity or abuse of service
+• Sharing account credentials
+
+External Factors
+• Device compatibility issues disclosed before purchase
+• Internet connectivity problems on user's end
+• Changes in personal circumstances or study plans
+
+Partial Refunds
+• No partial refunds for unused portions of subscription periods
+• No refunds for downgrades from annual to monthly plans
+
+5. REFUND REQUEST PROCESS
+
+How to Request a Refund
+
+Step 1: Contact Support
+• Email: support@supacharge.me
+• WhatsApp: +91 6304102415
+• Include subject line: "Refund Request - [Your Account Email]"
+
+Step 2: Provide Required Information
+• Full name and account email
+• Date of purchase
+• Transaction ID or receipt
+• Subscription plan purchased (Paper 1, Paper 2, or Both)
+• Detailed reason for refund request
+• Screenshots of any technical issues (if applicable)
+
+Step 3: Review Process
+• We will review your request within 5-7 business days
+• We may request additional information or documentation
+• You will be notified of the decision via email
+
+Step 4: Refund Processing
+• If approved, refunds will be processed within 10-14 business days
+• Refunds will be issued to the original payment method
+• You will receive confirmation once the refund is processed
+
+6. PROCESSING TIME
+
+Review Time
+• Initial review: 5-7 business days
+• Additional information requests: 2-3 business days for response
+
+Refund Processing
+• Bank transfers: 5-10 business days
+• Credit/Debit cards: 7-14 business days
+• Digital wallets (UPI, PayTM, etc.): 3-7 business days
+• App Store purchases: Depends on Apple's processing time
+• Google Play purchases: Depends on Google's processing time
+
+Note: Processing times may vary depending on your financial institution.
+
+7. APP STORE AND GOOGLE PLAY PURCHASES
+
+Apple App Store Purchases
+• Purchases made through Apple App Store are subject to Apple's refund policy
+• To request a refund, visit: reportaproblem.apple.com
+• Apple has sole discretion over App Store refunds
+• Contact Apple Support for App Store purchase disputes
+
+Google Play Store Purchases
+• Purchases made through Google Play are subject to Google's refund policy
+• To request a refund, visit: play.google.com/store/account
+• Google Play offers a 48-hour refund window for subscriptions
+• Contact Google Play Support for Google Play purchase disputes
+
+Our Involvement
+• We can provide purchase confirmation and account details to support your claim
+• Final refund decisions for App Store and Google Play purchases rest with Apple and Google
+
+8. SUBSCRIPTION CANCELLATION
+
+Cancellation vs. Refund
+• Canceling a subscription stops future billing but does not trigger a refund
+• You will retain access until the end of your current billing period
+• To cancel, go to Profile → Manage Subscription → Cancel
+
+How to Cancel
+
+iOS (Apple App Store)
+1. Open Settings on your iPhone/iPad
+2. Tap your name → Subscriptions
+3. Select Ultrathink subscription
+4. Tap Cancel Subscription
+
+Android (Google Play)
+1. Open Google Play Store
+2. Tap Menu → Subscriptions
+3. Select Ultrathink subscription
+4. Tap Cancel Subscription
+
+Direct Purchase
+• Contact support@supacharge.me to cancel direct purchases
+• Include your account email and subscription details
+
+9. PROMOTIONAL OFFERS AND FREE TRIALS
+
+Free Trials
+• Free trials are non-refundable (no charges to refund)
+• Cancel before trial ends to avoid charges
+• If charged after trial, standard refund policy applies
+
+Promotional Discounts
+• Discounted subscriptions follow the same refund policy
+• Refund amount will be the actual amount paid, not original price
+• Promotional codes are non-transferable and non-refundable
+
+Special Offers
+• Limited-time offers are subject to specific terms disclosed at purchase
+• Bundle deals and package offers are refunded as a whole, not partially
+
+10. TECHNICAL ISSUES AND SERVICE DISRUPTIONS
+
+Temporary Outages
+• Brief service interruptions do not qualify for refunds
+• Subscription time will be extended for major outages (>24 hours)
+
+Persistent Technical Issues
+• Report technical issues to support immediately
+• We will work to resolve issues before considering refunds
+• Refunds may be granted if issues cannot be resolved within 14 days
+• Must provide evidence of reported issues and troubleshooting attempts
+
+Device Compatibility
+• Minimum requirements are disclosed before purchase
+• Incompatibility with outdated devices does not qualify for refund
+• Account can be accessed on supported devices
+
+11. FRAUDULENT ACTIVITY
+
+Chargeback Abuse
+• Initiating chargebacks instead of requesting refunds may result in account termination
+• Fraudulent refund requests will result in permanent account suspension
+• We reserve the right to pursue legal action for fraudulent activity
+
+Multiple Refund Requests
+• Repeated refund requests may be flagged as abuse
+• Pattern of purchasing and refunding may result in refund denial
+• Account may be restricted from future purchases
+
+12. SPECIAL CIRCUMSTANCES
+
+Medical or Personal Emergencies
+• We understand that unforeseen circumstances occur
+• Contact us directly to discuss your situation
+• We will review on a case-by-case basis with appropriate documentation
+
+Financial Hardship
+• We may offer payment plans or discounted rates in lieu of refunds
+• Contact support to discuss available options
+• Documentation may be required
+
+Student Status Changes
+• Changes in educational plans do not automatically qualify for refunds
+• Consider pausing or transferring subscription instead
+• Contact support to explore alternatives
+
+13. REFUND ALTERNATIVES
+
+Instead of a refund, we may offer:
+
+Account Credit
+• Credit applied to your account for future use
+• Can be used for subscription renewal or upgrade
+• Valid for 12 months from issue date
+
+Subscription Extension
+• Additional time added to current subscription
+• Compensation for service disruptions
+• Bonus content access
+
+Plan Modification
+• Switch between subscription tiers
+• Adjust billing cycle (monthly to annual or vice versa)
+• Pause subscription for up to 3 months
+
+14. CONTACT INFORMATION
+
+For refund requests or questions about this policy:
+
+Email: support@supacharge.me
+Subject: "Refund Request" or "Refund Policy Inquiry"
+
+WhatsApp: +91 6304102415
+Business Hours: Monday-Saturday, 9 AM - 6 PM IST
+
+Response Time
+• We aim to respond to all refund inquiries within 48 hours
+• Complex cases may take up to 7 business days
+
+15. POLICY UPDATES
+
+Changes to This Policy
+• We may update this Refund Policy from time to time
+• Material changes will be communicated via email or in-app notification
+• Continued use after changes constitutes acceptance of the updated policy
+
+Grandfathering
+• Changes to the policy do not apply retroactively to purchases made before the update
+• Existing subscriptions are governed by the policy in effect at the time of purchase
+
+16. GOVERNING LAW
+
+• This Refund Policy is governed by the laws of India
+• Any disputes will be subject to the jurisdiction of courts in Hyderabad, Telangana
+• This policy is supplementary to and does not override consumer protection laws
+
+17. ACKNOWLEDGMENT
+
+BY PURCHASING A SUBSCRIPTION TO ULTRATHINK, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO THIS REFUND POLICY. IF YOU DO NOT AGREE, PLEASE DO NOT MAKE A PURCHASE.
+
+For questions or concerns, please contact us at support@supacharge.me before making a purchase.`;

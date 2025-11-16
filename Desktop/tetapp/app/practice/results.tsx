@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function PracticeResults() {
   const router = useRouter();
@@ -14,6 +16,10 @@ export default function PracticeResults() {
   const answeredCount = parseInt(params.answeredCount as string) || 0;
   const correctCount = parseInt(params.correctCount as string) || 0;
   const skippedCount = parseInt(params.skippedCount as string) || 0;
+  const subjectId = params.subjectId as string | undefined;
+  const subjectName = params.subjectName as string | undefined;
+  const questionsJson = params.questions as string | undefined;
+  const answersJson = params.answers as string | undefined;
 
   // Use passed incorrectCount if available, otherwise calculate (includes skipped as incorrect)
   const incorrectCount = params.incorrectCount
@@ -76,94 +82,89 @@ export default function PracticeResults() {
   });
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
-
-      <View className="px-6 pt-16 pb-6">
-        {/* Completion Header */}
-        <View className="items-center mb-8">
-          <Text className="text-6xl mb-4">🎉</Text>
-          <Text className="text-3xl font-bold text-gray-800 mb-2">
-            Session Complete!
-          </Text>
-        </View>
-
-        {/* Score Card */}
-        <View className="bg-blue-50 p-6 rounded-2xl mb-6">
-          <View className="items-center mb-4">
-            <Text className="text-6xl font-bold text-blue-500">
-              {sessionResults.accuracy.toFixed(0)}%
+      <ScrollView className="flex-1">
+        <View className="px-6 pt-16 pb-6">
+          {/* Completion Header */}
+          <View className="items-center mb-8">
+            <Text className="text-6xl mb-4">🎉</Text>
+            <Text className="text-3xl font-bold text-gray-800 mb-2">
+              Session Complete!
             </Text>
-            <Text className="text-gray-600 mt-2 text-lg">Accuracy</Text>
           </View>
 
-          <View className="flex-row justify-around pt-4 border-t border-blue-200">
-            <View className="items-center flex-1">
-              <Text className="text-3xl font-bold text-green-500">
-                {sessionResults.correct}
-              </Text>
-              <Text className="text-gray-600 text-xs mt-1">Correct</Text>
+          {/* Score Card */}
+          <View className="bg-white p-6 rounded-2xl mb-6 shadow-lg">
+            {/* Score and Percentage */}
+            <View className="flex-row justify-around items-center mb-6">
+              <View className="items-center flex-1">
+                <Text className="text-gray-600 mb-2 text-sm font-medium">Score</Text>
+                <Text className="text-5xl font-bold text-purple-600">
+                  {sessionResults.correct}/{sessionResults.total}
+                </Text>
+              </View>
+
+              <View className="w-px h-16 bg-gray-200" />
+
+              <View className="items-center flex-1">
+                <Text className="text-gray-600 mb-2 text-sm font-medium">Percentage</Text>
+                <Text className="text-5xl font-bold text-purple-600">
+                  {sessionResults.accuracy.toFixed(1)}%
+                </Text>
+              </View>
             </View>
 
-            <View className="w-px bg-blue-200" />
+            {/* Stats Breakdown */}
+            <View className="flex-row justify-around pt-4 border-t border-gray-200">
+              <View className="items-center flex-1">
+                <Text className="text-3xl font-bold text-green-500">
+                  {sessionResults.correct}
+                </Text>
+                <Text className="text-gray-600 text-xs mt-1 font-medium">Correct</Text>
+              </View>
 
-            <View className="items-center flex-1">
-              <Text className="text-3xl font-bold text-red-500">
-                {sessionResults.incorrect}
-              </Text>
-              <Text className="text-gray-600 text-xs mt-1">Incorrect</Text>
-            </View>
+              <View className="w-px bg-gray-200" />
 
-            <View className="w-px bg-blue-200" />
+              <View className="items-center flex-1">
+                <Text className="text-3xl font-bold text-red-500">
+                  {sessionResults.incorrect}
+                </Text>
+                <Text className="text-gray-600 text-xs mt-1 font-medium">Incorrect</Text>
+              </View>
 
-            <View className="items-center flex-1">
-              <Text className="text-3xl font-bold text-orange-500">
-                {sessionResults.skipped}
-              </Text>
-              <Text className="text-gray-600 text-xs mt-1">Skipped</Text>
-            </View>
+              <View className="w-px bg-gray-200" />
 
-            <View className="w-px bg-blue-200" />
-
-            <View className="items-center flex-1">
-              <Text className="text-3xl font-bold text-blue-500">
-                {sessionResults.total}
-              </Text>
-              <Text className="text-gray-600 text-xs mt-1">Total</Text>
+              <View className="items-center flex-1">
+                <Text className="text-3xl font-bold text-orange-500">
+                  {sessionResults.skipped}
+                </Text>
+                <Text className="text-gray-600 text-xs mt-1 font-medium">Skipped</Text>
+              </View>
             </View>
           </View>
+
+          {/* Actions */}
+          <View className="space-y-3">
+            <TouchableOpacity
+              onPress={() => {
+                router.back();
+              }}
+              className="bg-purple-600 py-4 px-8 rounded-xl shadow-md"
+              activeOpacity={0.7}
+            >
+              <Text className="text-white text-center text-lg font-semibold">
+                Done
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        {/* Actions */}
-        <View className="space-y-3">
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/analytics')}
-            className="bg-green-500 py-4 px-8 rounded-xl"
-          >
-            <Text className="text-white text-center text-lg font-semibold">
-              View Detailed Analytics
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/home')}
-            className="bg-blue-500 py-4 px-8 rounded-xl mt-3"
-          >
-            <Text className="text-white text-center text-lg font-semibold">
-              Start New Practice
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/home')}
-            className="bg-gray-100 py-4 px-8 rounded-xl mt-3"
-          >
-            <Text className="text-gray-700 text-center text-lg font-semibold">
-              Back to Home
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </LinearGradient>
   );
 }

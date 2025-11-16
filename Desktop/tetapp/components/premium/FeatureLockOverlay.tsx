@@ -18,7 +18,7 @@ export default function FeatureLockOverlay({ tier, featureName, children }: Feat
 
   const handleUnlock = () => {
     router.push({
-      pathname: '/(tabs)/notes',
+      pathname: '/(tabs)/pricing',
       params: { recommendedTier: tier },
     });
   };
@@ -55,7 +55,7 @@ export default function FeatureLockOverlay({ tier, featureName, children }: Feat
           <TouchableOpacity
             onPress={handleUnlock}
             className="bg-purple-600 rounded-xl py-3 px-6"
-            activeOpacity={0.8}
+            activeOpacity={1}
           >
             <Text className="text-white text-center font-bold text-base">
               Unlock Now

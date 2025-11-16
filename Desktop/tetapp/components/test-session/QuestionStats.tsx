@@ -44,13 +44,14 @@ export const QuestionStats = memo(function QuestionStats({ stats }: QuestionStat
           style={{
             width: 48,
             height: 48,
-            backgroundColor: '#9ca3af',
+            backgroundColor: '#ffffff',
+            borderRadius: 16,
             justifyContent: 'center',
             alignItems: 'center',
           }}
           className="shadow-sm"
         >
-          <Text className="text-white font-bold text-sm">
+          <Text className="text-black font-bold text-sm">
             {stats.notVisited}
           </Text>
         </View>

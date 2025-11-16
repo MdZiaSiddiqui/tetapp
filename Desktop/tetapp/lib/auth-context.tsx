@@ -1,15 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
 import Constants from 'expo-constants';
 
-// Configure Google Sign-In
-GoogleSignin.configure({
-  webClientId: Constants.expoConfig?.extra?.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-  scopes: ['profile', 'email'],
-  offlineAccess: true,
-});
+// Configure WebBrowser for authentication
+WebBrowser.maybeCompleteAuthSession();
 
 type AuthContextType = {
   user: User | null;
@@ -75,56 +72,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('🚀 Starting Native Google Sign-In...');
+      console.log('🚀 Starting In-Browser Google Sign-In...');
 
-      // Check if Google Play services are available (Android)
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-
-      // Sign in with Google - shows native bottom sheet popup
-      const userInfo = await GoogleSignin.signIn();
-      console.log('✅ Google Sign-In successful:', userInfo.data?.user.email);
-
-      // Get the ID token from Google
-      const idToken = userInfo.data?.idToken;
-      if (!idToken) {
-        console.error('❌ No ID token received from Google');
-        return {
-          success: false,
-          error: 'No ID token received from Google',
-        };
-      }
-
-      console.log('🔑 Got ID token, signing in to Supabase...');
-
-      // Sign in to Supabase using the Google ID token
-      const { data, error } = await supabase.auth.signInWithIdToken({
+      // Create the OAuth URL
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        token: idToken,
+        options: {
+          redirectTo: AuthSession.makeRedirectUri({
+            scheme: 'tgtet',
+            path: 'auth/callback',
+          }),
+          skipBrowserRedirect: true,
+        },
       });
 
       if (error) {
-        console.error('❌ Supabase sign-in error:', error);
+        console.error('❌ Error creating OAuth URL:', error);
         return {
           success: false,
           error: error.message,
         };
       }
 
-      if (data.session) {
-        console.log('✅ Supabase session created successfully!');
-        console.log('User:', data.session.user.email);
-        return { success: true };
+      if (!data?.url) {
+        console.error('❌ No OAuth URL received');
+        return {
+          success: false,
+          error: 'Failed to get authentication URL',
+        };
       }
 
-      return {
-        success: false,
-        error: 'Failed to create session',
-      };
-    } catch (error: any) {
-      console.error('❌ Google Sign-In error:', error);
+      console.log('🌐 Opening browser for authentication...');
 
-      // Handle user cancellation
-      if (error.code === 'SIGN_IN_CANCELLED') {
+      // Open the OAuth URL in the browser
+      const result = await WebBrowser.openAuthSessionAsync(
+        data.url,
+        AuthSession.makeRedirectUri({
+          scheme: 'tgtet',
+          path: 'auth/callback',
+        })
+      );
+
+      if (result.type === 'cancel') {
         console.log('⚠️ User cancelled sign in');
         return {
           success: false,
@@ -132,6 +121,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
       }
 
+      if (result.type === 'success') {
+        console.log('✅ Browser authentication successful');
+
+        // Extract the URL params
+        const url = result.url;
+        const params = new URLSearchParams(url.split('#')[1] || url.split('?')[1]);
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+          // Set the session in Supabase
+          const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (sessionError) {
+            console.error('❌ Error setting session:', sessionError);
+            return {
+              success: false,
+              error: sessionError.message,
+            };
+          }
+
+          console.log('✅ Session created successfully!');
+          console.log('User:', sessionData.session?.user.email);
+          return { success: true };
+        }
+      }
+
+      return {
+        success: false,
+        error: 'Failed to complete authentication',
+      };
+    } catch (error: any) {
+      console.error('❌ Google Sign-In error:', error);
       return {
         success: false,
         error: error.message || 'Failed to sign in with Google',

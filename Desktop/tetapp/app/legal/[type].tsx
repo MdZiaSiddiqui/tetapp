@@ -3,15 +3,40 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { TERMS_OF_SERVICE, PRIVACY_POLICY } from '../../constants/legal';
+import { TERMS_OF_SERVICE, PRIVACY_POLICY, REFUND_POLICY } from '../../constants/legal';
 
 export default function LegalDocument() {
   const router = useRouter();
-  const { type } = useLocalSearchParams<{ type: 'terms' | 'privacy' }>();
+  const { type } = useLocalSearchParams<{ type: 'terms' | 'privacy' | 'refund' }>();
 
-  const isTerms = type === 'terms';
-  const title = isTerms ? 'Terms of Service' : 'Privacy Policy';
-  const content = isTerms ? TERMS_OF_SERVICE : PRIVACY_POLICY;
+  const getTitle = () => {
+    switch (type) {
+      case 'terms':
+        return 'Terms of Service';
+      case 'privacy':
+        return 'Privacy Policy';
+      case 'refund':
+        return 'Refund Policy';
+      default:
+        return 'Legal Document';
+    }
+  };
+
+  const getContent = () => {
+    switch (type) {
+      case 'terms':
+        return TERMS_OF_SERVICE;
+      case 'privacy':
+        return PRIVACY_POLICY;
+      case 'refund':
+        return REFUND_POLICY;
+      default:
+        return '';
+    }
+  };
+
+  const title = getTitle();
+  const content = getContent();
 
   return (
     <LinearGradient
@@ -27,7 +52,7 @@ export default function LegalDocument() {
         <TouchableOpacity
           onPress={() => router.back()}
           className="mr-4 w-10 h-10 bg-white rounded-full items-center justify-center"
-          activeOpacity={0.7}
+          activeOpacity={1}
         >
           <Ionicons name="arrow-back" size={20} color="#000" />
         </TouchableOpacity>

@@ -38,8 +38,8 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="subjects/[id]" />
             <Stack.Screen name="practice" />
+            <Stack.Screen name="notes" />
             <Stack.Screen name="revision/session" />
-            <Stack.Screen name="pricing" />
             <Stack.Screen name="payment-success" />
             <Stack.Screen name="legal/[type]" />
           </Stack>

@@ -96,7 +96,7 @@ export default function PhoneInput({
           className="flex-row items-center px-4 py-4 border-r-2 border-gray-300"
           onPress={() => !disabled && setShowCountryPicker(true)}
           disabled={disabled}
-          activeOpacity={0.7}
+          activeOpacity={1}
         >
           <Text className="text-2xl mr-1">{selectedCountryCode.flag}</Text>
           <Text className="text-gray-800 font-semibold text-base">
@@ -162,7 +162,7 @@ export default function PhoneInput({
                     item.code === selectedCountryCode.code ? 'bg-blue-50' : ''
                   }`}
                   onPress={() => handleCountryCodeSelect(item)}
-                  activeOpacity={0.7}
+                  activeOpacity={1}
                 >
                   <Text className="text-3xl mr-3">{item.flag}</Text>
                   <View className="flex-1">

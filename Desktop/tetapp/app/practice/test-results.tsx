@@ -2,11 +2,12 @@ import { useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   ScrollView,
   Image,
+  ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -42,8 +43,18 @@ interface QuestionWithAnswer extends Question {
 }
 
 export default function TestResults() {
-  const router = useRouter();
   const params = useLocalSearchParams();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // Defensive check for navigation context - show loading if params not ready
+  if (!params || Object.keys(params).length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center bg-purple-50">
+        <ActivityIndicator size="large" color="#7c3aed" />
+        <Text className="mt-4 text-gray-600">Loading results...</Text>
+      </View>
+    );
+  }
 
   // Parse params
   const totalQuestions = parseInt(params.totalQuestions as string) || 0;
@@ -52,6 +63,11 @@ export default function TestResults() {
   const incorrectCount = parseInt(params.incorrectCount as string) || 0;
   const skippedCount = parseInt(params.skippedCount as string) || 0;
   const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+
+  // Check if subject is Urdu (RTL language)
+  const subjectId = params.subjectId as string | undefined;
+  const subjectName = params.subjectName as string | undefined;
+  const isUrduSubject = subjectId?.toLowerCase() === 'urdu' || subjectName?.toLowerCase() === 'urdu';
 
   // Parse questions data
   const questionsData: Question[] = (() => {
@@ -98,44 +114,58 @@ export default function TestResults() {
 
   // Create questions with answers
   const questionsWithAnswers: QuestionWithAnswer[] = questionsData.map((question, index) => {
-    const userAnswer = answersData[index];
-    const isCorrect = userAnswer === question.correct_answer;
-    const status = !userAnswer ? 'unanswered' : isCorrect ? 'correct' : 'incorrect';
+    const userAnswerKey = answersData[index]; // This is "A", "B", "C", or "D"
+
+    // Convert option key to option text for comparison
+    const optionsArray = Array.isArray(question.options) ? question.options : [];
+    const optionsMap = optionsArray.reduce((acc, option, idx) => {
+      const key = String.fromCharCode(65 + idx); // A, B, C, D
+      acc[key] = option;
+      return acc;
+    }, {} as Record<string, string>);
+
+    const userAnswerText = userAnswerKey ? optionsMap[userAnswerKey] : undefined;
+    // Use trimmed comparison to avoid whitespace issues
+    const isCorrect = userAnswerText?.trim() === question.correct_answer?.trim();
+    const status = !userAnswerKey ? 'unanswered' : isCorrect ? 'correct' : 'incorrect';
     const markedForReview = markedForReviewData.has(index);
 
     return {
       ...question,
-      userAnswer,
+      userAnswer: userAnswerKey, // Keep as key for display purposes
       isCorrect,
       status,
       markedForReview,
     };
   });
 
+  // Get current question
+  const currentQuestion = questionsWithAnswers[currentQuestionIndex];
+
+  // Navigation handlers
+  const handleNext = () => {
+    if (currentQuestionIndex < questionsWithAnswers.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
   return (
-    <View className="flex-1 bg-gray-50">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
 
-      {/* Header */}
-      <LinearGradient
-        colors={['#3B82F6', '#2563EB']}
-        className="pt-12 pb-6"
-      >
-        <View className="px-6 flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="mr-4"
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          >
-            <Ionicons name="arrow-back" size={28} color="white" />
-          </TouchableOpacity>
-          <Text className="text-white text-2xl font-bold flex-1">Test Results</Text>
-          <View style={{ width: 28 }} />
-        </View>
-      </LinearGradient>
-
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-6 py-6">
+        <View className="px-6 pt-16 pb-6">
           {/* Stats Summary */}
           <View className="items-center mb-8">
             <Text className="text-6xl mb-4">🎉</Text>
@@ -145,216 +175,252 @@ export default function TestResults() {
           </View>
 
           {/* Score Card */}
-          <View className="bg-blue-50 p-6 rounded-2xl mb-6">
-            <View className="items-center mb-4">
-              <Text className="text-6xl font-bold text-blue-500">
-                {correctCount}/{totalQuestions}
-              </Text>
-              <Text className="text-gray-600 mt-2 text-lg">Score</Text>
+          <View className="bg-white p-6 rounded-3xl mb-6 shadow-sm border border-gray-100">
+            <View className="flex-row justify-around mb-6 pb-4 border-b border-gray-100">
+              <View className="items-center flex-1">
+                <Text className="text-sm font-semibold text-gray-600 mb-2">
+                  Score
+                </Text>
+                <Text className="text-4xl font-bold text-purple-700">
+                  {correctCount}/{totalQuestions}
+                </Text>
+              </View>
+
+              <View className="items-center flex-1">
+                <Text className="text-sm font-semibold text-gray-600 mb-2">
+                  Percentage
+                </Text>
+                <Text className="text-4xl font-bold text-purple-700">
+                  {accuracy.toFixed(0)}%
+                </Text>
+              </View>
             </View>
 
-            <View className="flex-row justify-around pt-4 border-t border-blue-200">
+            <View className="flex-row justify-around">
               <View className="items-center flex-1">
-                <Text className="text-3xl font-bold text-green-500">
-                  {correctCount}
-                </Text>
-                <Text className="text-gray-600 text-sm mt-1">Correct</Text>
+                <View className="w-12 h-12 rounded-full bg-emerald-100 items-center justify-center mb-2">
+                  <Text className="text-2xl font-bold text-emerald-600">
+                    {correctCount}
+                  </Text>
+                </View>
+                <Text className="text-gray-600 text-xs font-medium">Correct</Text>
               </View>
               <View className="items-center flex-1">
-                <Text className="text-3xl font-bold text-red-500">
-                  {incorrectCount}
-                </Text>
-                <Text className="text-gray-600 text-sm mt-1">Incorrect</Text>
-              </View>
-              <View className="items-center flex-1">
-                <Text className="text-3xl font-bold text-orange-500">
-                  {skippedCount}
-                </Text>
-                <Text className="text-gray-600 text-sm mt-1">Skipped</Text>
+                <View className="w-12 h-12 rounded-full bg-rose-100 items-center justify-center mb-2">
+                  <Text className="text-2xl font-bold text-rose-600">
+                    {incorrectCount}
+                  </Text>
+                </View>
+                <Text className="text-gray-600 text-xs font-medium">Incorrect</Text>
               </View>
             </View>
           </View>
 
-          {/* Quick Actions */}
-          <View className="space-y-3 mb-8">
-            <TouchableOpacity
-              onPress={() => router.push('/(tabs)/analytics')}
-              className="bg-green-500 py-4 px-8 rounded-xl"
-            >
-              <Text className="text-white text-center text-lg font-semibold">
-                View Analytics
-              </Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => router.push('/(tabs)/home')}
-              className="bg-gray-100 py-4 px-8 rounded-xl"
-            >
-              <Text className="text-gray-700 text-center text-lg font-semibold">
-                Back to Home
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Divider */}
-          <View className="border-t border-gray-300 mb-6" />
-
-          {/* All Questions Section */}
+          {/* Question Review Section */}
           <Text className="text-2xl font-bold text-gray-800 mb-4">
             Question Review
           </Text>
 
-          {/* Render all questions */}
-          {questionsWithAnswers.map((question, questionIndex) => {
-            const isCorrect = question.status === 'correct';
-            const isSkipped = question.status === 'unanswered';
-            const explanation = getQuestionExplanation(question);
+          {/* Question Counter */}
+          <View className="mb-4">
+            <Text className="text-center text-gray-600 font-semibold">
+              Question {currentQuestionIndex + 1} of {questionsWithAnswers.length}
+            </Text>
+          </View>
+
+          {/* Single Question Display */}
+          {currentQuestion && (() => {
+            const isCorrect = currentQuestion.status === 'correct';
+            const isSkipped = currentQuestion.status === 'unanswered';
+            const explanation = getQuestionExplanation(currentQuestion);
+
+            // Determine border color based on status
+            const borderColor = isCorrect ? 'border-emerald-500' : 'border-rose-500';
+
+            // Debug log to check data format
+            console.log('[test-results] Question data:', {
+              userAnswerKey: currentQuestion.userAnswer,
+              correctAnswerText: currentQuestion.correct_answer,
+              status: currentQuestion.status,
+              isCorrect: currentQuestion.isCorrect,
+            });
 
             return (
-              <View key={question.id} className="mb-8">
+              <View className={`mb-6 border ${borderColor} rounded-2xl overflow-hidden`}>
                 {/* Question Header */}
-                <View className="bg-white p-4 rounded-t-2xl border-b-2 border-gray-200">
-                  <View className="flex-row items-center justify-between mb-2">
-                    <Text className="text-lg font-bold text-gray-800">
-                      Question {questionIndex + 1}
-                    </Text>
-                    <View className="flex-row items-center gap-2">
-                      <View className={`px-3 py-1 rounded-full ${
-                        isCorrect ? 'bg-green-500' : isSkipped ? 'bg-orange-500' : 'bg-red-500'
-                      }`}>
-                        <Text className="text-white text-xs font-semibold">
-                          {isCorrect ? '✓ Correct' : isSkipped ? '○ Skipped' : '✗ Incorrect'}
-                        </Text>
-                      </View>
-                      {question.markedForReview && (
-                        <View className="px-3 py-1 rounded-full bg-purple-500">
-                          <Text className="text-white text-xs font-semibold">🔖 Review</Text>
-                        </View>
-                      )}
-                    </View>
-                  </View>
+                <View className="bg-white p-4 border-b border-gray-200">
+                  <Text className="text-lg font-bold text-gray-800">
+                    Question {currentQuestionIndex + 1}
+                  </Text>
                 </View>
 
                 {/* Question Content */}
-                <View className="bg-white p-6 rounded-b-2xl mb-2">
-                  {question.image_url && (
+                <View className="bg-white p-4">
+                  {currentQuestion.image_url && (
                     <Image
-                      source={{ uri: question.image_url }}
+                      source={{ uri: currentQuestion.image_url }}
                       className="w-full h-48 rounded-xl mb-4"
                       resizeMode="contain"
                     />
                   )}
-                  <MathText
-                    text={question.question}
-                    fontSize="medium"
-                    color="#111827"
-                  />
-                </View>
-
-                {/* Your Response */}
-                <View className="bg-gray-50 p-4 rounded-xl mb-2">
-                  <Text className="text-xs font-semibold text-gray-600 mb-2">YOUR RESPONSE</Text>
-                  <View className="flex-row items-center">
-                    {question.userAnswer ? (
-                      <>
-                        <View className={`w-8 h-8 rounded-full items-center justify-center ${
-                          isCorrect ? 'bg-green-500' : 'bg-red-500'
-                        }`}>
-                          <Text className="text-white font-bold">{question.userAnswer}</Text>
-                        </View>
-                        <Text className={`ml-2 text-sm font-semibold ${
-                          isCorrect ? 'text-green-700' : 'text-red-700'
-                        }`}>
-                          {isCorrect ? 'Correct' : 'Incorrect'}
-                        </Text>
-                      </>
-                    ) : (
-                      <>
-                        <View className="w-8 h-8 rounded-full items-center justify-center bg-orange-500">
-                          <Ionicons name="remove" size={20} color="white" />
-                        </View>
-                        <Text className="ml-2 text-sm font-semibold text-orange-700">
-                          Not Answered
-                        </Text>
-                      </>
-                    )}
-                  </View>
-                </View>
-
-                {/* Options */}
-                <View className="mb-2">
-                  {question.options.map((option, idx) => {
-                    const optionKey = String.fromCharCode(65 + idx);
-                    const isUserAnswer = question.userAnswer === optionKey;
-                    const isCorrectAnswer = question.correct_answer === optionKey;
-
-                    let bgColor = 'bg-white border-gray-200';
-                    let borderWidth = 'border';
-
-                    if (isCorrectAnswer) {
-                      bgColor = 'bg-green-50 border-green-500';
-                      borderWidth = 'border-2';
-                    } else if (isUserAnswer && !isCorrectAnswer) {
-                      bgColor = 'bg-red-50 border-red-500';
-                      borderWidth = 'border-2';
-                    }
-
-                    return (
-                      <View
-                        key={idx}
-                        className={`mb-2 p-3 rounded-xl ${borderWidth} ${bgColor} flex-row items-start`}
-                      >
-                        <View className="mr-2 mt-1">
-                          <View className={`w-7 h-7 rounded-full items-center justify-center ${
-                            isCorrectAnswer ? 'bg-green-500' : isUserAnswer ? 'bg-red-500' : 'bg-gray-300'
-                          }`}>
-                            <Text className={`text-sm font-bold ${
-                              isCorrectAnswer || isUserAnswer ? 'text-white' : 'text-gray-700'
-                            }`}>
-                              {optionKey}
-                            </Text>
-                          </View>
-                        </View>
-                        <View className="flex-1">
-                          <MathText
-                            text={option}
-                            fontSize="small"
-                            color="#374151"
-                          />
-                          {isCorrectAnswer && (
-                            <Text className="text-green-600 font-semibold mt-1 text-xs">
-                              ✓ Correct Answer
-                            </Text>
-                          )}
-                          {isUserAnswer && !isCorrectAnswer && (
-                            <Text className="text-red-600 font-semibold mt-1 text-xs">
-                              ✗ Your Answer
-                            </Text>
-                          )}
-                        </View>
-                      </View>
-                    );
-                  })}
-                </View>
-
-                {/* Explanation */}
-                {explanation && (
-                  <View className="bg-blue-50 p-4 rounded-xl">
-                    <Text className="text-xs font-semibold text-blue-600 mb-2">
-                      EXPLANATION
-                    </Text>
+                  <View className="mb-4">
                     <MathText
-                      text={explanation}
-                      fontSize="small"
-                      color="#1F2937"
+                      text={currentQuestion.question}
+                      fontSize="medium"
+                      color="#111827"
+                      isRTL={isUrduSubject}
                     />
                   </View>
-                )}
+
+                  {/* Options - Show selected answer, then correct answer, then explanation */}
+                  <View className="mb-4">
+                    {(() => {
+                      // Find the correct option key by matching text
+                      const correctOptionKey = currentQuestion.options.findIndex(
+                        (opt) => opt.trim() === currentQuestion.correct_answer.trim()
+                      );
+                      const correctKey = correctOptionKey >= 0 ? String.fromCharCode(65 + correctOptionKey) : '';
+
+                      // Build array of options to show: user's answer first (if wrong), then correct answer
+                      const optionsToShow: Array<{ key: string; option: string; isUserAnswer: boolean; isCorrect: boolean }> = [];
+
+                      // If user answered and it's wrong, show their answer first (in red)
+                      if (currentQuestion.userAnswer && currentQuestion.userAnswer !== correctKey) {
+                        const userOptionIdx = currentQuestion.userAnswer.charCodeAt(0) - 65;
+                        if (userOptionIdx >= 0 && userOptionIdx < currentQuestion.options.length) {
+                          optionsToShow.push({
+                            key: currentQuestion.userAnswer,
+                            option: currentQuestion.options[userOptionIdx],
+                            isUserAnswer: true,
+                            isCorrect: false,
+                          });
+                        }
+                      }
+
+                      // Always show correct answer (in green)
+                      if (correctOptionKey >= 0) {
+                        optionsToShow.push({
+                          key: correctKey,
+                          option: currentQuestion.options[correctOptionKey],
+                          isUserAnswer: currentQuestion.userAnswer === correctKey,
+                          isCorrect: true,
+                        });
+                      }
+
+                      return optionsToShow.map((item, displayIdx) => {
+                        let textColor = '#374151';
+                        let labelBgColor = 'bg-gray-300';
+                        let labelTextColor = 'text-gray-700';
+                        let labelText = '';
+
+                        if (item.isCorrect) {
+                          // Correct answer is always green
+                          textColor = '#047857';
+                          labelBgColor = 'bg-emerald-500';
+                          labelTextColor = 'text-white';
+                          labelText = item.isUserAnswer ? 'Your Answer (Correct)' : 'Correct Answer';
+                        } else if (item.isUserAnswer) {
+                          // Wrong chosen answer is red
+                          textColor = '#DC2626';
+                          labelBgColor = 'bg-rose-500';
+                          labelTextColor = 'text-white';
+                          labelText = 'Your Answer (Wrong)';
+                        }
+
+                        return (
+                          <View key={displayIdx} className="mb-3">
+                            <Text className={`text-xs font-semibold mb-1 ${item.isCorrect ? 'text-emerald-600' : 'text-rose-600'} ${isUrduSubject ? 'text-right' : ''}`}>
+                              {labelText}
+                            </Text>
+                            <View
+                              className={`flex-row items-start ${isUrduSubject ? 'flex-row-reverse' : ''}`}
+                            >
+                              <View className={isUrduSubject ? 'ml-3 mt-0.5' : 'mr-3 mt-0.5'}>
+                                <View className={`w-7 h-7 rounded-full items-center justify-center ${labelBgColor}`}>
+                                  <Text className={`text-sm font-bold ${labelTextColor}`}>
+                                    {item.key}
+                                  </Text>
+                                </View>
+                              </View>
+                              <View className="flex-1">
+                                <MathText
+                                  text={item.option}
+                                  fontSize="small"
+                                  color={textColor}
+                                  isRTL={isUrduSubject}
+                                />
+                              </View>
+                            </View>
+                          </View>
+                        );
+                      });
+                    })()}
+                  </View>
+
+                  {/* Explanation */}
+                  {explanation && (
+                    <View className="bg-blue-50 p-4 rounded-xl">
+                      <Text className={`text-xs font-semibold text-blue-600 mb-2 ${isUrduSubject ? 'text-right' : ''}`}>
+                        EXPLANATION
+                      </Text>
+                      <MathText
+                        text={explanation}
+                        fontSize="small"
+                        color="#1F2937"
+                        isRTL={isUrduSubject}
+                      />
+                    </View>
+                  )}
+                </View>
               </View>
             );
-          })}
+          })()}
+
+          {/* Navigation Buttons */}
+          <View className="flex-row gap-3 mb-6">
+            <TouchableOpacity
+              onPress={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+              className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
+                currentQuestionIndex === 0 ? 'bg-gray-200' : 'bg-indigo-600'
+              }`}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={24}
+                color={currentQuestionIndex === 0 ? '#9CA3AF' : 'white'}
+              />
+              <Text className={`ml-2 font-bold text-lg ${
+                currentQuestionIndex === 0 ? 'text-gray-400' : 'text-white'
+              }`}>
+                Previous
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleNext}
+              disabled={currentQuestionIndex === questionsWithAnswers.length - 1}
+              className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
+                currentQuestionIndex === questionsWithAnswers.length - 1 ? 'bg-gray-200' : 'bg-indigo-600'
+              }`}
+              activeOpacity={0.7}
+            >
+              <Text className={`mr-2 font-bold text-lg ${
+                currentQuestionIndex === questionsWithAnswers.length - 1 ? 'text-gray-400' : 'text-white'
+              }`}>
+                Next
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={currentQuestionIndex === questionsWithAnswers.length - 1 ? '#9CA3AF' : 'white'}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }

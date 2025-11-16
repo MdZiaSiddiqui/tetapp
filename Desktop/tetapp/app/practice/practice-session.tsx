@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import ExitConfirmationModal from '../../components/ExitConfirmationModal';
+import LoadingBar from '../../components/LoadingBar';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
@@ -77,8 +78,15 @@ export default function PracticeSession() {
   const paperParam = params.paper as string | undefined;
   const isPaper1 = paperParam?.includes('Paper 1') || paperParam?.includes('Paper-1');
   const isPaper2 = paperParam?.includes('Paper 2') || paperParam?.includes('Paper-2');
-  const hasRequiredAccess = isPaper2 ? hasPaper2Access : hasPaper1Access;
+  const sessionNumber = params.sessionNumber ? parseInt(params.sessionNumber as string) : 1;
+  // Session 1 is always free, others require premium access
+  const hasRequiredAccess = sessionNumber === 1 ? true : (isPaper2 ? hasPaper2Access : hasPaper1Access);
   const requiredTier = isPaper2 ? 'paper2' : 'paper1';
+
+  // Check if subject is Urdu (RTL language)
+  const subjectId = params.subjectId as string | undefined;
+  const subjectName = params.subjectName as string | undefined;
+  const isUrduSubject = subjectId?.toLowerCase() === 'urdu' || subjectName?.toLowerCase() === 'urdu';
 
   // Session state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -93,6 +101,9 @@ export default function PracticeSession() {
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
   // Exit confirmation modal
   const [showExitModal, setShowExitModal] = useState(false);
+
+  // ScrollView ref for scrolling to top
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Gesture animation values
   const translateX = useSharedValue(0);
@@ -244,6 +255,8 @@ export default function PracticeSession() {
       setSelectedAnswer(questionAnswers[nextIndex] || null);
       setShowExplanation(questionExplanations[nextIndex] || false);
       setQuestionStartTime(Date.now());
+      // Scroll to top
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     } else {
       // Finish session
       handleFinishSession();
@@ -260,6 +273,8 @@ export default function PracticeSession() {
     setSelectedAnswer(questionAnswers[prevIndex] || null);
     setShowExplanation(questionExplanations[prevIndex] || false);
     setQuestionStartTime(Date.now());
+    // Scroll to top
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   // Finish session and navigate to results
@@ -299,6 +314,10 @@ export default function PracticeSession() {
         correctCount,
         incorrectCount,
         skippedCount,
+        subjectId: params.subjectId as string | undefined,
+        subjectName: params.subjectName as string | undefined,
+        questions: JSON.stringify(questions),
+        answers: JSON.stringify(questionAnswers),
       },
     });
   };
@@ -340,6 +359,8 @@ export default function PracticeSession() {
     setSelectedAnswer(questionAnswers[prevIndex] || null);
     setShowExplanation(questionExplanations[prevIndex] || false);
     setQuestionStartTime(Date.now());
+    // Scroll to top
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   // Handle swipe to next question
@@ -420,33 +441,9 @@ export default function PracticeSession() {
     };
   });
 
-  // Edge indicator animations - Optimized for performance
-  const leftEdgeStyle = useAnimatedStyle(() => {
-    const canSwipeRight = currentQuestionIndex > 0;
-    const showIndicator = translateX.value > 10 && canSwipeRight;
-
-    return {
-      opacity: showIndicator ? interpolate(translateX.value, [10, 80], [0, 1], Extrapolation.CLAMP) : 0,
-    };
-  });
-
-  const rightEdgeStyle = useAnimatedStyle(() => {
-    const canSwipeLeft = currentQuestionIndex < (questions?.length ?? 0) - 1;
-    const showIndicator = translateX.value < -10 && canSwipeLeft;
-
-    return {
-      opacity: showIndicator ? interpolate(translateX.value, [-80, -10], [1, 0], Extrapolation.CLAMP) : 0,
-    };
-  });
-
   // Pro access check - Loading state
   if (proLoading) {
-    return (
-      <View className="flex-1 bg-white justify-center items-center">
-        <ActivityIndicator size="large" color="#9333ea" />
-        <Text className="text-gray-600 mt-4 text-lg">Checking access...</Text>
-      </View>
-    );
+    return <LoadingBar message="Loading..." />;
   }
 
   // Pro access check - No access
@@ -476,6 +473,7 @@ export default function PracticeSession() {
         <TouchableOpacity
           onPress={() => router.back()}
           className="bg-blue-500 px-8 py-4 rounded-xl"
+          activeOpacity={1}
         >
           <Text className="text-white font-bold text-lg">Go Back</Text>
         </TouchableOpacity>
@@ -536,6 +534,8 @@ export default function PracticeSession() {
     setSelectedAnswer(questionAnswers[index] || null);
     setShowExplanation(questionExplanations[index] || false);
     setQuestionStartTime(Date.now());
+    // Scroll to top
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   // Get question font size (exactly 14% larger than options)
@@ -623,7 +623,7 @@ export default function PracticeSession() {
       {/* Header */}
       <View className="px-6 pt-16 pb-4 bg-white border-b border-gray-200">
         <View className="flex-row justify-between items-center mb-4">
-          <TouchableOpacity onPress={handleExit} className="flex items-center justify-center z-10">
+          <TouchableOpacity onPress={handleExit} className="flex items-center justify-center z-10" activeOpacity={1}>
             <Ionicons name="chevron-back" size={24} color="#000000" />
           </TouchableOpacity>
 
@@ -633,8 +633,8 @@ export default function PracticeSession() {
             </Text>
           </View>
 
-          <View className="bg-green-100 px-3 py-2 rounded-full z-10">
-            <Text className="text-green-700 font-bold text-sm">
+          <View style={{ backgroundColor: '#ffffff', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, borderWidth: 2, borderColor: '#000000', zIndex: 10 }}>
+            <Text style={{ color: '#000000', fontWeight: 'bold', fontSize: 14 }}>
               Score : {totalAnswered === 0 ? '0' : correctAnswers}
             </Text>
           </View>
@@ -652,43 +652,12 @@ export default function PracticeSession() {
         </View>
       </View>
 
-      {/* Swipe Edge Indicators */}
-      <Animated.View
-        style={[leftEdgeStyle, {
-          position: 'absolute',
-          left: 0,
-          top: '50%',
-          zIndex: 10,
-          paddingHorizontal: 16,
-          paddingVertical: 32,
-        }]}
-        pointerEvents="none"
-      >
-        <View className="bg-blue-500/20 px-3 py-2 rounded-r-xl">
-          <Ionicons name="chevron-back" size={28} color="#2563eb" />
-        </View>
-      </Animated.View>
-
-      <Animated.View
-        style={[rightEdgeStyle, {
-          position: 'absolute',
-          right: 0,
-          top: '50%',
-          zIndex: 10,
-          paddingHorizontal: 16,
-          paddingVertical: 32,
-        }]}
-        pointerEvents="none"
-      >
-        <View className="bg-blue-500/20 px-3 py-2 rounded-l-xl">
-          <Ionicons name="chevron-forward" size={28} color="#2563eb" />
-        </View>
-      </Animated.View>
 
       {/* Content */}
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[{ flex: 1 }, animatedStyle]}>
           <ScrollView
+            ref={scrollViewRef}
             showsVerticalScrollIndicator={true}
             contentContainerStyle={{ paddingBottom: 24, flexGrow: 1 }}
           >
@@ -707,6 +676,7 @@ export default function PracticeSession() {
               fontSize={getQuestionFontSize()}
               color="#111827"
               style={{ fontWeight: 'bold' }}
+              isRTL={isUrduSubject}
             />
           </View>
 
@@ -743,14 +713,15 @@ export default function PracticeSession() {
                   onPress={() => handleAnswerSelect(key)}
                   disabled={showExplanation}
                   className={`p-4 rounded-2xl mb-5 border ${containerStyle}`}
-                  activeOpacity={0.7}
+                  activeOpacity={1}
                 >
-                  <View className="flex-row items-center">
+                  <View className={`flex-row items-center ${isUrduSubject ? 'flex-row-reverse' : ''}`}>
                     <MathText
                       text={value}
                       fontSize={fontSize}
                       color={showCorrect ? '#111827' : showWrong ? '#111827' : isSelected ? '#ffffff' : '#000000'}
                       style={{ flex: 1, fontWeight: '600' }}
+                      isRTL={isUrduSubject}
                     />
                   </View>
                 </TouchableOpacity>
@@ -761,7 +732,7 @@ export default function PracticeSession() {
           {/* Explanation */}
           {showExplanation && isCorrect && (
             <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500" style={{ overflow: 'hidden', borderRadius: 16 }}>
-              <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
+              <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
               <View style={{ width: '100%' }}>
                 {(() => {
                   // Check for both 'solutions' and 'explanation' fields (data sources use different names)
@@ -784,9 +755,10 @@ export default function PracticeSession() {
                       fontSize={getExplanationFontSize()}
                       color="#111827"
                       style={{ width: '100%' }}
+                      isRTL={isUrduSubject}
                     />
                   ) : (
-                    <Text className="text-gray-500 italic text-sm">
+                    <Text className={`text-gray-500 italic text-sm ${isUrduSubject ? 'text-right' : ''}`}>
                       No explanation available for this question.
                     </Text>
                   );
@@ -802,7 +774,7 @@ export default function PracticeSession() {
               style={{ marginTop: 0, borderRadius: 16, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3, padding: 2, overflow: 'hidden' }}
             >
               <View className="bg-white p-4" style={{ borderRadius: 14, overflow: 'hidden' }}>
-                <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
+                <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
                 <View style={{ width: '100%' }}>
                   {(() => {
                     // Check for both 'solutions' and 'explanation' fields (data sources use different names)
@@ -815,9 +787,10 @@ export default function PracticeSession() {
                         fontSize={getExplanationFontSize()}
                         color="#111827"
                         style={{ width: '100%' }}
+                        isRTL={isUrduSubject}
                       />
                     ) : (
-                      <Text className="text-gray-500 italic text-sm">
+                      <Text className={`text-gray-500 italic text-sm ${isUrduSubject ? 'text-right' : ''}`}>
                         No explanation available for this question.
                       </Text>
                     );
@@ -845,12 +818,13 @@ export default function PracticeSession() {
                     key={key}
                     className="p-4 rounded-2xl mb-5 bg-red-100 border border-gray-100 shadow-md"
                   >
-                    <View className="flex-row items-center">
+                    <View className={`flex-row items-center ${isUrduSubject ? 'flex-row-reverse' : ''}`}>
                       <MathText
                         text={value}
                         fontSize={fontSize}
                         color="#111827"
                         style={{ flex: 1, fontWeight: '600' }}
+                        isRTL={isUrduSubject}
                       />
                     </View>
                   </View>
@@ -860,13 +834,13 @@ export default function PracticeSession() {
           )}
 
           {/* Question number bubbles - Grid layout with 5 per row */}
-          <View className="mt-6 mb-4">
+          <View className="mt-6 mb-4 bg-gray-100 border-2 border-gray-300 rounded-2xl p-4">
             <View className="flex-row flex-wrap justify-center gap-2">
               {questions.map((_, index) => {
                 const status = getQuestionStatus(index);
                 const isCurrentQuestion = index === currentQuestionIndex;
 
-                // Render shapes based on status
+                // Render boxes based on status
                 if (status === 'correct') {
                   return (
                     <TouchableOpacity
@@ -874,17 +848,23 @@ export default function PracticeSession() {
                       onPress={() => navigateToQuestion(index)}
                       style={{
                         position: 'relative',
-                        borderWidth: isCurrentQuestion ? 1.5 : 0,
-                        borderColor: isCurrentQuestion ? '#2563eb' : 'transparent',
-                        borderRadius: 6,
                       }}
-                      activeOpacity={0.7}
+                      activeOpacity={1}
                     >
-                      <HomeShape size={48} gradient={['#86efac', '#22c55e']}>
-                        <Text className="text-green-800 font-bold text-base">
+                      <View
+                        style={{
+                          width: 48,
+                          height: 48,
+                          backgroundColor: '#7CC94D',
+                          borderRadius: 8,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Text className="text-white font-bold text-base">
                           {index + 1}
                         </Text>
-                      </HomeShape>
+                      </View>
                     </TouchableOpacity>
                   );
                 } else if (status === 'wrong') {
@@ -894,38 +874,50 @@ export default function PracticeSession() {
                       onPress={() => navigateToQuestion(index)}
                       style={{
                         position: 'relative',
-                        borderWidth: isCurrentQuestion ? 1.5 : 0,
-                        borderColor: isCurrentQuestion ? '#2563eb' : 'transparent',
-                        borderRadius: 6,
                       }}
-                      activeOpacity={0.7}
+                      activeOpacity={1}
                     >
-                      <InvertedHomeShape size={48} gradient={['#fca5a5', '#ef4444']}>
-                        <Text className="text-red-800 font-bold text-base">
+                      <View
+                        style={{
+                          width: 48,
+                          height: 48,
+                          backgroundColor: '#ef4444',
+                          borderRadius: 8,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Text className="text-white font-bold text-base">
                           {index + 1}
                         </Text>
-                      </InvertedHomeShape>
+                      </View>
                     </TouchableOpacity>
                   );
                 } else {
-                  // Unanswered - grey home shape
+                  // Unanswered - white box
                   return (
                     <TouchableOpacity
                       key={index}
                       onPress={() => navigateToQuestion(index)}
                       style={{
                         position: 'relative',
-                        borderWidth: isCurrentQuestion ? 1.5 : 0,
-                        borderColor: isCurrentQuestion ? '#2563eb' : 'transparent',
-                        borderRadius: 6,
                       }}
-                      activeOpacity={0.7}
+                      activeOpacity={1}
                     >
-                      <HomeShape size={48} gradient={['#e5e7eb', '#d1d5db']}>
-                        <Text className="text-gray-700 font-bold text-base">
+                      <View
+                        style={{
+                          width: 48,
+                          height: 48,
+                          backgroundColor: '#ffffff',
+                          borderRadius: 8,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Text className="text-black font-bold text-base">
                           {index + 1}
                         </Text>
-                      </HomeShape>
+                      </View>
                     </TouchableOpacity>
                   );
                 }
@@ -950,7 +942,7 @@ export default function PracticeSession() {
                   className={`w-10 h-10 rounded-full items-center justify-center ${
                     fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
                   }`}
-                  activeOpacity={0.7}
+                  activeOpacity={1}
                 >
                   <Text className={`text-xl font-bold ${fontSize === 'xs' ? 'text-gray-400' : 'text-white'}`}>
                     −
@@ -970,7 +962,7 @@ export default function PracticeSession() {
                   className={`w-10 h-10 rounded-full items-center justify-center ${
                     fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
                   }`}
-                  activeOpacity={0.7}
+                  activeOpacity={1}
                 >
                   <Text className={`text-xl font-bold ${fontSize === '3xl' ? 'text-gray-400' : 'text-white'}`}>
                     +
@@ -991,7 +983,7 @@ export default function PracticeSession() {
             onPress={handlePreviousQuestion}
             disabled={currentQuestionIndex === 0}
             className="flex-1 rounded-lg overflow-hidden"
-            activeOpacity={0.8}
+            activeOpacity={1}
           >
             {currentQuestionIndex === 0 ? (
               <View className="bg-gray-300 py-3">
@@ -1022,7 +1014,7 @@ export default function PracticeSession() {
           <TouchableOpacity
             onPress={handleNextQuestion}
             className="flex-1 rounded-lg overflow-hidden"
-            activeOpacity={0.8}
+            activeOpacity={1}
           >
             <LinearGradient
               colors={currentQuestionIndex < questions.length - 1 ? ['#8b5cf6', '#a855f7'] : ['#f59e0b', '#eab308']}

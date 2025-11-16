@@ -129,8 +129,8 @@ export default function Login() {
           <TouchableOpacity
             onPress={handleGoogleSignIn}
             disabled={loading}
-            className="bg-white rounded-full py-5 px-6 flex-row items-center justify-center mb-4 active:scale-95"
-            activeOpacity={0.9}
+            className="bg-white rounded-full py-5 px-6 flex-row items-center justify-center mb-4"
+            activeOpacity={1}
             style={{
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 4 },
@@ -162,7 +162,7 @@ export default function Login() {
             <View className="flex-row items-center justify-center">
               <TouchableOpacity
                 onPress={() => router.push('/legal/terms')}
-                activeOpacity={0.7}
+                activeOpacity={1}
               >
                 <Text className="text-purple-600 font-medium text-sm">
                   Terms of Service
@@ -171,7 +171,7 @@ export default function Login() {
               <Text className="text-gray-400 text-sm"> and </Text>
               <TouchableOpacity
                 onPress={() => router.push('/legal/privacy')}
-                activeOpacity={0.7}
+                activeOpacity={1}
               >
                 <Text className="text-purple-600 font-medium text-sm">
                   Privacy Policy

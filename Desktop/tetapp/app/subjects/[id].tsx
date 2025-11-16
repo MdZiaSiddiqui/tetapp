@@ -114,10 +114,10 @@ export default function SubjectDetail() {
   const currentPaper: 'Paper 1' | 'Paper 2' = showPaper2 ? 'Paper 2' : 'Paper 1';
 
   const handleLockedPress = () => {
-    router.push('/(tabs)/notes');
+    router.push('/(tabs)/pricing');
   };
 
-  const handleModePress = async (paper: 'Paper 1' | 'Paper 2', mode: 'practice' | 'test' | 'notes') => {
+  const handleModePress = async (paper: 'Paper 1' | 'Paper 2', mode: 'practice' | 'test' | 'notes', sessionNumber: number = 1) => {
     try {
       setFetchingQuestions(true);
 
@@ -187,6 +187,7 @@ export default function SubjectDetail() {
             paper,
             mode: 'practice',
             questionCount: questions.length.toString(),
+            sessionNumber: sessionNumber.toString(),
           },
         });
       } else if (mode === 'test') {
@@ -199,6 +200,7 @@ export default function SubjectDetail() {
             paper,
             mode: 'test',
             questionCount: questions.length.toString(),
+            sessionNumber: sessionNumber.toString(),
           },
         });
       } else {
@@ -212,6 +214,7 @@ export default function SubjectDetail() {
             paper,
             mode: 'notes',
             questionCount: questions.length.toString(),
+            sessionNumber: sessionNumber.toString(),
           },
         });
       }
@@ -245,6 +248,7 @@ export default function SubjectDetail() {
           <TouchableOpacity
             onPress={() => router.back()}
             className="bg-red-600 py-3 px-6 rounded-lg"
+            activeOpacity={1}
           >
             <Text className="text-white font-semibold text-center">Go Back</Text>
           </TouchableOpacity>
@@ -269,10 +273,22 @@ export default function SubjectDetail() {
         end={{ x: 1, y: 1 }}
         className="px-6 pt-16 pb-6"
       >
-        <View className="items-center">
-          <Text className="text-xl font-medium text-white">
-            {subject?.name || subjectName} & Pedagogy
-          </Text>
+        <View className="flex-row items-center">
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={1}
+            className="mr-3"
+          >
+            <Ionicons name="chevron-back" size={28} color="white" />
+          </TouchableOpacity>
+
+          {/* Title */}
+          <View className="flex-1">
+            <Text className="text-xl font-medium text-white text-center mr-10">
+              {subject?.name || subjectName} & Pedagogy
+            </Text>
+          </View>
         </View>
       </LinearGradient>
 
@@ -337,6 +353,7 @@ export default function SubjectDetail() {
                         key={lang}
                         onPress={handleNotesPress}
                         className="w-[48%] mb-4"
+                        activeOpacity={1}
                       >
                         <View style={{ position: 'relative' }} className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
                           {/* Display book cover image if available, otherwise show gradient */}
@@ -400,6 +417,7 @@ export default function SubjectDetail() {
                         ? 'bg-purple-600 border-purple-600'
                         : 'bg-white border-gray-300'
                     }`}
+                    activeOpacity={1}
                   >
                     <Text
                       className={`text-center font-semibold text-sm ${
@@ -421,7 +439,8 @@ export default function SubjectDetail() {
             {/* Generate 50 rows of Practice and Test */}
             {Array.from({ length: 50 }, (_, index) => {
               const sessionNumber = index + 1;
-              const isLocked = isPremiumLocked;
+              // First practice and test session (Practice-1 and Test-1) are always unlocked
+              const isLocked = sessionNumber === 1 ? false : isPremiumLocked;
               const isLastItem = index === 49; // Check if this is the last item
               const questionBadge = subjectId === 'social' ? '60Q' : '30Q'; // Dynamic badge based on subject
 
@@ -430,9 +449,9 @@ export default function SubjectDetail() {
                   <View className="flex-row justify-between">
                   {/* Practice Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'practice')}
+                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'practice', sessionNumber)}
                     disabled={fetchingQuestions}
-                    activeOpacity={0.7}
+                    activeOpacity={1}
                     className="flex-1 mr-2"
                   >
                     <View style={{ position: 'relative' }}>
@@ -500,9 +519,9 @@ export default function SubjectDetail() {
 
                   {/* Test Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'test')}
+                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'test', sessionNumber)}
                     disabled={fetchingQuestions}
-                    activeOpacity={0.7}
+                    activeOpacity={1}
                     className="flex-1 ml-2"
                   >
                     <View style={{ position: 'relative' }}>
@@ -583,26 +602,6 @@ export default function SubjectDetail() {
           )}
         </View>
       </ScrollView>
-
-      {/* Floating Back Button - Bottom Right */}
-      <View className="absolute bottom-8 right-6" style={{ zIndex: 1000 }}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          activeOpacity={0.8}
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 28,
-            backgroundColor: 'rgba(156, 163, 175, 0.3)',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderWidth: 1,
-            borderColor: 'rgba(255, 255, 255, 0.4)',
-          }}
-        >
-          <Ionicons name="chevron-back" size={28} color="#000000" />
-        </TouchableOpacity>
-      </View>
     </LinearGradient>
   );
 }
