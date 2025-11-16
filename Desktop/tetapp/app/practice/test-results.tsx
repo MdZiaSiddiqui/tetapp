@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,24 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSpring,
+  runOnJS,
+} from 'react-native-reanimated';
 import MathText from '../../components/MathText';
 import getQuestionExplanation from '../../lib/utils/getQuestionExplanation';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 interface Question {
   id: string;
@@ -45,6 +56,8 @@ interface QuestionWithAnswer extends Question {
 export default function TestResults() {
   const params = useLocalSearchParams();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const questionSectionY = useRef<number>(0);
 
   // Defensive check for navigation context - show loading if params not ready
   if (!params || Object.keys(params).length === 0) {
@@ -142,95 +155,184 @@ export default function TestResults() {
   // Get current question
   const currentQuestion = questionsWithAnswers[currentQuestionIndex];
 
+  // Scroll to question section
+  const scrollToQuestion = useCallback(() => {
+    scrollViewRef.current?.scrollTo({
+      y: questionSectionY.current,
+      animated: true,
+    });
+  }, []);
+
   // Navigation handlers
   const handleNext = () => {
     if (currentQuestionIndex < questionsWithAnswers.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      scrollToQuestion();
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
+      scrollToQuestion();
     }
   };
 
+  // Gesture animation values
+  const translateX = useSharedValue(0);
+
+  // Swipe gesture handlers
+  const handleSwipeNext = useCallback(() => {
+    handleNext();
+  }, [currentQuestionIndex, questionsWithAnswers.length]);
+
+  const handleSwipePrevious = useCallback(() => {
+    handlePrevious();
+  }, [currentQuestionIndex]);
+
+  // Pan gesture for swipe navigation
+  const panGesture = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-15, 15])
+    .onUpdate((event) => {
+      const canSwipeLeft = currentQuestionIndex < questionsWithAnswers.length - 1;
+      const canSwipeRight = currentQuestionIndex > 0;
+
+      if (event.translationX < 0 && !canSwipeLeft) {
+        translateX.value = event.translationX * 0.2;
+        return;
+      }
+      if (event.translationX > 0 && !canSwipeRight) {
+        translateX.value = event.translationX * 0.2;
+        return;
+      }
+
+      translateX.value = event.translationX;
+    })
+    .onEnd((event) => {
+      const swipeThreshold = SCREEN_WIDTH * 0.12;
+      const velocityThreshold = 500;
+
+      const shouldSwipeLeft = (event.translationX < -swipeThreshold || event.velocityX < -velocityThreshold) && currentQuestionIndex < questionsWithAnswers.length - 1;
+      const shouldSwipeRight = (event.translationX > swipeThreshold || event.velocityX > velocityThreshold) && currentQuestionIndex > 0;
+
+      if (shouldSwipeLeft) {
+        translateX.value = withTiming(-SCREEN_WIDTH, {
+          duration: 200,
+        }, (finished) => {
+          'worklet';
+          if (finished) {
+            runOnJS(handleSwipeNext)();
+            translateX.value = 0;
+          }
+        });
+      } else if (shouldSwipeRight) {
+        translateX.value = withTiming(SCREEN_WIDTH, {
+          duration: 200,
+        }, (finished) => {
+          'worklet';
+          if (finished) {
+            runOnJS(handleSwipePrevious)();
+            translateX.value = 0;
+          }
+        });
+      } else {
+        translateX.value = withSpring(0, {
+          damping: 20,
+          stiffness: 300,
+        });
+      }
+    });
+
+  // Animated style for content
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
   return (
-    <LinearGradient
-      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      className="flex-1"
-    >
-      <StatusBar style="dark" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <LinearGradient
+        colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        className="flex-1"
+      >
+        <StatusBar style="dark" />
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-6 pt-16 pb-6">
-          {/* Stats Summary */}
-          <View className="items-center mb-8">
-            <Text className="text-6xl mb-4">🎉</Text>
-            <Text className="text-3xl font-bold text-gray-800 mb-2">
-              Test Complete!
-            </Text>
-          </View>
+        <ScrollView ref={scrollViewRef} className="flex-1" showsVerticalScrollIndicator={false}>
+          <View className="px-6 pt-16 pb-6">
+            {/* Stats Summary */}
+            <View className="items-center mb-8">
+              <Text className="text-6xl mb-4">🎉</Text>
+              <Text className="text-3xl font-bold text-gray-800 mb-2">
+                Test Complete!
+              </Text>
+            </View>
 
-          {/* Score Card */}
-          <View className="bg-white p-6 rounded-3xl mb-6 shadow-sm border border-gray-100">
-            <View className="flex-row justify-around mb-6 pb-4 border-b border-gray-100">
-              <View className="items-center flex-1">
-                <Text className="text-sm font-semibold text-gray-600 mb-2">
-                  Score
-                </Text>
-                <Text className="text-4xl font-bold text-purple-700">
-                  {correctCount}/{totalQuestions}
-                </Text>
+            {/* Score Card */}
+            <View className="bg-white p-6 rounded-3xl mb-6 shadow-sm border border-gray-100">
+              <View className="flex-row justify-around mb-6 pb-4 border-b border-gray-100">
+                <View className="items-center flex-1">
+                  <Text className="text-sm font-semibold text-gray-600 mb-2">
+                    Score
+                  </Text>
+                  <Text className="text-4xl font-bold text-purple-700">
+                    {correctCount}/{totalQuestions}
+                  </Text>
+                </View>
+
+                <View className="items-center flex-1">
+                  <Text className="text-sm font-semibold text-gray-600 mb-2">
+                    Percentage
+                  </Text>
+                  <Text className="text-4xl font-bold text-purple-700">
+                    {accuracy.toFixed(0)}%
+                  </Text>
+                </View>
               </View>
 
-              <View className="items-center flex-1">
-                <Text className="text-sm font-semibold text-gray-600 mb-2">
-                  Percentage
-                </Text>
-                <Text className="text-4xl font-bold text-purple-700">
-                  {accuracy.toFixed(0)}%
-                </Text>
+              <View className="flex-row justify-around">
+                <View className="items-center flex-1">
+                  <View className="w-12 h-12 rounded-full bg-emerald-100 items-center justify-center mb-2">
+                    <Text className="text-2xl font-bold text-emerald-600">
+                      {correctCount}
+                    </Text>
+                  </View>
+                  <Text className="text-gray-600 text-xs font-medium">Correct</Text>
+                </View>
+                <View className="items-center flex-1">
+                  <View className="w-12 h-12 rounded-full bg-rose-100 items-center justify-center mb-2">
+                    <Text className="text-2xl font-bold text-rose-600">
+                      {incorrectCount}
+                    </Text>
+                  </View>
+                  <Text className="text-gray-600 text-xs font-medium">Incorrect</Text>
+                </View>
               </View>
             </View>
 
-            <View className="flex-row justify-around">
-              <View className="items-center flex-1">
-                <View className="w-12 h-12 rounded-full bg-emerald-100 items-center justify-center mb-2">
-                  <Text className="text-2xl font-bold text-emerald-600">
-                    {correctCount}
-                  </Text>
-                </View>
-                <Text className="text-gray-600 text-xs font-medium">Correct</Text>
-              </View>
-              <View className="items-center flex-1">
-                <View className="w-12 h-12 rounded-full bg-rose-100 items-center justify-center mb-2">
-                  <Text className="text-2xl font-bold text-rose-600">
-                    {incorrectCount}
-                  </Text>
-                </View>
-                <Text className="text-gray-600 text-xs font-medium">Incorrect</Text>
-              </View>
+
+            {/* Question Review Section */}
+            <View
+              className="flex-row items-center justify-between mb-4"
+              onLayout={(event) => {
+                questionSectionY.current = event.nativeEvent.layout.y;
+              }}
+            >
+              <Text className="text-2xl font-bold text-gray-800">
+                Question Review
+              </Text>
+              <Text className="text-sm text-gray-500">
+                Swipe to navigate
+              </Text>
             </View>
-          </View>
 
-
-          {/* Question Review Section */}
-          <Text className="text-2xl font-bold text-gray-800 mb-4">
-            Question Review
-          </Text>
-
-          {/* Question Counter */}
-          <View className="mb-4">
-            <Text className="text-center text-gray-600 font-semibold">
-              Question {currentQuestionIndex + 1} of {questionsWithAnswers.length}
-            </Text>
-          </View>
-
-          {/* Single Question Display */}
-          {currentQuestion && (() => {
+            {/* Single Question Display with Swipe */}
+            <GestureDetector gesture={panGesture}>
+              <Animated.View style={animatedStyle}>
+                {currentQuestion && (() => {
             const isCorrect = currentQuestion.status === 'correct';
             const isSkipped = currentQuestion.status === 'unanswered';
             const explanation = getQuestionExplanation(currentQuestion);
@@ -283,10 +385,20 @@ export default function TestResults() {
                       const correctKey = correctOptionKey >= 0 ? String.fromCharCode(65 + correctOptionKey) : '';
 
                       // Build array of options to show: user's answer first (if wrong), then correct answer
-                      const optionsToShow: Array<{ key: string; option: string; isUserAnswer: boolean; isCorrect: boolean }> = [];
+                      const optionsToShow: Array<{ key: string; option: string; isUserAnswer: boolean; isCorrect: boolean; isSkipped?: boolean }> = [];
 
+                      // If user skipped the question, show "Your Answer (Skipped)" first
+                      if (isSkipped) {
+                        optionsToShow.push({
+                          key: '-',
+                          option: 'No answer selected',
+                          isUserAnswer: true,
+                          isCorrect: false,
+                          isSkipped: true,
+                        });
+                      }
                       // If user answered and it's wrong, show their answer first (in red)
-                      if (currentQuestion.userAnswer && currentQuestion.userAnswer !== correctKey) {
+                      else if (currentQuestion.userAnswer && currentQuestion.userAnswer !== correctKey) {
                         const userOptionIdx = currentQuestion.userAnswer.charCodeAt(0) - 65;
                         if (userOptionIdx >= 0 && userOptionIdx < currentQuestion.options.length) {
                           optionsToShow.push({
@@ -320,6 +432,12 @@ export default function TestResults() {
                           labelBgColor = 'bg-emerald-500';
                           labelTextColor = 'text-white';
                           labelText = item.isUserAnswer ? 'Your Answer (Correct)' : 'Correct Answer';
+                        } else if (item.isSkipped) {
+                          // Skipped question is red
+                          textColor = '#9CA3AF';
+                          labelBgColor = 'bg-rose-500';
+                          labelTextColor = 'text-white';
+                          labelText = 'Your Answer (Skipped)';
                         } else if (item.isUserAnswer) {
                           // Wrong chosen answer is red
                           textColor = '#DC2626';
@@ -376,51 +494,54 @@ export default function TestResults() {
               </View>
             );
           })()}
+              </Animated.View>
+            </GestureDetector>
 
-          {/* Navigation Buttons */}
-          <View className="flex-row gap-3 mb-6">
-            <TouchableOpacity
-              onPress={handlePrevious}
-              disabled={currentQuestionIndex === 0}
-              className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
-                currentQuestionIndex === 0 ? 'bg-gray-200' : 'bg-indigo-600'
-              }`}
-              activeOpacity={0.7}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={24}
-                color={currentQuestionIndex === 0 ? '#9CA3AF' : 'white'}
-              />
-              <Text className={`ml-2 font-bold text-lg ${
-                currentQuestionIndex === 0 ? 'text-gray-400' : 'text-white'
-              }`}>
-                Previous
-              </Text>
-            </TouchableOpacity>
+            {/* Navigation Buttons */}
+            <View className="flex-row gap-3 mb-6">
+              <TouchableOpacity
+                onPress={handlePrevious}
+                disabled={currentQuestionIndex === 0}
+                className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
+                  currentQuestionIndex === 0 ? 'bg-gray-200' : 'bg-indigo-600'
+                }`}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={currentQuestionIndex === 0 ? '#9CA3AF' : 'white'}
+                />
+                <Text className={`ml-2 font-bold text-lg ${
+                  currentQuestionIndex === 0 ? 'text-gray-400' : 'text-white'
+                }`}>
+                  Previous
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleNext}
-              disabled={currentQuestionIndex === questionsWithAnswers.length - 1}
-              className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
-                currentQuestionIndex === questionsWithAnswers.length - 1 ? 'bg-gray-200' : 'bg-indigo-600'
-              }`}
-              activeOpacity={0.7}
-            >
-              <Text className={`mr-2 font-bold text-lg ${
-                currentQuestionIndex === questionsWithAnswers.length - 1 ? 'text-gray-400' : 'text-white'
-              }`}>
-                Next
-              </Text>
-              <Ionicons
-                name="chevron-forward"
-                size={24}
-                color={currentQuestionIndex === questionsWithAnswers.length - 1 ? '#9CA3AF' : 'white'}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleNext}
+                disabled={currentQuestionIndex === questionsWithAnswers.length - 1}
+                className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
+                  currentQuestionIndex === questionsWithAnswers.length - 1 ? 'bg-gray-200' : 'bg-indigo-600'
+                }`}
+                activeOpacity={0.7}
+              >
+                <Text className={`mr-2 font-bold text-lg ${
+                  currentQuestionIndex === questionsWithAnswers.length - 1 ? 'text-gray-400' : 'text-white'
+                }`}>
+                  Next
+                </Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={24}
+                  color={currentQuestionIndex === questionsWithAnswers.length - 1 ? '#9CA3AF' : 'white'}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </LinearGradient>
+        </ScrollView>
+      </LinearGradient>
+    </GestureHandlerRootView>
   );
 }
