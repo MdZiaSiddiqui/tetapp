@@ -226,6 +226,14 @@ export default function TestSession() {
         userAnswersMap[questionIndex] = answered.answer;
       });
 
+      // Extract marked for review question indices
+      const markedForReviewIndices: number[] = [];
+      Object.entries(questionStatus).forEach(([index, status]) => {
+        if (status === 'marked-for-review' || status === 'marked-for-review-answered') {
+          markedForReviewIndices.push(parseInt(index));
+        }
+      });
+
       // Navigate to test results with questions and answers data
       router.replace({
         pathname: '/practice/test-results',
@@ -236,7 +244,8 @@ export default function TestSession() {
           incorrectCount: incorrectCount,
           skippedCount: skippedCount,
           questions: JSON.stringify(questions),
-          userAnswers: JSON.stringify(userAnswersMap),
+          answers: JSON.stringify(userAnswersMap),
+          markedForReview: JSON.stringify(markedForReviewIndices),
         },
       });
     },
@@ -264,6 +273,14 @@ export default function TestSession() {
         userAnswersMap[questionIndex] = answered.answer;
       });
 
+      // Extract marked for review question indices
+      const markedForReviewIndices: number[] = [];
+      Object.entries(questionStatus).forEach(([index, status]) => {
+        if (status === 'marked-for-review' || status === 'marked-for-review-answered') {
+          markedForReviewIndices.push(parseInt(index));
+        }
+      });
+
       // Navigate to test results with questions and answers data
       router.replace({
         pathname: '/practice/test-results',
@@ -274,7 +291,8 @@ export default function TestSession() {
           incorrectCount: incorrectCount,
           skippedCount: skippedCount,
           questions: JSON.stringify(questions),
-          userAnswers: JSON.stringify(userAnswersMap),
+          answers: JSON.stringify(userAnswersMap),
+          markedForReview: JSON.stringify(markedForReviewIndices),
         },
       });
     },
@@ -327,6 +345,14 @@ export default function TestSession() {
       userAnswersMap[questionIndex] = answered.answer;
     });
 
+    // Extract marked for review question indices
+    const markedForReviewIndices: number[] = [];
+    Object.entries(questionStatus).forEach(([index, status]) => {
+      if (status === 'marked-for-review' || status === 'marked-for-review-answered') {
+        markedForReviewIndices.push(parseInt(index));
+      }
+    });
+
     // Navigate to test results with questions and answers data
     router.replace({
       pathname: '/practice/test-results',
@@ -337,10 +363,11 @@ export default function TestSession() {
         incorrectCount: incorrectCount,
         skippedCount: skippedCount,
         questions: JSON.stringify(questions),
-        userAnswers: JSON.stringify(userAnswersMap),
+        answers: JSON.stringify(userAnswersMap),
+        markedForReview: JSON.stringify(markedForReviewIndices),
       },
     });
-  }, [questions, answeredQuestions, calculateCorrectCount, router]);
+  }, [questions, answeredQuestions, calculateCorrectCount, router, questionStatus]);
 
   // Handle hardware back button - show exit confirmation
   useFocusEffect(

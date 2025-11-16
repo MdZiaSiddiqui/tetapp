@@ -128,8 +128,8 @@ export default function SubjectDetail() {
       if (isLanguageSubject) {
         // Capitalize first letter to match database format
         const subjectNameCapitalized = subjectName.charAt(0).toUpperCase() + subjectName.slice(1).toLowerCase();
-        // Hindi is stored as English in the database
-        if (subjectNameCapitalized === 'Hindi') {
+        // Hindi and Urdu are stored as English in the database
+        if (subjectNameCapitalized === 'Hindi' || subjectNameCapitalized === 'Urdu') {
           language = 'English';
         } else {
           language = subjectNameCapitalized as 'English' | 'Telugu' | 'Urdu';

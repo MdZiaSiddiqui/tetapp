@@ -74,16 +74,30 @@ const MathText: React.FC<MathTextProps> = ({
     plain = plain.replace(/__([^_]+)__/g, '$1');
     plain = plain.replace(/\\text\{([^}]*)\}/g, '$1');
     plain = plain.replace(/\\frac\s*\{([^}]*)\}\s*\{([^}]*)\}/g, '$1/$2');
-    plain = plain.replace(/\\times/g, '×');
-    plain = plain.replace(/\\cdot/g, '·');
+    plain = plain.replace(/\times/g, '×');
+    plain = plain.replace(/\cdot/g, '·');
+    plain = plain.replace(/\angle/g, '∠');
+    plain = plain.replace(/\triangle/g, 'Δ');
+    plain = plain.replace(/\\subset/g, '⊂');
+    plain = plain.replace(/\\supset/g, '⊃');
+    plain = plain.replace(/\\in/g, '∈');
+    plain = plain.replace(/\\notin/g, '∉');
     plain = plain.replace(/\\left|\\right/g, '');
     plain = plain.replace(/\\%/g, '%');
     plain = plain.replace(/\\pi/g, 'π');
     plain = plain.replace(/\\sqrt\s*\{([^}]*)\}/g, '√($1)');
+    // Remove escaped braces (for set notation) - \{ becomes {
+    plain = plain.replace(/\\\{/g, '{');
+    plain = plain.replace(/\\\}/g, '}');
     plain = plain.replace(/\\{2}/g, String.fromCharCode(92));
     plain = plain.replace(/\$/g, '');
     plain = plain.replace(/&nbsp;/gi, ' ');
     plain = plain.replace(/<[^>]+>/g, '');
+
+    // Clean up stray spaces introduced around math symbols
+    plain = plain.replace(/∠\s+/g, '∠');
+    plain = plain.replace(/Δ\s+/g, 'Δ');
+    plain = plain.replace(/√\s*\(/g, '√(');
 
     return plain.trim();
   }, [text]);
@@ -167,6 +181,35 @@ const MathText: React.FC<MathTextProps> = ({
     }
 
     try {
+      // STEP 0: Auto-wrap naked LaTeX commands in $ delimiters
+      // This handles cases where LaTeX commands appear without delimiters
+      const autoWrapLatexCommands = (str: string): string => {
+        // First, protect already-delimited math by replacing with placeholders
+        const mathSegments: string[] = [];
+        let workingStr = str;
+
+        // Extract existing $...$ segments
+        workingStr = workingStr.replace(/\$[^$]+\$/g, (match) => {
+          const index = mathSegments.length;
+          mathSegments.push(match);
+          return `__MATH_${index}__`;
+        });
+
+        // Now find naked LaTeX commands (not in protected segments)
+        // Pattern: \command or \command{...}
+        const latexPattern = /\\(subset|supset|subseteq|supseteq|in|notin|times|cdot|div|pm|infty|alpha|beta|gamma|theta|pi|sigma|delta|mu|lambda|omega|rightarrow|leftarrow|Rightarrow|Leftarrow|leq|geq|neq|approx|equiv|forall|exists|nabla|partial|angle|circ|degree)(?:\s*\{[^}]*\})?/g;
+
+        workingStr = workingStr.replace(latexPattern, (match) => `$${match}$`);
+
+        // Restore protected math segments
+        mathSegments.forEach((segment, index) => {
+          workingStr = workingStr.replace(`__MATH_${index}__`, segment);
+        });
+
+        return workingStr;
+      };
+
+      result = autoWrapLatexCommands(result);
 
       // SIMPLIFIED & SAFE: Fix only the most common corrupted LaTeX escape sequences
       // This is conservative - it only fixes KNOWN corruption patterns
@@ -343,6 +386,32 @@ const MathText: React.FC<MathTextProps> = ({
         console.warn('Newline processing failed:', e);
       }
 
+      // SAFE: Fix escaped braces in text content (outside math mode)
+      // Replace \{ and \} with plain braces in HTML text (not in math delimiters)
+      try {
+        // Only replace escaped braces that are NOT inside $...$ delimiters
+        // This is for text like "set A = \{1, 2, 3\}" which should show as "set A = {1, 2, 3}"
+        // First, protect $...$ segments
+        const protectedSegments: string[] = [];
+        let workStr = result.replace(/\$[^$]+\$/g, (match) => {
+          const idx = protectedSegments.length;
+          protectedSegments.push(match);
+          return `__PROTECT_${idx}__`;
+        });
+
+        // Now replace escaped braces in unprotected text
+        workStr = workStr.replace(/\\\{/g, '{').replace(/\\\}/g, '}');
+
+        // Restore protected segments
+        protectedSegments.forEach((seg, idx) => {
+          workStr = workStr.replace(`__PROTECT_${idx}__`, seg);
+        });
+
+        result = workStr;
+      } catch (e) {
+        console.warn('Brace cleanup failed:', e);
+      }
+
       // Debug: log processed text length for very long content
       if (result.length > 1000) {
         console.log('MathText processing long content:', result.length, 'chars');
@@ -386,7 +455,21 @@ const MathText: React.FC<MathTextProps> = ({
     }
     const hasMath = /\$.*?\$|\\\(.*?\\\)|\\\[.*?\\\]/.test(text);
     const hasMarkdown = /\*\*.*?\*\*|__.*?__|([^\*]|^)\*([^\*]+?)\*([^\*]|$)|([^_]|^)_([^_]+?)_([^_]|$)/.test(text);
-    const needs = hasMath || hasMarkdown;
+
+    // Check for common LaTeX commands even without delimiters
+    const hasLatexCommands = /\\(frac|sqrt|sum|int|lim|subset|supset|subseteq|supseteq|in|notin|times|cdot|div|pm|infty|alpha|beta|gamma|theta|pi|sigma|delta|mu|lambda|omega|rightarrow|leftarrow|Rightarrow|Leftarrow|leq|geq|neq|approx|equiv|forall|exists|nabla|partial|angle|circ|degree|text|mathbf|mathrm|left|right)\{?/.test(text);
+
+    const needs = hasMath || hasMarkdown || hasLatexCommands;
+
+    // Very long strings with math can overwhelm WebView rendering on some devices.
+    // Fall back to plain text for stability while still showing the explanation content.
+    const LENGTH_WEBVIEW_THRESHOLD = 1200;
+    if (needs && text.length > LENGTH_WEBVIEW_THRESHOLD) {
+      console.warn('MathText: Falling back to plain text for very long content', {
+        length: text.length,
+      });
+      return false;
+    }
 
     // Debug log for troubleshooting
     if (!needs && text.length > 100) {
@@ -505,8 +588,10 @@ const MathText: React.FC<MathTextProps> = ({
                 processEscapes: true,
                 processEnvironments: true,
                 formatError: (jax, err) => {
-                  // Return empty string to suppress error display
-                  console.log('MathJax error suppressed:', err.message);
+                  // Log MathJax errors prominently
+                  console.error('MathJax rendering error:', err.message);
+                  console.error('Failed LaTeX:', jax?.math?.toString() || 'unknown');
+                  // Return empty string to suppress error display in UI
                   return '';
                 }
               },
@@ -544,8 +629,22 @@ const MathText: React.FC<MathTextProps> = ({
                         content.offsetHeight,
                         document.body.scrollHeight
                       );
+
+                      // Check if content is actually empty despite having height
+                      const textContent = content.textContent || '';
+                      const hasVisibleContent = textContent.trim().length > 0;
+
                       console.log('Sending height from WebView:', height);
-                      window.ReactNativeWebView.postMessage(JSON.stringify({ height }));
+                      console.log('Content check:', {
+                        height,
+                        textLength: textContent.length,
+                        hasVisibleContent
+                      });
+
+                      window.ReactNativeWebView.postMessage(JSON.stringify({
+                        height,
+                        isEmpty: !hasVisibleContent
+                      }));
                     }, 50);
                   }).catch((err) => {
                     // Silently handle errors and still send height
@@ -566,8 +665,22 @@ const MathText: React.FC<MathTextProps> = ({
                         content.offsetHeight,
                         document.body.scrollHeight
                       );
+
+                      // Check if content is actually empty
+                      const textContent = content.textContent || '';
+                      const hasVisibleContent = textContent.trim().length > 0;
+
                       console.log('Sending height from WebView (error case):', height);
-                      window.ReactNativeWebView.postMessage(JSON.stringify({ height }));
+                      console.log('Content check (error case):', {
+                        height,
+                        textLength: textContent.length,
+                        hasVisibleContent
+                      });
+
+                      window.ReactNativeWebView.postMessage(JSON.stringify({
+                        height,
+                        isEmpty: !hasVisibleContent
+                      }));
                     }, 50);
                   });
                 }
@@ -591,15 +704,35 @@ const MathText: React.FC<MathTextProps> = ({
   const [webViewFailed, setWebViewFailed] = useState(false);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Use a ref to track if we've already set the height (prevents infinite loops)
+  const heightSetRef = useRef(false);
+
+  // Track if WebView was actually created to prevent re-creation
+  const webViewCreatedRef = useRef(false);
+
   const handleMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
-      if (data.height) {
+      if (data.height && !heightSetRef.current) {
+        // Check if WebView rendered but content is empty
+        if (data.isEmpty === true) {
+          console.warn('MathText: WebView rendered empty content, falling back to plain text');
+          setWebViewFailed(true);
+          setIsRendering(false);
+          if (fallbackTimerRef.current) {
+            clearTimeout(fallbackTimerRef.current);
+            fallbackTimerRef.current = null;
+          }
+          return;
+        }
+
+        // CRITICAL: Only set height ONCE to prevent infinite scroll loops
+        heightSetRef.current = true;
+
         // Use smarter padding calculation based on content size
-        // Smaller padding for short content, reasonable for long content
         const basePadding = data.height < 50 ? 15 : 25;
         const calculatedHeight = Math.max(data.height + basePadding, 50);
-        console.log('WebView height calculated:', calculatedHeight, 'from content:', data.height);
+        console.log('WebView height set ONCE:', calculatedHeight, 'from content:', data.height);
         setWebViewHeight(calculatedHeight);
         // Mark as finished rendering
         setIsRendering(false);
@@ -615,6 +748,10 @@ const MathText: React.FC<MathTextProps> = ({
   };
 
   useEffect(() => {
+    // Reset height flag when text changes
+    heightSetRef.current = false;
+    webViewCreatedRef.current = false;
+
     if (fallbackTimerRef.current) {
       clearTimeout(fallbackTimerRef.current);
       fallbackTimerRef.current = null;
@@ -623,11 +760,14 @@ const MathText: React.FC<MathTextProps> = ({
     if (needsWebView && !usedFallback) {
       setIsRendering(true);
       setWebViewFailed(false);
+      // INCREASED TIMEOUT: Give WebView more time when many are loading
       fallbackTimerRef.current = setTimeout(() => {
-        console.warn('MathText: WebView timeout reached, falling back to plain text rendering.');
-        fallbackTimerRef.current = null;
-        setWebViewFailed(true);
-      }, 1600);
+        if (!heightSetRef.current && !webViewFailed) {
+          console.warn('MathText: WebView timeout reached, falling back to plain text rendering.');
+          fallbackTimerRef.current = null;
+          setWebViewFailed(true);
+        }
+      }, 3000); // Increased from 1600ms to 3000ms
     } else {
       setIsRendering(false);
       setWebViewFailed(false);
@@ -659,8 +799,13 @@ const MathText: React.FC<MathTextProps> = ({
     );
   }
 
+  // Only create WebView once per content
+  if (!webViewCreatedRef.current) {
+    webViewCreatedRef.current = true;
+  }
+
   return (
-    <View style={[{ width: '100%', minHeight: webViewHeight, position: 'relative' }, style]}>
+    <View style={[{ width: '100%', height: webViewHeight, overflow: 'hidden' }, style]}>
       {/* Show subtle loading indicator while rendering */}
       {isRendering && (
         <View style={{
@@ -677,50 +822,67 @@ const MathText: React.FC<MathTextProps> = ({
         </View>
       )}
 
-      <WebView
-        originWhitelist={['*']}
-        source={{ html }}
-        onMessage={handleMessage}
-        onError={(syntheticEvent) => {
-          const { nativeEvent } = syntheticEvent;
-          console.error('WebView error: ', nativeEvent);
-          setIsRendering(false);
-          setWebViewFailed(true);
-          if (fallbackTimerRef.current) {
-            clearTimeout(fallbackTimerRef.current);
-            fallbackTimerRef.current = null;
-          }
-        }}
-        onLoadEnd={() => {
-          // Fallback: if height wasn't set after loading, set a minimal default
-          setTimeout(() => {
-            if (webViewHeight < 50) {
-              setWebViewHeight(60);
-            }
+      {webViewCreatedRef.current && (
+        <WebView
+          originWhitelist={['*']}
+          source={{ html }}
+          onMessage={handleMessage}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent;
+            console.error('WebView error: ', nativeEvent);
             setIsRendering(false);
-          }, 300);
-        }}
-        scrollEnabled={false}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        style={{
-          backgroundColor: 'transparent',
-          width: '100%',
-          minHeight: webViewHeight,
-          opacity: isRendering ? 0 : 1,
-        }}
-        // Performance optimizations
-        androidLayerType="software"
-        startInLoadingState={false}
-        // Disable unnecessary features
-        javaScriptEnabled={true}
-        domStorageEnabled={false}
-        cacheEnabled={true}
-        mixedContentMode="always"
-        // Prevent zoom
-        scalesPageToFit={Platform.OS === 'android'}
-        bounces={false}
-      />
+            setWebViewFailed(true);
+            if (fallbackTimerRef.current) {
+              clearTimeout(fallbackTimerRef.current);
+              fallbackTimerRef.current = null;
+            }
+          }}
+          onLoadStart={() => {
+            // Clear any existing timeout when load actually starts
+            if (fallbackTimerRef.current) {
+              clearTimeout(fallbackTimerRef.current);
+              fallbackTimerRef.current = null;
+            }
+          }}
+          onLoadEnd={() => {
+            // Fallback: if height wasn't set after loading, set a minimal default
+            if (!heightSetRef.current) {
+              setTimeout(() => {
+                if (webViewHeight < 50 && !heightSetRef.current) {
+                  heightSetRef.current = true;
+                  setWebViewHeight(60);
+                }
+                setIsRendering(false);
+              }, 300);
+            } else {
+              setIsRendering(false);
+            }
+          }}
+          scrollEnabled={false}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled={false}
+          style={{
+            backgroundColor: 'transparent',
+            width: '100%',
+            height: webViewHeight,
+            opacity: isRendering ? 0 : 1,
+          }}
+          // Performance optimizations
+          androidLayerType="software"
+          startInLoadingState={false}
+          // Disable unnecessary features
+          javaScriptEnabled={true}
+          domStorageEnabled={false}
+          cacheEnabled={true}
+          mixedContentMode="always"
+          // Prevent zoom
+          scalesPageToFit={Platform.OS === 'android'}
+          bounces={false}
+          // CRITICAL: Prevent multiple WebView instances
+          key={`webview-${text.substring(0, 50)}`}
+        />
+      )}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -38,15 +38,12 @@ interface QuestionWithAnswer extends Question {
   userAnswer?: string;
   isCorrect?: boolean;
   status: 'correct' | 'incorrect' | 'unanswered';
+  markedForReview?: boolean;
 }
 
 export default function TestResults() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const scrollViewRef = useRef<ScrollView>(null);
-  const incorrectSectionRef = useRef<View>(null);
-  const skippedSectionRef = useRef<View>(null);
-  const correctSectionRef = useRef<View>(null);
 
   // Parse params
   const totalQuestions = parseInt(params.totalQuestions as string) || 0;
@@ -63,34 +60,12 @@ export default function TestResults() {
         console.warn('[test-results] No questions param found');
         return [];
       }
-
       const rawParam = params.questions as string;
-      console.log('[test-results] Questions param length:', rawParam.length, 'chars');
-      console.log('[test-results] First 200 chars:', rawParam.substring(0, 200));
-      console.log('[test-results] Last 200 chars:', rawParam.substring(rawParam.length - 200));
-
       const parsed = JSON.parse(rawParam);
-
       if (!Array.isArray(parsed)) {
         console.error('[test-results] Parsed questions is not an array:', typeof parsed);
         return [];
       }
-
-      console.log('[test-results] Successfully parsed', parsed.length, 'questions');
-
-      // Log first question's explanation field types
-      if (parsed.length > 0) {
-        const firstQ = parsed[0];
-        console.log('[test-results] First question explanation fields:', {
-          id: firstQ.id,
-          solutions_type: typeof firstQ.solutions,
-          solutions_isArray: Array.isArray(firstQ.solutions),
-          solutions_length: Array.isArray(firstQ.solutions) ? firstQ.solutions.length : firstQ.solutions?.length,
-          explanation_type: typeof firstQ.explanation,
-          solution_type: typeof firstQ.solution,
-        });
-      }
-
       return parsed;
     } catch (error) {
       console.error('[test-results] Error parsing questions:', error);
@@ -98,294 +73,68 @@ export default function TestResults() {
     }
   })();
 
-  // Parse user answers (format: { "0": "A", "1": "B", ... })
-  const userAnswers: { [key: number]: string } = params.userAnswers
-    ? JSON.parse(params.userAnswers as string)
-    : {};
-
-  // Categorize questions
-  const categorizedQuestions: {
-    incorrect: QuestionWithAnswer[];
-    unanswered: QuestionWithAnswer[];
-    correct: QuestionWithAnswer[];
-  } = questionsData.reduce(
-    (acc, question, index) => {
-      const userAnswer = userAnswers[index];
-      const correctAnswer = question.correct_answer;
-
-      // Convert options to map
-      const optionsArray = Array.isArray(question.options) ? question.options : [];
-      const optionsMap = optionsArray.reduce((map, option, idx) => {
-        const key = String.fromCharCode(65 + idx); // A, B, C, D
-        map[key] = option;
-        return map;
-      }, {} as Record<string, string>);
-
-      const selectedOptionText = userAnswer ? optionsMap[userAnswer] : undefined;
-      const isCorrect = selectedOptionText === correctAnswer;
-
-      const questionWithAnswer: QuestionWithAnswer = {
-        ...question,
-        userAnswer,
-        isCorrect,
-        status: !userAnswer ? 'unanswered' : isCorrect ? 'correct' : 'incorrect',
-      };
-
-      if (!userAnswer) {
-        acc.unanswered.push(questionWithAnswer);
-      } else if (isCorrect) {
-        acc.correct.push(questionWithAnswer);
-      } else {
-        acc.incorrect.push(questionWithAnswer);
-      }
-
-      return acc;
-    },
-    { incorrect: [], unanswered: [], correct: [] } as {
-      incorrect: QuestionWithAnswer[];
-      unanswered: QuestionWithAnswer[];
-      correct: QuestionWithAnswer[];
+  // Parse answers data
+  const answersData: Record<string, string> = (() => {
+    try {
+      if (!params.answers) return {};
+      return JSON.parse(params.answers as string);
+    } catch (error) {
+      console.error('[test-results] Error parsing answers:', error);
+      return {};
     }
-  );
+  })();
 
-  // Initialize all questions as expanded (open by default)
-  const [expandedQuestions, setExpandedQuestions] = useState<Set<string>>(
-    () => new Set(questionsData.map(q => q.id))
-  );
-
-  const toggleQuestion = (questionId: string) => {
-    setExpandedQuestions((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(questionId)) {
-        newSet.delete(questionId);
-      } else {
-        newSet.add(questionId);
-      }
-      return newSet;
-    });
-  };
-
-  const scrollToSection = (sectionRef: React.RefObject<View>) => {
-    if (sectionRef.current && scrollViewRef.current) {
-      sectionRef.current.measureLayout(
-        // @ts-ignore - measureLayout exists on View
-        scrollViewRef.current,
-        (x, y) => {
-          scrollViewRef.current?.scrollTo({ y: y - 20, animated: true });
-        },
-        () => {}
-      );
+  // Parse marked for review data (array of question indices)
+  const markedForReviewData: Set<number> = (() => {
+    try {
+      if (!params.markedForReview) return new Set();
+      const parsed = JSON.parse(params.markedForReview as string);
+      return new Set(Array.isArray(parsed) ? parsed.map(Number) : []);
+    } catch (error) {
+      console.error('[test-results] Error parsing markedForReview:', error);
+      return new Set();
     }
-  };
+  })();
 
-  const renderQuestion = (question: QuestionWithAnswer, index: number) => {
-    const isExpanded = expandedQuestions.has(question.id);
+  // Create questions with answers
+  const questionsWithAnswers: QuestionWithAnswer[] = questionsData.map((question, index) => {
+    const userAnswer = answersData[index];
+    const isCorrect = userAnswer === question.correct_answer;
+    const status = !userAnswer ? 'unanswered' : isCorrect ? 'correct' : 'incorrect';
+    const markedForReview = markedForReviewData.has(index);
 
-    // Convert options to map
-    const optionsArray = Array.isArray(question.options) ? question.options : [];
-    const options = optionsArray.reduce((map, option, idx) => {
-      const key = String.fromCharCode(65 + idx); // A, B, C, D
-      map[key] = option;
-      return map;
-    }, {} as Record<string, string>);
-
-    // Find correct answer key
-    const correctAnswerKey = Object.entries(options).find(
-      ([_, text]) => text === question.correct_answer
-    )?.[0];
-
-    const statusColor =
-      question.status === 'correct'
-        ? 'bg-green-50 border-green-200'
-        : question.status === 'incorrect'
-        ? 'bg-red-50 border-red-200'
-        : 'bg-orange-50 border-orange-200';
-
-    const statusIcon =
-      question.status === 'correct' ? '✓' : question.status === 'incorrect' ? '✗' : '○';
-
-    return (
-      <View key={question.id} className={`mb-4 rounded-2xl border ${statusColor} overflow-hidden`}>
-        <TouchableOpacity
-          onPress={() => toggleQuestion(question.id)}
-          className="p-4"
-          activeOpacity={0.7}
-        >
-          <View className="flex-row items-center justify-between mb-2">
-            <View className="flex-row items-center flex-1">
-              <Text className="text-2xl mr-3">{statusIcon}</Text>
-              <Text className="text-base font-semibold text-gray-900 flex-1">
-                Question {index + 1}
-              </Text>
-            </View>
-            <Ionicons
-              name={isExpanded ? 'chevron-up' : 'chevron-down'}
-              size={24}
-              color="#6B7280"
-            />
-          </View>
-
-          {!isExpanded && (
-            <View className="ml-11">
-              <MathText
-                text={question.question}
-                fontSize="small"
-                color="#374151"
-              />
-            </View>
-          )}
-        </TouchableOpacity>
-
-        {isExpanded && (
-          <View className="px-4 pb-4">
-            {/* Question with Image */}
-            <View className="mb-4">
-              {question.image_url && (
-                <Image
-                  source={{ uri: question.image_url }}
-                  className="w-full h-48 rounded-xl mb-4"
-                  resizeMode="contain"
-                />
-              )}
-              <MathText
-                text={question.question}
-                fontSize="medium"
-                color="#111827"
-                style={{ fontWeight: '600' }}
-              />
-            </View>
-
-            {/* Options */}
-            <View className="mb-4">
-              {Object.entries(options).map(([key, value]) => {
-                const isUserAnswer = question.userAnswer === key;
-                const isCorrectAnswer = key === correctAnswerKey;
-
-                let optionStyle = 'bg-white border-gray-200';
-                let textStyle = 'text-gray-900';
-                let icon = null;
-
-                if (isCorrectAnswer) {
-                  optionStyle = 'bg-green-100 border-green-300';
-                  textStyle = 'text-green-900 font-semibold';
-                  icon = <Text className="text-green-600 text-lg ml-2">✓</Text>;
-                } else if (isUserAnswer && !isCorrectAnswer) {
-                  optionStyle = 'bg-red-100 border-red-300';
-                  textStyle = 'text-red-900 font-semibold';
-                  icon = <Text className="text-red-600 text-lg ml-2">✗</Text>;
-                }
-
-                return (
-                  <View
-                    key={key}
-                    className={`p-3 rounded-xl mb-2 border ${optionStyle}`}
-                  >
-                    <View className="flex-row items-center justify-between">
-                      <View className="flex-1">
-                        <MathText
-                          text={`${key}. ${value}`}
-                          fontSize="small"
-                          color={isCorrectAnswer ? '#14532d' : isUserAnswer ? '#7f1d1d' : '#111827'}
-                          style={{ fontWeight: (isCorrectAnswer || isUserAnswer) ? '600' : 'normal' }}
-                        />
-                      </View>
-                      {icon}
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-
-            {/* Explanation */}
-            {(() => {
-              const resolvedExplanation = getQuestionExplanation(question);
-              const hasExplanation = typeof resolvedExplanation === 'string' && resolvedExplanation.trim().length > 0;
-
-              // Debug: Log explanation length
-              if (hasExplanation && resolvedExplanation) {
-                const length = resolvedExplanation.length;
-                if (length > 5000) {
-                  console.warn(`Question ${index + 1} has very long explanation: ${length} chars`, {
-                    questionId: question.id,
-                    firstChars: resolvedExplanation.substring(0, 100)
-                  });
-                }
-              }
-
-              if (!hasExplanation) {
-                return null;
-              }
-
-              // Green border for correct answers
-              if (question.status === 'correct') {
-                return (
-                  <View className="bg-white p-4 rounded-xl border-2 border-green-500" style={{ minHeight: 80 }}>
-                    <Text className="text-xs font-semibold text-gray-700 mb-2">
-                      EXPLANATION
-                    </Text>
-                    <View style={{ width: '100%' }}>
-                      <MathText
-                        text={resolvedExplanation}
-                        fontSize="small"
-                        color="#111827"
-                        style={{ width: '100%', flex: 1 }}
-                      />
-                    </View>
-                  </View>
-                );
-              }
-
-              // Purple gradient border for incorrect answers
-              return (
-                <LinearGradient
-                  colors={['#9333ea', '#c084fc', '#9333ea']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  className="rounded-xl p-0.5"
-                  style={{ minHeight: 80 }}
-                >
-                  <View className="bg-white p-4 rounded-xl h-full">
-                    <Text className="text-xs font-semibold text-gray-700 mb-2">
-                      EXPLANATION
-                    </Text>
-                    <View style={{ width: '100%' }}>
-                      <MathText
-                        text={resolvedExplanation}
-                        fontSize="small"
-                        color="#111827"
-                        style={{ width: '100%', flex: 1 }}
-                      />
-                    </View>
-                  </View>
-                </LinearGradient>
-              );
-            })()}
-          </View>
-        )}
-      </View>
-    );
-  };
+    return {
+      ...question,
+      userAnswer,
+      isCorrect,
+      status,
+      markedForReview,
+    };
+  });
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-gray-50">
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View className="px-6 pt-16 pb-4 bg-white border-b border-gray-200">
-        <View className="flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.push('/(tabs)/home')}>
-            <Ionicons name="close" size={28} color="#000" />
+      <LinearGradient
+        colors={['#3B82F6', '#2563EB']}
+        className="pt-12 pb-6"
+      >
+        <View className="px-6 flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="mr-4"
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="arrow-back" size={28} color="white" />
           </TouchableOpacity>
-          <Text className="text-xl font-bold text-gray-900">Test Results</Text>
+          <Text className="text-white text-2xl font-bold flex-1">Test Results</Text>
           <View style={{ width: 28 }} />
         </View>
-      </View>
+      </LinearGradient>
 
-      <ScrollView
-        ref={scrollViewRef}
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-6 py-6">
           {/* Stats Summary */}
           <View className="items-center mb-8">
@@ -399,9 +148,9 @@ export default function TestResults() {
           <View className="bg-blue-50 p-6 rounded-2xl mb-6">
             <View className="items-center mb-4">
               <Text className="text-6xl font-bold text-blue-500">
-                {accuracy.toFixed(0)}%
+                {correctCount}/{totalQuestions}
               </Text>
-              <Text className="text-gray-600 mt-2 text-lg">Accuracy</Text>
+              <Text className="text-gray-600 mt-2 text-lg">Score</Text>
             </View>
 
             <View className="flex-row justify-around pt-4 border-t border-blue-200">
@@ -409,162 +158,201 @@ export default function TestResults() {
                 <Text className="text-3xl font-bold text-green-500">
                   {correctCount}
                 </Text>
-                <Text className="text-gray-600 text-xs mt-1">Correct</Text>
+                <Text className="text-gray-600 text-sm mt-1">Correct</Text>
               </View>
-
-              <View className="w-px bg-blue-200" />
-
               <View className="items-center flex-1">
                 <Text className="text-3xl font-bold text-red-500">
                   {incorrectCount}
                 </Text>
-                <Text className="text-gray-600 text-xs mt-1">Incorrect</Text>
+                <Text className="text-gray-600 text-sm mt-1">Incorrect</Text>
               </View>
-
-              <View className="w-px bg-blue-200" />
-
               <View className="items-center flex-1">
                 <Text className="text-3xl font-bold text-orange-500">
                   {skippedCount}
                 </Text>
-                <Text className="text-gray-600 text-xs mt-1">Skipped</Text>
-              </View>
-
-              <View className="w-px bg-blue-200" />
-
-              <View className="items-center flex-1">
-                <Text className="text-3xl font-bold text-blue-500">
-                  {totalQuestions}
-                </Text>
-                <Text className="text-gray-600 text-xs mt-1">Total</Text>
+                <Text className="text-gray-600 text-sm mt-1">Skipped</Text>
               </View>
             </View>
           </View>
 
-          {/* Section Navigation Buttons */}
-          <View className="mb-8">
-            <Text className="text-sm font-semibold text-gray-700 mb-3">
-              Jump to Section
-            </Text>
-            <View className="flex-row gap-3">
-              {incorrectCount > 0 && (
-                <TouchableOpacity
-                  onPress={() => scrollToSection(incorrectSectionRef)}
-                  className="flex-1 py-3 px-4 rounded-xl border-2 bg-white border-red-200"
-                >
-                  <Text className="text-center font-semibold text-red-500">
-                    Incorrect
-                  </Text>
-                  <Text className="text-center text-xs mt-1 text-red-400">
-                    {incorrectCount}
-                  </Text>
-                </TouchableOpacity>
-              )}
-
-              {skippedCount > 0 && (
-                <TouchableOpacity
-                  onPress={() => scrollToSection(skippedSectionRef)}
-                  className="flex-1 py-3 px-4 rounded-xl border-2 bg-white border-orange-200"
-                >
-                  <Text className="text-center font-semibold text-orange-500">
-                    Skipped
-                  </Text>
-                  <Text className="text-center text-xs mt-1 text-orange-400">
-                    {skippedCount}
-                  </Text>
-                </TouchableOpacity>
-              )}
-
-              {correctCount > 0 && (
-                <TouchableOpacity
-                  onPress={() => scrollToSection(correctSectionRef)}
-                  className="flex-1 py-3 px-4 rounded-xl border-2 bg-white border-green-200"
-                >
-                  <Text className="text-center font-semibold text-green-500">
-                    Correct
-                  </Text>
-                  <Text className="text-center text-xs mt-1 text-green-400">
-                    {correctCount}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-
-          {/* Incorrect Questions Section */}
-          {categorizedQuestions.incorrect.length > 0 && (
-            <View ref={incorrectSectionRef} className="mb-8">
-              <View className="flex-row items-center mb-4">
-                <View className="bg-red-500 w-1 h-6 rounded-full mr-3" />
-                <Text className="text-xl font-bold text-gray-900">
-                  Incorrect ({categorizedQuestions.incorrect.length})
-                </Text>
-              </View>
-              {categorizedQuestions.incorrect.map((question, index) =>
-                renderQuestion(question, questionsData.indexOf(question))
-              )}
-            </View>
-          )}
-
-          {/* Unanswered Questions Section */}
-          {categorizedQuestions.unanswered.length > 0 && (
-            <View ref={skippedSectionRef} className="mb-8">
-              <View className="flex-row items-center mb-4">
-                <View className="bg-orange-500 w-1 h-6 rounded-full mr-3" />
-                <Text className="text-xl font-bold text-gray-900">
-                  Skipped ({categorizedQuestions.unanswered.length})
-                </Text>
-              </View>
-              {categorizedQuestions.unanswered.map((question, index) =>
-                renderQuestion(question, questionsData.indexOf(question))
-              )}
-            </View>
-          )}
-
-          {/* Correct Questions Section */}
-          {categorizedQuestions.correct.length > 0 && (
-            <View ref={correctSectionRef} className="mb-8">
-              <View className="flex-row items-center mb-4">
-                <View className="bg-green-500 w-1 h-6 rounded-full mr-3" />
-                <Text className="text-xl font-bold text-gray-900">
-                  Correct ({categorizedQuestions.correct.length})
-                </Text>
-              </View>
-              {categorizedQuestions.correct.map((question, index) =>
-                renderQuestion(question, questionsData.indexOf(question))
-              )}
-            </View>
-          )}
-
-          {/* Actions */}
-          <View className="space-y-3 mt-8">
+          {/* Quick Actions */}
+          <View className="space-y-3 mb-8">
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/analytics')}
               className="bg-green-500 py-4 px-8 rounded-xl"
             >
               <Text className="text-white text-center text-lg font-semibold">
-                View Detailed Analytics
+                View Analytics
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/home')}
-              className="bg-blue-500 py-4 px-8 rounded-xl mt-3"
-            >
-              <Text className="text-white text-center text-lg font-semibold">
-                Start New Practice
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => router.push('/(tabs)/home')}
-              className="bg-gray-100 py-4 px-8 rounded-xl mt-3"
+              className="bg-gray-100 py-4 px-8 rounded-xl"
             >
               <Text className="text-gray-700 text-center text-lg font-semibold">
                 Back to Home
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* Divider */}
+          <View className="border-t border-gray-300 mb-6" />
+
+          {/* All Questions Section */}
+          <Text className="text-2xl font-bold text-gray-800 mb-4">
+            Question Review
+          </Text>
+
+          {/* Render all questions */}
+          {questionsWithAnswers.map((question, questionIndex) => {
+            const isCorrect = question.status === 'correct';
+            const isSkipped = question.status === 'unanswered';
+            const explanation = getQuestionExplanation(question);
+
+            return (
+              <View key={question.id} className="mb-8">
+                {/* Question Header */}
+                <View className="bg-white p-4 rounded-t-2xl border-b-2 border-gray-200">
+                  <View className="flex-row items-center justify-between mb-2">
+                    <Text className="text-lg font-bold text-gray-800">
+                      Question {questionIndex + 1}
+                    </Text>
+                    <View className="flex-row items-center gap-2">
+                      <View className={`px-3 py-1 rounded-full ${
+                        isCorrect ? 'bg-green-500' : isSkipped ? 'bg-orange-500' : 'bg-red-500'
+                      }`}>
+                        <Text className="text-white text-xs font-semibold">
+                          {isCorrect ? '✓ Correct' : isSkipped ? '○ Skipped' : '✗ Incorrect'}
+                        </Text>
+                      </View>
+                      {question.markedForReview && (
+                        <View className="px-3 py-1 rounded-full bg-purple-500">
+                          <Text className="text-white text-xs font-semibold">🔖 Review</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                </View>
+
+                {/* Question Content */}
+                <View className="bg-white p-6 rounded-b-2xl mb-2">
+                  {question.image_url && (
+                    <Image
+                      source={{ uri: question.image_url }}
+                      className="w-full h-48 rounded-xl mb-4"
+                      resizeMode="contain"
+                    />
+                  )}
+                  <MathText
+                    text={question.question}
+                    fontSize="medium"
+                    color="#111827"
+                  />
+                </View>
+
+                {/* Your Response */}
+                <View className="bg-gray-50 p-4 rounded-xl mb-2">
+                  <Text className="text-xs font-semibold text-gray-600 mb-2">YOUR RESPONSE</Text>
+                  <View className="flex-row items-center">
+                    {question.userAnswer ? (
+                      <>
+                        <View className={`w-8 h-8 rounded-full items-center justify-center ${
+                          isCorrect ? 'bg-green-500' : 'bg-red-500'
+                        }`}>
+                          <Text className="text-white font-bold">{question.userAnswer}</Text>
+                        </View>
+                        <Text className={`ml-2 text-sm font-semibold ${
+                          isCorrect ? 'text-green-700' : 'text-red-700'
+                        }`}>
+                          {isCorrect ? 'Correct' : 'Incorrect'}
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <View className="w-8 h-8 rounded-full items-center justify-center bg-orange-500">
+                          <Ionicons name="remove" size={20} color="white" />
+                        </View>
+                        <Text className="ml-2 text-sm font-semibold text-orange-700">
+                          Not Answered
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                </View>
+
+                {/* Options */}
+                <View className="mb-2">
+                  {question.options.map((option, idx) => {
+                    const optionKey = String.fromCharCode(65 + idx);
+                    const isUserAnswer = question.userAnswer === optionKey;
+                    const isCorrectAnswer = question.correct_answer === optionKey;
+
+                    let bgColor = 'bg-white border-gray-200';
+                    let borderWidth = 'border';
+
+                    if (isCorrectAnswer) {
+                      bgColor = 'bg-green-50 border-green-500';
+                      borderWidth = 'border-2';
+                    } else if (isUserAnswer && !isCorrectAnswer) {
+                      bgColor = 'bg-red-50 border-red-500';
+                      borderWidth = 'border-2';
+                    }
+
+                    return (
+                      <View
+                        key={idx}
+                        className={`mb-2 p-3 rounded-xl ${borderWidth} ${bgColor} flex-row items-start`}
+                      >
+                        <View className="mr-2 mt-1">
+                          <View className={`w-7 h-7 rounded-full items-center justify-center ${
+                            isCorrectAnswer ? 'bg-green-500' : isUserAnswer ? 'bg-red-500' : 'bg-gray-300'
+                          }`}>
+                            <Text className={`text-sm font-bold ${
+                              isCorrectAnswer || isUserAnswer ? 'text-white' : 'text-gray-700'
+                            }`}>
+                              {optionKey}
+                            </Text>
+                          </View>
+                        </View>
+                        <View className="flex-1">
+                          <MathText
+                            text={option}
+                            fontSize="small"
+                            color="#374151"
+                          />
+                          {isCorrectAnswer && (
+                            <Text className="text-green-600 font-semibold mt-1 text-xs">
+                              ✓ Correct Answer
+                            </Text>
+                          )}
+                          {isUserAnswer && !isCorrectAnswer && (
+                            <Text className="text-red-600 font-semibold mt-1 text-xs">
+                              ✗ Your Answer
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+
+                {/* Explanation */}
+                {explanation && (
+                  <View className="bg-blue-50 p-4 rounded-xl">
+                    <Text className="text-xs font-semibold text-blue-600 mb-2">
+                      EXPLANATION
+                    </Text>
+                    <MathText
+                      text={explanation}
+                      fontSize="small"
+                      color="#1F2937"
+                    />
+                  </View>
+                )}
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
     </View>

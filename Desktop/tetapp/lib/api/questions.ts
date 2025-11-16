@@ -430,6 +430,21 @@ export async function getQuestionsBySubjectAndMode(
   count: number = 30
 ): Promise<{ data: Question[] | null; error: Error | null }> {
   try {
+    console.log('🔍 [getQuestionsBySubjectAndMode] Query params:', { subjectId, language, paper, mode, count });
+
+    // First, let's check what actually exists in the database for this subject
+    const { data: debugData, error: debugError } = await supabase
+      .from('questions')
+      .select('subject_id, language, paper')
+      .eq('subject_id', subjectId)
+      .limit(5);
+
+    console.log('📊 [DEBUG] Sample questions for subject:', {
+      subjectId,
+      sampleCount: debugData?.length || 0,
+      samples: debugData?.slice(0, 3).map(q => ({ subject_id: q.subject_id, language: q.language, paper: q.paper }))
+    });
+
     // Fetch all questions for this subject, language, and paper
     let query = supabase
       .from('questions')
@@ -440,7 +455,37 @@ export async function getQuestionsBySubjectAndMode(
 
     const { data: allQuestions, error } = await query;
 
+    console.log('✅ [getQuestionsBySubjectAndMode] Query result:', {
+      found: allQuestions?.length || 0,
+      error: error?.message,
+      filters: { subjectId, language, paper }
+    });
+
     if (error || !allQuestions || allQuestions.length === 0) {
+      // Try alternative paper formats
+      console.log('⚠️ [DEBUG] Trying alternative paper formats...');
+      const alternativePapers = [
+        paper.replace(' ', '-'),  // 'Paper-2'
+        paper.replace(' ', ''),   // 'Paper2'
+        `Paper-${paper.split(' ')[1]}`,  // Ensure hyphen format
+      ];
+
+      for (const altPaper of alternativePapers) {
+        const { data: altData, error: altError } = await supabase
+          .from('questions')
+          .select('*')
+          .eq('subject_id', subjectId)
+          .eq('language', language)
+          .eq('paper', altPaper);
+
+        console.log(`🔄 Trying paper format "${altPaper}":`, { found: altData?.length || 0 });
+
+        if (altData && altData.length > 0) {
+          console.log(`✅ Found questions with paper="${altPaper}"`);
+          return { data: null, error }; // Still return error but with debug info
+        }
+      }
+
       return { data: null, error };
     }
 

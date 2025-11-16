@@ -1,8 +1,11 @@
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../lib/auth-context';
+import GoogleLogo from '../components/GoogleLogo';
 
 export default function Login() {
   const router = useRouter();
@@ -49,7 +52,12 @@ export default function Login() {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <LinearGradient
+      colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      className="flex-1"
+    >
       <StatusBar style="dark" />
 
       <ScrollView
@@ -60,69 +68,53 @@ export default function Login() {
         {/* Hero Section */}
         <View className="px-8 pt-20 pb-12">
           {/* App Logo */}
-          <View className="items-center mb-8">
-            <View className="w-28 h-28 bg-blue-500 rounded-[32px] items-center justify-center shadow-lg mb-6">
-              <Text className="text-white text-6xl font-bold">T</Text>
+          <View className="items-center mb-12">
+            <Image
+              source={require('../Supacharge Logo.webp')}
+              style={{ width: 160, height: 160 }}
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* Complete Solution */}
+          <View className="mb-8">
+            <Text className="text-3xl font-bold text-gray-900 text-center mb-8">
+              Complete Solution for
+            </Text>
+
+            {/* Paper 1 */}
+            <View className="flex-row items-center mb-4">
+              <Ionicons name="checkmark-circle" size={24} color="#9333ea" />
+              <Text className="text-lg text-gray-800 ml-3 font-medium">
+                TS-TET Paper-1
+              </Text>
             </View>
 
-            <Text className="text-5xl font-bold text-gray-900 text-center mb-3">
-              Welcome to TET
-            </Text>
-            <Text className="text-gray-500 text-center text-lg leading-relaxed">
-              Your ultimate companion for exam preparation and success
+            {/* Paper 2 Math & Science */}
+            <View className="flex-row items-center mb-4">
+              <Ionicons name="checkmark-circle" size={24} color="#9333ea" />
+              <Text className="text-lg text-gray-800 ml-3 font-medium">
+                TS-TET Paper-2 Maths & Science
+              </Text>
+            </View>
+
+            {/* Paper 2 Social Studies */}
+            <View className="flex-row items-center mb-6">
+              <Ionicons name="checkmark-circle" size={24} color="#9333ea" />
+              <Text className="text-lg text-gray-800 ml-3 font-medium">
+                TS-TET Paper-2 Social Studies
+              </Text>
+            </View>
+
+            {/* Languages */}
+            <Text className="text-xl text-gray-800 text-center font-bold">
+              English, తెలుగు, اردو & हिन्दी
             </Text>
           </View>
         </View>
 
-        {/* Features Section */}
-        <View className="px-8 mb-auto">
-          <View className="space-y-6">
-            {/* Feature 1 */}
-            <View className="flex-row items-start">
-              <View className="w-12 h-12 bg-blue-50 rounded-2xl items-center justify-center mr-4">
-                <Text className="text-2xl">📚</Text>
-              </View>
-              <View className="flex-1">
-                <Text className="text-gray-900 font-semibold text-lg mb-1">
-                  Comprehensive Study Material
-                </Text>
-                <Text className="text-gray-600 text-base leading-relaxed">
-                  Access curated content across all subjects
-                </Text>
-              </View>
-            </View>
-
-            {/* Feature 2 */}
-            <View className="flex-row items-start">
-              <View className="w-12 h-12 bg-green-50 rounded-2xl items-center justify-center mr-4">
-                <Text className="text-2xl">🎯</Text>
-              </View>
-              <View className="flex-1">
-                <Text className="text-gray-900 font-semibold text-lg mb-1">
-                  Practice & Test Modes
-                </Text>
-                <Text className="text-gray-600 text-base leading-relaxed">
-                  Multiple practice modes to boost your preparation
-                </Text>
-              </View>
-            </View>
-
-            {/* Feature 3 */}
-            <View className="flex-row items-start">
-              <View className="w-12 h-12 bg-purple-50 rounded-2xl items-center justify-center mr-4">
-                <Text className="text-2xl">📊</Text>
-              </View>
-              <View className="flex-1">
-                <Text className="text-gray-900 font-semibold text-lg mb-1">
-                  Track Your Progress
-                </Text>
-                <Text className="text-gray-600 text-base leading-relaxed">
-                  Detailed analytics and performance insights
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
+        {/* Spacer */}
+        <View className="flex-1" />
 
         {/* Bottom Section - Google Sign In */}
         <View className="px-8 pb-10 pt-8">
@@ -137,14 +129,14 @@ export default function Login() {
           <TouchableOpacity
             onPress={handleGoogleSignIn}
             disabled={loading}
-            className="bg-white border-2 border-gray-200 rounded-2xl py-5 px-6 flex-row items-center justify-center mb-4 shadow-sm active:scale-95"
-            activeOpacity={0.8}
+            className="bg-white rounded-full py-5 px-6 flex-row items-center justify-center mb-4 active:scale-95"
+            activeOpacity={0.9}
             style={{
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 3,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.12,
+              shadowRadius: 12,
+              elevation: 4,
             }}
           >
             {loading ? (
@@ -153,7 +145,7 @@ export default function Login() {
               <>
                 {/* Google Icon */}
                 <View className="mr-3">
-                  <Text className="text-2xl">G</Text>
+                  <GoogleLogo size={24} />
                 </View>
                 <Text className="text-gray-900 font-semibold text-lg">
                   Continue with Google
@@ -163,14 +155,32 @@ export default function Login() {
           </TouchableOpacity>
 
           {/* Terms & Privacy */}
-          <Text className="text-gray-400 text-center text-sm leading-relaxed">
-            By continuing, you agree to our{'\n'}
-            <Text className="text-blue-500 font-medium">Terms of Service</Text>
-            {' '}and{' '}
-            <Text className="text-blue-500 font-medium">Privacy Policy</Text>
-          </Text>
+          <View className="items-center">
+            <Text className="text-gray-400 text-center text-sm mb-1">
+              By continuing, you agree to our
+            </Text>
+            <View className="flex-row items-center justify-center">
+              <TouchableOpacity
+                onPress={() => router.push('/legal/terms')}
+                activeOpacity={0.7}
+              >
+                <Text className="text-purple-600 font-medium text-sm">
+                  Terms of Service
+                </Text>
+              </TouchableOpacity>
+              <Text className="text-gray-400 text-sm"> and </Text>
+              <TouchableOpacity
+                onPress={() => router.push('/legal/privacy')}
+                activeOpacity={0.7}
+              >
+                <Text className="text-purple-600 font-medium text-sm">
+                  Privacy Policy
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }

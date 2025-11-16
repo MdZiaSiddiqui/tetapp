@@ -153,6 +153,21 @@ export const getQuestionExplanation = (question: GenericQuestion): string | null
     }
   }
 
+  // Debug: if we reached here, no explanation was found under expected keys
+  try {
+    const availableKeys = Object.keys(question as Record<string, unknown>);
+    console.warn('[getQuestionExplanation] No explanation found. Available keys:', availableKeys.slice(0, 50));
+    // Also print small preview of keys that look like explanation-containing fields
+    for (const k of EXPLANATION_KEYS) {
+      if (k in (question as Record<string, unknown>)) {
+        const v = (question as Record<string, unknown>)[k];
+        console.warn(`[getQuestionExplanation] Key present but empty/invalid: ${k}`, typeof v, (typeof v === 'string' ? (v as string).substring(0, 120) : v));
+      }
+    }
+  } catch (e) {
+    // ignore logging errors
+  }
+
   const possibleQuestionText = (() => {
     const record = question as Record<string, unknown>;
     const candidate = record.question ?? record.text;

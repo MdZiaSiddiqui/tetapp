@@ -760,12 +760,22 @@ export default function PracticeSession() {
 
           {/* Explanation */}
           {showExplanation && isCorrect && (
-            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500">
+            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500" style={{ overflow: 'hidden', borderRadius: 16 }}>
               <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
               <View style={{ width: '100%' }}>
                 {(() => {
                   // Check for both 'solutions' and 'explanation' fields (data sources use different names)
                   const explanationText = getQuestionExplanation(currentQuestion);
+                  // Debug: log explanation result to help trace empty explanations
+                  try {
+                    console.log('[practice-session] explanationText for question', currentQuestion.id || currentQuestion.question_number || currentQuestion.question?.substring?.(0,40) || 'unknown', {
+                      type: typeof explanationText,
+                      length: typeof explanationText === 'string' ? explanationText.length : 'N/A',
+                      preview: typeof explanationText === 'string' ? explanationText.substring(0, 200) : null,
+                    });
+                  } catch (e) {
+                    // ignore logging errors
+                  }
                   const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
 
                   return hasExplanation ? (
@@ -789,9 +799,9 @@ export default function PracticeSession() {
               colors={['#9333ea', '#c084fc', '#9333ea']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              className="mt-0 rounded-2xl shadow-md p-0.5"
+              style={{ marginTop: 0, borderRadius: 16, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3, padding: 2, overflow: 'hidden' }}
             >
-              <View className="bg-white p-4 rounded-2xl">
+              <View className="bg-white p-4" style={{ borderRadius: 14, overflow: 'hidden' }}>
                 <Text className="text-gray-700 font-bold mb-2 text-base">Explanation:</Text>
                 <View style={{ width: '100%' }}>
                   {(() => {
