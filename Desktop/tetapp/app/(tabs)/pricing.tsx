@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect } from 'expo-router';
@@ -27,6 +28,7 @@ type PricingPlan = {
   plans: {
     duration: string;
     price: string;
+    originalPrice?: string;
     popular?: boolean;
     savings?: string;
   }[];
@@ -41,10 +43,17 @@ const pricingData: PricingPlan[] = [
     icon: '',
     gradient: ['#ffffff', '#ffffff'],
     plans: [
-      { duration: '3 Months', price: '499' },
-      { duration: '1 Year', price: '799' },
+      { duration: '3 Months', price: '499', originalPrice: '999' },
+      { duration: '1 Year', price: '799', originalPrice: '1599' },
     ],
-    features: ['Complete Paper-1 syllabus', 'Practice tests', 'Progress tracking'],
+    features: [
+      'Premium Paper-1 Practice Sessions',
+      'Premium Paper-1 Mock Tests',
+      'Complete TS-TET 2026 eNotes',
+      'Previous Year TS-TET Questions',
+      'Predicted 2026 Pattern Questions',
+      '100% Detailed Solutions',
+    ],
   },
   {
     title: 'TS-TET Paper-2',
@@ -52,10 +61,17 @@ const pricingData: PricingPlan[] = [
     icon: '',
     gradient: ['#ffffff', '#ffffff'],
     plans: [
-      { duration: '3 Months', price: '699' },
-      { duration: '1 Year', price: '999' },
+      { duration: '3 Months', price: '699', originalPrice: '1399' },
+      { duration: '1 Year', price: '999', originalPrice: '1999' },
     ],
-    features: ['Complete Paper-2 syllabus', 'Advanced practice tests', 'Detailed analytics', 'Expert guidance'],
+    features: [
+      'Premium Paper-2 Practice Sessions',
+      'Premium Paper-2 Mock Tests',
+      'Complete TS-TET 2026 eNotes',
+      'Previous Year TS-TET Questions',
+      'Predicted 2026 Pattern Questions',
+      '100% Detailed Solutions',
+    ],
   },
   {
     title: 'TS-TET Paper-1 + Paper-2',
@@ -63,10 +79,17 @@ const pricingData: PricingPlan[] = [
     icon: '',
     gradient: ['#ffffff', '#ffffff'],
     plans: [
-      { duration: '3 Months', price: '999' },
-      { duration: '1 Year', price: '1499' },
+      { duration: '3 Months', price: '999', originalPrice: '1999' },
+      { duration: '1 Year', price: '1499', originalPrice: '2999' },
     ],
-    features: ['Both Paper-1 & Paper-2', 'All practice tests', 'Priority support', 'Unlimited access', 'Best value package'],
+    features: [
+      'Premium Paper-1 & 2 Practice Sessions',
+      'Premium Paper-1 & 2 Mock Tests',
+      'Complete TS-TET 2026 eNotes',
+      'Previous Year TS-TET Questions',
+      'Predicted 2026 Pattern Questions',
+      '100% Detailed Solutions',
+    ],
   },
 ];
 
@@ -260,79 +283,107 @@ export default function PricingScreen() {
         {/* Pricing Cards */}
         <View style={styles.cardsContainer}>
           {orderedPricingData.map((plan, index) => (
-            <View key={index} style={styles.cardWrapper}>
-              <View style={styles.card}>
-                {/* Card Header */}
-                <View style={styles.cardTitleContainer}>
-                  <Text style={styles.cardTitle}>{plan.title}</Text>
-                </View>
+            <React.Fragment key={index}>
+              <View style={styles.cardWrapper}>
+                <LinearGradient
+                  colors={['#fef3c7', '#fde68a', '#fcd34d']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.card}
+                >
+                  {/* Card Header */}
+                  <View style={styles.cardTitleContainer}>
+                    <Text style={styles.cardTitle}>{plan.title}</Text>
+                  </View>
 
-                {/* Pricing Options */}
-                <View style={styles.pricingOptions}>
-                  {plan.plans.map((option, optionIndex) => (
-                    <View
-                      key={optionIndex}
-                      style={styles.priceOption}
-                    >
-                      <View style={styles.priceRow}>
-                        <View style={styles.priceInfo}>
-                          <Text style={styles.duration}>{option.duration}</Text>
-                          <View style={styles.priceContainer}>
-                            <Text style={styles.priceCurrency}>₹</Text>
-                            <Text style={styles.price}>{option.price}</Text>
+                  {/* Pricing Options */}
+                  <View style={styles.pricingOptions}>
+                    {plan.plans.map((option, optionIndex) => (
+                      <View
+                        key={optionIndex}
+                        style={styles.priceOption}
+                      >
+                        <View style={styles.priceRow}>
+                          <View style={styles.priceInfo}>
+                            <Text style={styles.duration}>{option.duration}</Text>
+                            <View style={styles.priceRowHorizontal}>
+                              <View style={styles.priceContainer}>
+                                <Text style={styles.priceCurrency}>₹</Text>
+                                <Text style={styles.price}>{option.price}</Text>
+                              </View>
+                              {option.originalPrice && (
+                                <View style={styles.originalPriceContainer}>
+                                  <Text style={styles.originalPrice}>₹{option.originalPrice}</Text>
+                                </View>
+                              )}
+                            </View>
+                            {option.savings && (
+                              <Text style={styles.savings}>{option.savings}</Text>
+                            )}
                           </View>
-                          {option.savings && (
-                            <Text style={styles.savings}>{option.savings}</Text>
-                          )}
-                        </View>
-                        <TouchableOpacity
-                          style={styles.selectButton}
-                          onPress={() => {
-                            const tierMap: Record<string, TierType> = {
-                              'TS-TET Paper-1': 'paper1',
-                              'TS-TET Paper-2': 'paper2',
-                              'TS-TET Paper-1 + Paper-2': 'both',
-                            };
-                            const packageMap: Record<string, PackageType> = {
-                              '3 Months': '3_months',
-                              '1 Year': '1_year',
-                            };
-                            handleSelectPlan(
-                              tierMap[plan.title],
-                              packageMap[option.duration]
-                            );
-                          }}
-                          activeOpacity={1}
-                        >
-                          <LinearGradient
-                            colors={['#000000', '#000000']}
-                            style={styles.selectButtonGradient}
+                          <TouchableOpacity
+                            style={styles.selectButton}
+                            onPress={() => {
+                              const tierMap: Record<string, TierType> = {
+                                'TS-TET Paper-1': 'paper1',
+                                'TS-TET Paper-2': 'paper2',
+                                'TS-TET Paper-1 + Paper-2': 'both',
+                              };
+                              const packageMap: Record<string, PackageType> = {
+                                '3 Months': '3_months',
+                                '1 Year': '1_year',
+                              };
+                              handleSelectPlan(
+                                tierMap[plan.title],
+                                packageMap[option.duration]
+                              );
+                            }}
+                            activeOpacity={1}
                           >
-                            <Text style={styles.selectButtonText}>Buy Now</Text>
-                          </LinearGradient>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-
-                {/* Features */}
-                {plan.features && plan.features.length > 0 && (
-                  <View style={styles.features}>
-                    {plan.features.map((feature, featureIndex) => (
-                      <View key={featureIndex} style={styles.featureRow}>
-                        <View style={styles.checkmarkContainer}>
-                          <Ionicons name="checkmark-circle" size={16} color="#10b981" />
+                            <LinearGradient
+                              colors={['#000000', '#000000']}
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
+                              style={styles.selectButtonGradient}
+                            >
+                              <Text style={styles.selectButtonText}>Buy Now</Text>
+                            </LinearGradient>
+                          </TouchableOpacity>
                         </View>
-                        <Text style={styles.featureText}>{feature}</Text>
                       </View>
                     ))}
                   </View>
-                )}
+
+                  {/* Features */}
+                  {plan.features && plan.features.length > 0 && (
+                    <View style={styles.features}>
+                      {plan.features.map((feature, featureIndex) => (
+                        <View key={featureIndex} style={styles.featureRow}>
+                          <View style={styles.checkmarkContainer}>
+                            <Ionicons name="checkmark-circle" size={16} color="#f59e0b" />
+                          </View>
+                          <Text style={styles.featureText}>{feature}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
+
+                  {/* Payment Methods - Show in first card */}
+                  {index === 0 && (
+                    <View style={styles.paymentLogosInCard}>
+                      <Image
+                        source={require('../../payments.webp')}
+                        style={styles.paymentLogosImageInCard}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  )}
+                </LinearGradient>
               </View>
-            </View>
+            </React.Fragment>
           ))}
         </View>
+
       </ScrollView>
 
       {/* Razorpay Payment Modal */}
@@ -384,6 +435,23 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     position: 'relative',
+  },
+  cardGoldenBorder: {
+    borderRadius: 20,
+    shadowColor: '#d97706',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  goldenBorderGradient: {
+    borderRadius: 20,
+    padding: 3,
+  },
+  cardInner: {
+    backgroundColor: '#fffbeb',
+    borderRadius: 17,
+    padding: 16,
   },
   recommendedBadge: {
     position: 'absolute',
@@ -444,11 +512,19 @@ const styles = StyleSheet.create({
   cardTitleContainer: {
     flex: 1,
     alignItems: 'center',
+    marginBottom: 16,
   },
   cardTitle: {
-    fontSize: 17,
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#000000',
+    letterSpacing: 0.5,
+    textAlign: 'center',
+  },
+  cardTitleGolden: {
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#111827',
+    color: '#92400e',
     marginBottom: 4,
     letterSpacing: 0.3,
     textAlign: 'center',
@@ -468,6 +544,14 @@ const styles = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#e5e7eb',
+    position: 'relative',
+  },
+  priceOptionGolden: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#fcd34d',
     position: 'relative',
   },
   popularBadge: {
@@ -507,6 +591,42 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontWeight: '500',
   },
+  priceRowHorizontal: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  originalPriceWrapper: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  durationGolden: {
+    fontSize: 13,
+    color: '#92400e',
+    marginBottom: 6,
+    fontWeight: '600',
+  },
+  originalPriceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  originalPrice: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#9ca3af',
+    textDecorationLine: 'line-through',
+  },
+  discountBadge: {
+    backgroundColor: '#10b981',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  discountText: {
+    color: '#ffffff',
+    fontSize: 9,
+    fontWeight: 'bold',
+  },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -518,10 +638,22 @@ const styles = StyleSheet.create({
     color: '#111827',
     marginTop: 4,
   },
+  priceCurrencyGolden: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#b45309',
+    marginTop: 4,
+  },
   price: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#111827',
+    letterSpacing: -1,
+  },
+  priceGolden: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#92400e',
     letterSpacing: -1,
   },
   savings: {
@@ -557,6 +689,14 @@ const styles = StyleSheet.create({
     padding: 12,
     borderWidth: 1,
     borderColor: '#e5e7eb',
+  },
+  featuresGolden: {
+    gap: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#fcd34d',
   },
   featureRow: {
     flexDirection: 'row',
@@ -735,5 +875,15 @@ const styles = StyleSheet.create({
   dividerText: {
     fontSize: 14,
     color: '#6b7280',
+  },
+  // Payment Logos in Card (inside first card)
+  paymentLogosInCard: {
+    alignItems: 'center',
+    paddingTop: 12,
+    opacity: 1,
+  },
+  paymentLogosImageInCard: {
+    width: width - 100,
+    height: 32,
   },
 });
