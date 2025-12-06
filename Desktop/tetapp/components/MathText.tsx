@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { View, Text, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 interface MathTextProps {
@@ -577,8 +577,8 @@ const MathText: React.FC<MathTextProps> = ({
 
           <!-- MathJax Configuration -->
           <script>
-            // Hide content initially to prevent flash of unstyled content
-            document.documentElement.style.opacity = '0';
+            // Show content immediately - no delay
+            document.documentElement.style.opacity = '1';
 
             // Custom error handler that suppresses errors completely
             window.MathJax = {
@@ -622,70 +622,43 @@ const MathText: React.FC<MathTextProps> = ({
                     const errors = document.querySelectorAll('merror, .mjx-merror, [data-mjx-error], mjx-merror');
                     errors.forEach(el => el.remove());
 
-                    // Show content with fade-in animation after rendering is complete
-                    setTimeout(() => {
-                      document.documentElement.style.transition = 'opacity 0.15s ease-in';
-                      document.documentElement.style.opacity = '1';
+                    // Immediately calculate and send height (no delays)
+                    const content = document.getElementById('content');
+                    const height = Math.max(
+                      content.scrollHeight,
+                      content.offsetHeight,
+                      document.body.scrollHeight
+                    );
 
-                      const content = document.getElementById('content');
-                      const height = Math.max(
-                        content.scrollHeight,
-                        content.offsetHeight,
-                        document.body.scrollHeight
-                      );
+                    const textContent = content.textContent || '';
+                    const hasVisibleContent = textContent.trim().length > 0;
 
-                      // Check if content is actually empty despite having height
-                      const textContent = content.textContent || '';
-                      const hasVisibleContent = textContent.trim().length > 0;
-
-                      console.log('Sending height from WebView:', height);
-                      console.log('Content check:', {
-                        height,
-                        textLength: textContent.length,
-                        hasVisibleContent
-                      });
-
-                      window.ReactNativeWebView.postMessage(JSON.stringify({
-                        height,
-                        isEmpty: !hasVisibleContent
-                      }));
-                    }, 50);
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                      height,
+                      isEmpty: !hasVisibleContent
+                    }));
                   }).catch((err) => {
-                    // Silently handle errors and still send height
                     console.error('MathJax error:', err);
 
                     // Remove any error elements
                     const errors = document.querySelectorAll('merror, .mjx-merror, [data-mjx-error], mjx-merror');
                     errors.forEach(el => el.remove());
 
-                    // Show content even on error
-                    setTimeout(() => {
-                      document.documentElement.style.transition = 'opacity 0.15s ease-in';
-                      document.documentElement.style.opacity = '1';
+                    // Send height even on error (no delays)
+                    const content = document.getElementById('content');
+                    const height = Math.max(
+                      content.scrollHeight,
+                      content.offsetHeight,
+                      document.body.scrollHeight
+                    );
 
-                      const content = document.getElementById('content');
-                      const height = Math.max(
-                        content.scrollHeight,
-                        content.offsetHeight,
-                        document.body.scrollHeight
-                      );
+                    const textContent = content.textContent || '';
+                    const hasVisibleContent = textContent.trim().length > 0;
 
-                      // Check if content is actually empty
-                      const textContent = content.textContent || '';
-                      const hasVisibleContent = textContent.trim().length > 0;
-
-                      console.log('Sending height from WebView (error case):', height);
-                      console.log('Content check (error case):', {
-                        height,
-                        textLength: textContent.length,
-                        hasVisibleContent
-                      });
-
-                      window.ReactNativeWebView.postMessage(JSON.stringify({
-                        height,
-                        isEmpty: !hasVisibleContent
-                      }));
-                    }, 50);
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                      height,
+                      isEmpty: !hasVisibleContent
+                    }));
                   });
                 }
               }
@@ -816,22 +789,6 @@ const MathText: React.FC<MathTextProps> = ({
 
   return (
     <View style={[{ width: '100%', height: webViewHeight, overflow: 'hidden' }, style]}>
-      {/* Show subtle loading indicator while rendering */}
-      {isRendering && (
-        <View style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1,
-        }}>
-          <ActivityIndicator size="small" color="#9CA3AF" />
-        </View>
-      )}
-
       {webViewCreatedRef.current && (
         <WebView
           originWhitelist={['*']}
@@ -876,7 +833,7 @@ const MathText: React.FC<MathTextProps> = ({
             backgroundColor: 'transparent',
             width: '100%',
             height: webViewHeight,
-            opacity: isRendering ? 0 : 1,
+            opacity: 1,
           }}
           // Performance optimizations
           androidLayerType="software"

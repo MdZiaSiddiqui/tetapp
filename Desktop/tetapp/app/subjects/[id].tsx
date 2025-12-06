@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSubject } from '../../hooks/useSupabaseData';
 import { getQuestionsBySubjectAndMode } from '../../lib/api/questions';
 import { getBookCover } from '../../lib/notes-data';
 import { useProAccess } from '../../hooks/useProAccess';
@@ -59,9 +58,6 @@ export default function SubjectDetail() {
   const subjectId = params.id as string;
   const subjectName = params.name as string;
   const selectedPaperParam = params.selectedPaper as string;
-
-  // Fetch subject details
-  const { data: subject, isLoading, error } = useSubject(subjectId);
 
   // Get premium access information
   const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
@@ -121,18 +117,20 @@ export default function SubjectDetail() {
     try {
       setFetchingQuestions(true);
 
-      // For language subjects, use the subject name as the language
-      // (e.g., Telugu subject queries for language='Telugu')
+      // For language subjects, map subjectId to the database language field
       // For non-language subjects, use the user's selected language
       let language: 'English' | 'Telugu' | 'Urdu';
       if (isLanguageSubject) {
-        // Capitalize first letter to match database format
-        const subjectNameCapitalized = subjectName.charAt(0).toUpperCase() + subjectName.slice(1).toLowerCase();
-        // Hindi and Urdu are stored as English in the database
-        if (subjectNameCapitalized === 'Hindi' || subjectNameCapitalized === 'Urdu') {
+        // Map subjectId to database language field:
+        // - Hindi, Urdu, and English subjects are stored with language='English'
+        // - Telugu subject is stored with language='Telugu'
+        if (subjectId === 'hindi' || subjectId === 'urdu' || subjectId === 'english') {
           language = 'English';
+        } else if (subjectId === 'telugu') {
+          language = 'Telugu';
         } else {
-          language = subjectNameCapitalized as 'English' | 'Telugu' | 'Urdu';
+          // Fallback for unknown language subjects
+          language = 'English';
         }
       } else {
         language = selectedLanguage === 'Hindi' ? 'English' : selectedLanguage;
@@ -224,39 +222,6 @@ export default function SubjectDetail() {
     }
   };
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <View className="flex-1 bg-white justify-center items-center">
-        <ActivityIndicator size="large" color="#3b82f6" />
-        <Text className="text-gray-600 mt-4">Loading subject...</Text>
-      </View>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <View className="flex-1 bg-white justify-center items-center px-6">
-        <View className="bg-red-50 p-6 rounded-xl border border-red-200">
-          <Text className="text-red-800 font-semibold text-lg text-center mb-2">
-            Error Loading Subject
-          </Text>
-          <Text className="text-red-600 text-center mb-4">
-            {error.message || 'Failed to load subject. Please try again.'}
-          </Text>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="bg-red-600 py-3 px-6 rounded-lg"
-            activeOpacity={1}
-          >
-            <Text className="text-white font-semibold text-center">Go Back</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <LinearGradient
       colors={['#faf5ff', '#f3e8ff', '#ede9fe']}
@@ -286,7 +251,7 @@ export default function SubjectDetail() {
           {/* Title */}
           <View className="flex-1">
             <Text className="text-xl font-medium text-white text-center mr-10">
-              {subject?.name || subjectName} & Pedagogy
+              {subjectName} & Pedagogy
             </Text>
           </View>
         </View>
@@ -325,21 +290,25 @@ export default function SubjectDetail() {
 
                 <View className="flex-row flex-wrap justify-between">
                   {notesLanguages.map((lang) => {
+                    // Map language to note suffix
+                    const langSuffix = lang.toLowerCase() === 'english' || lang.toLowerCase() === 'hindi'
+                      ? 'eng'
+                      : lang.toLowerCase() === 'telugu'
+                      ? 'tel'
+                      : 'urdu';
+
+                    const noteId = `${notePrefix}-${langSuffix}`;
+
+                    // Free notes that don't require pro access
+                    const FREE_NOTES = ['english-eng'];
+                    const isFreeNote = FREE_NOTES.includes(noteId);
+
                     const handleNotesPress = () => {
-                      // If locked, redirect to pricing
-                      if (isPremiumLocked) {
+                      // If locked and not a free note, redirect to pricing
+                      if (isPremiumLocked && !isFreeNote) {
                         handleLockedPress();
                         return;
                       }
-
-                      // Map language to note suffix
-                      const langSuffix = lang.toLowerCase() === 'english' || lang.toLowerCase() === 'hindi'
-                        ? 'eng'
-                        : lang.toLowerCase() === 'telugu'
-                        ? 'tel'
-                        : 'urdu';
-
-                      const noteId = `${notePrefix}-${langSuffix}`;
 
                       // Navigate to notes viewer
                       router.push({
@@ -374,8 +343,8 @@ export default function SubjectDetail() {
                             </Text>
                           </View>
 
-                          {/* Lock Icon Overlay */}
-                          {isPremiumLocked && (
+                          {/* Lock Icon Overlay - don't show for free notes */}
+                          {isPremiumLocked && !isFreeNote && (
                             <View
                               style={{
                                 position: 'absolute',
@@ -390,6 +359,23 @@ export default function SubjectDetail() {
                               }}
                             >
                               <Ionicons name="lock-closed" size={14} color="#fbbf24" />
+                            </View>
+                          )}
+
+                          {/* FREE badge for free notes */}
+                          {isFreeNote && (
+                            <View
+                              style={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                backgroundColor: '#10b981',
+                                borderRadius: 8,
+                                paddingHorizontal: 8,
+                                paddingVertical: 4,
+                              }}
+                            >
+                              <Text style={{ color: 'white', fontSize: 10, fontWeight: '700' }}>FREE</Text>
                             </View>
                           )}
                         </View>

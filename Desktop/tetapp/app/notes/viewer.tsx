@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  ScrollView,
+  Animated,
+  Pressable,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { WebView } from 'react-native-webview';
@@ -18,6 +19,8 @@ import { addRecentNote, saveProgress } from '@/lib/notes-storage';
 import { useProAccess } from '@/hooks/useProAccess';
 import UpgradePrompt from '@/components/premium/UpgradePrompt';
 import LoadingBar from '@/components/LoadingBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function NotesViewer() {
   const router = useRouter();
@@ -25,7 +28,10 @@ export default function NotesViewer() {
   const webViewRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
   const [htmlContent, setHtmlContent] = useState<string>('');
-  const [showTOC, setShowTOC] = useState(false);
+  const [fontScale, setFontScale] = useState(1.0);
+  const [showFontMenu, setShowFontMenu] = useState(false);
+  const [showSizeButton, setShowSizeButton] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
 
   const noteId = typeof params.noteId === 'string' ? params.noteId : '';
@@ -38,6 +44,56 @@ export default function NotesViewer() {
       addRecentNote(noteId);
     }
   }, [noteId]);
+
+  // Load saved font scale preference
+  useEffect(() => {
+    AsyncStorage.getItem('notes-font-scale').then(val => {
+      if (val) {
+        const savedScale = parseFloat(val);
+        setFontScale(savedScale);
+      }
+    });
+  }, []);
+
+  // Update font scale and persist preference
+  const updateFontScale = (newScale: number) => {
+    const clampedScale = Math.max(0.8, Math.min(1.6, newScale));
+    setFontScale(clampedScale);
+    AsyncStorage.setItem('notes-font-scale', clampedScale.toString());
+    // Inject JS to update font size dynamically
+    webViewRef.current?.injectJavaScript(`
+      document.documentElement.style.fontSize = '${16 * clampedScale}px';
+      true;
+    `);
+  };
+
+  // Apply font scale when content is loaded and fontScale is set
+  useEffect(() => {
+    if (!loading && htmlContent && fontScale !== 1.0) {
+      webViewRef.current?.injectJavaScript(`
+        document.documentElement.style.fontSize = '${16 * fontScale}px';
+        true;
+      `);
+    }
+  }, [loading, fontScale, htmlContent]);
+
+  // Toggle font menu with animation
+  const toggleFontMenu = () => {
+    if (showFontMenu) {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 150,
+        useNativeDriver: true,
+      }).start(() => setShowFontMenu(false));
+    } else {
+      setShowFontMenu(true);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
 
   const loadHTMLContent = async () => {
     if (!note) {
@@ -381,13 +437,17 @@ export default function NotesViewer() {
     return modifiedHtml.replace('</head>', `${mobileCSS}</head>`);
   };
 
-  // Pro access check - Loading state
-  if (proLoading) {
+  // Free notes that don't require pro access
+  const FREE_NOTES = ['english-eng'];
+  const isFreeNote = FREE_NOTES.includes(noteId);
+
+  // Pro access check - Loading state (skip for free notes)
+  if (proLoading && !isFreeNote) {
     return <LoadingBar message="Loading..." />;
   }
 
-  // Pro access check - No access (require either paper1 or paper2)
-  if (!hasPaper1Access && !hasPaper2Access) {
+  // Pro access check - No access (require either paper1 or paper2, but skip for free notes)
+  if (!hasPaper1Access && !hasPaper2Access && !isFreeNote) {
     return <UpgradePrompt tier="paper1" feature="Notes" />;
   }
 
@@ -445,6 +505,54 @@ export default function NotesViewer() {
           scrollEventThrottle={1000}
         />
       )}
+
+      {/* Floating Font Size Button */}
+      {showSizeButton && (
+        <View style={styles.floatingFontBtn}>
+          <TouchableOpacity
+            style={styles.closeBtnArea}
+            onPress={() => setShowSizeButton(false)}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="close" size={14} color="#6b7280" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.sizeBtnArea}
+            onPress={toggleFontMenu}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.floatingFontBtnText}>size</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Font Size Menu */}
+      {showFontMenu && showSizeButton && (
+        <>
+          <Pressable style={styles.menuOverlay} onPress={toggleFontMenu} />
+          <Animated.View style={[styles.fontMenu, { opacity: fadeAnim }]}>
+            <TouchableOpacity
+              style={[styles.fontMenuItem, fontScale <= 0.8 && styles.fontMenuItemDisabled]}
+              onPress={() => updateFontScale(fontScale - 0.1)}
+              disabled={fontScale <= 0.8}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="remove" size={20} color={fontScale <= 0.8 ? '#9ca3af' : '#ffffff'} />
+            </TouchableOpacity>
+
+            <View style={styles.fontMenuDivider} />
+
+            <TouchableOpacity
+              style={[styles.fontMenuItem, fontScale >= 1.6 && styles.fontMenuItemDisabled]}
+              onPress={() => updateFontScale(fontScale + 0.1)}
+              disabled={fontScale >= 1.6}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add" size={20} color={fontScale >= 1.6 ? '#9ca3af' : '#ffffff'} />
+            </TouchableOpacity>
+          </Animated.View>
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -490,5 +598,72 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  // Floating button
+  floatingFontBtn: {
+    position: 'absolute',
+    top: 50,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: 'rgba(229, 231, 235, 0.6)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  closeBtnArea: {
+    paddingLeft: 10,
+    paddingRight: 6,
+    paddingVertical: 8,
+  },
+  sizeBtnArea: {
+    paddingRight: 14,
+    paddingLeft: 4,
+    paddingVertical: 8,
+  },
+  floatingFontBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  // Font menu
+  menuOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  fontMenu: {
+    position: 'absolute',
+    top: 100,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(31, 41, 55, 0.95)',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  fontMenuItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  fontMenuItemDisabled: {
+    opacity: 0.4,
+  },
+  fontMenuDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
 });

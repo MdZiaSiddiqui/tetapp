@@ -418,6 +418,43 @@ After any navigation changes:
 
 ## Recent Fixes Applied
 
+### 2025-12-05: Language Subject Questions Not Loading (English, Hindi, Urdu)
+
+**Issue Found:**
+- "No questions available" alert shown for English, Hindi, and Urdu subjects
+- Questions were properly seeded in the database but not being fetched
+
+**Root Cause:**
+The code in `app/subjects/[id].tsx` was using `subjectName` (e.g., 'English & Pedagogy') instead of `subjectId` ('english') to determine the database language field:
+```typescript
+// ❌ WRONG - subjectName is 'English & Pedagogy', not 'English'
+const subjectNameCapitalized = subjectName.charAt(0).toUpperCase() + subjectName.slice(1).toLowerCase();
+// Results in: 'English & pedagogy' which doesn't match database
+```
+
+**Fix Applied:**
+Changed to use `subjectId` for language determination:
+```typescript
+// ✅ CORRECT - use subjectId to determine language
+if (subjectId === 'hindi' || subjectId === 'urdu' || subjectId === 'english') {
+  language = 'English';
+} else if (subjectId === 'telugu') {
+  language = 'Telugu';
+}
+```
+
+**Files Modified:**
+- `app/subjects/[id].tsx:123-137`: Fixed language determination logic
+
+**Database Verification:**
+Questions are properly seeded:
+- english: 1998 questions (language='English')
+- hindi: 640 questions (language='English')
+- urdu: 1498 questions (language='English')
+- telugu: 637 questions (language='Telugu')
+
+---
+
 ### 2025-11-11 (3): Navigation Context Error in Practice Session
 
 **Issue Found:**

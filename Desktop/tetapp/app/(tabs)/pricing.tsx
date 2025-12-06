@@ -101,6 +101,12 @@ export default function PricingScreen() {
     expiresAt,
     daysRemaining,
     packageType,
+    hasPaper1Access,
+    hasPaper2Access,
+    paper1ExpiresAt,
+    paper2ExpiresAt,
+    paper1DaysRemaining,
+    paper2DaysRemaining,
     refresh,
   } = useProAccess();
   const [showPayment, setShowPayment] = useState(false);
@@ -191,62 +197,64 @@ export default function PricingScreen() {
             )}
           </View>
 
-          {/* Plan Description */}
-          <Text style={styles.planDescription}>
-            {isProActive
-              ? currentTier === 'both'
-                ? 'Full access to Paper-1 & Paper-2'
-                : currentTier === 'paper1'
-                ? 'Full access to Paper-1'
-                : 'Full access to Paper-2'
-              : 'Plan expired'}
-          </Text>
-
-          {/* Validity Information */}
-          <View style={styles.validityBox}>
-            {isProActive ? (
-              <>
-                <View style={styles.validityHeader}>
-                  <Ionicons name="calendar-outline" size={16} color="#6B7280" />
-                  <Text style={styles.validityLabel}>Valid Until</Text>
-                </View>
-                <Text style={styles.validityDate}>
-                  {expiresAt?.toLocaleDateString('en-IN', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </Text>
-                <Text style={styles.validityDays}>
-                  {daysRemaining !== null &&
-                    `${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} remaining`}
-                </Text>
-              </>
-            ) : (
-              <>
-                <View style={styles.expiredHeader}>
-                  <Ionicons name="warning-outline" size={16} color="#DC2626" />
-                  <Text style={styles.expiredLabel}>Plan Expired</Text>
-                </View>
-                <Text style={styles.expiredText}>
-                  Your subscription expired on{' '}
-                  {expiresAt?.toLocaleDateString('en-IN', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </Text>
-              </>
-            )}
-          </View>
-
-          {/* Package Type for Active Plans */}
-          {isProActive && packageType && (
-            <View style={styles.packageTypeRow}>
-              <Ionicons name="time-outline" size={14} color="#6B7280" />
-              <Text style={styles.packageTypeText}>
-                {packageType === '3_months' ? '3 Months' : '1 Year'} Plan
+          {/* Validity Information - Simplified UI */}
+          {/* Paper 1 only - show validity directly */}
+          {currentTier === 'paper1' && paper1ExpiresAt && (
+            <View style={{ marginTop: 4 }}>
+              <Text style={{ color: '#374151', fontSize: 14 }}>
+                {hasPaper1Access ? 'Valid until' : 'Expired on'}{' '}
+                {paper1ExpiresAt.toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
               </Text>
+              {hasPaper1Access && paper1DaysRemaining !== null && (
+                <Text style={{ color: '#6b7280', fontSize: 12, marginTop: 4 }}>
+                  {paper1DaysRemaining} {paper1DaysRemaining === 1 ? 'day' : 'days'} remaining
+                </Text>
+              )}
+            </View>
+          )}
+
+          {/* Paper 2 only - show validity directly */}
+          {currentTier === 'paper2' && paper2ExpiresAt && (
+            <View style={{ marginTop: 4 }}>
+              <Text style={{ color: '#374151', fontSize: 14 }}>
+                {hasPaper2Access ? 'Valid until' : 'Expired on'}{' '}
+                {paper2ExpiresAt.toLocaleDateString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </Text>
+              {hasPaper2Access && paper2DaysRemaining !== null && (
+                <Text style={{ color: '#6b7280', fontSize: 12, marginTop: 4 }}>
+                  {paper2DaysRemaining} {paper2DaysRemaining === 1 ? 'day' : 'days'} remaining
+                </Text>
+              )}
+            </View>
+          )}
+
+          {/* Both papers - show compact rows */}
+          {currentTier === 'both' && (
+            <View style={{ marginTop: 12, gap: 8 }}>
+              {paper1ExpiresAt && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text style={{ color: '#374151', fontSize: 14 }}>Paper 1</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 14 }}>
+                    {hasPaper1Access ? `${paper1DaysRemaining} days left` : 'Expired'}
+                  </Text>
+                </View>
+              )}
+              {paper2ExpiresAt && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text style={{ color: '#374151', fontSize: 14 }}>Paper 2</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 14 }}>
+                    {hasPaper2Access ? `${paper2DaysRemaining} days left` : 'Expired'}
+                  </Text>
+                </View>
+              )}
             </View>
           )}
         </View>

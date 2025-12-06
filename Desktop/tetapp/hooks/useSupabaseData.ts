@@ -4,6 +4,11 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Cache keys for AsyncStorage
+const SUBJECTS_CACHE_KEY = 'cached_subjects_with_stats';
+const CACHE_EXPIRY_KEY = 'cached_subjects_expiry';
 import type {
   Subject,
   SubjectWithStats,
@@ -65,17 +70,64 @@ export function useSubjects() {
 
 /**
  * Get all subjects with statistics
+ * Optimized with AsyncStorage cache for instant load on subsequent opens
  */
 export function useSubjectsWithStats() {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: ['subjects', 'with-stats'],
     queryFn: async () => {
       const { data, error } = await getSubjectsWithStats();
       if (error) throw error;
+
+      // Save to AsyncStorage cache in background
+      if (data) {
+        AsyncStorage.setItem(SUBJECTS_CACHE_KEY, JSON.stringify(data)).catch(() => {});
+        AsyncStorage.setItem(CACHE_EXPIRY_KEY, String(Date.now() + 24 * 60 * 60 * 1000)).catch(() => {});
+      }
+
       return data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    // Use cached data as placeholder while fetching fresh data
+    placeholderData: () => {
+      // Try to get cached data synchronously from React Query cache first
+      const cached = queryClient.getQueryData<SubjectWithStats[]>(['subjects', 'with-stats']);
+      return cached;
+    },
+    // Initialize from AsyncStorage cache on first load
+    initialData: undefined,
   });
+}
+
+/**
+ * Preload subjects from AsyncStorage cache
+ * Call this early in app startup for instant loading
+ */
+export async function preloadSubjectsCache(queryClient: ReturnType<typeof useQueryClient>) {
+  try {
+    const [cachedData, expiryStr] = await Promise.all([
+      AsyncStorage.getItem(SUBJECTS_CACHE_KEY),
+      AsyncStorage.getItem(CACHE_EXPIRY_KEY),
+    ]);
+
+    if (cachedData) {
+      const expiry = expiryStr ? parseInt(expiryStr, 10) : 0;
+      const isExpired = Date.now() > expiry;
+
+      // Set cached data in React Query (even if expired, it's better than nothing)
+      const parsed = JSON.parse(cachedData);
+      queryClient.setQueryData(['subjects', 'with-stats'], parsed);
+
+      // If cache is expired, mark it as stale so it refetches
+      if (isExpired) {
+        queryClient.invalidateQueries({ queryKey: ['subjects', 'with-stats'] });
+      }
+    }
+  } catch (error) {
+    // Silent fail - cache is just an optimization
+  }
 }
 
 /**

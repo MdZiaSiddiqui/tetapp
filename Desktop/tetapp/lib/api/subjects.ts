@@ -28,54 +28,69 @@ export async function getSubjects(): Promise<DbResultArray<Subject>> {
 
 /**
  * Get all subjects with statistics (question count, chapter count)
+ * Optimized: Uses 3 batched queries instead of N+1 queries
  * @returns Array of subjects with stats
  */
 export async function getSubjectsWithStats(): Promise<DbResultArray<SubjectWithStats>> {
   try {
-    // Get subjects with chapter counts
-    const { data: subjects, error: subjectsError } = await supabase
-      .from('subjects')
-      .select(`
-        *,
-        chapters:chapters(count)
-      `)
-      .order('name', { ascending: true });
+    // Run all 3 queries in parallel for maximum speed
+    const [subjectsResult, questionsResult, chaptersResult] = await Promise.all([
+      // Query 1: Get all subjects with chapter counts
+      supabase
+        .from('subjects')
+        .select(`
+          *,
+          chapters:chapters(count)
+        `)
+        .order('name', { ascending: true }),
 
-    if (subjectsError) {
-      return { data: null, error: subjectsError };
+      // Query 2: Get question counts grouped by subject_id
+      supabase
+        .from('questions')
+        .select('subject_id'),
+
+      // Query 3: Get all chapters (for paper info)
+      supabase
+        .from('chapters')
+        .select('subject_id, name'),
+    ]);
+
+    if (subjectsResult.error) {
+      return { data: null, error: subjectsResult.error };
     }
 
-    if (!subjects) {
+    if (!subjectsResult.data) {
       return { data: [], error: null };
     }
 
-    // For each subject, get question count and available papers
-    const subjectsWithStats = await Promise.all(
-      subjects.map(async (subject: any) => {
-        // Get question count
-        const { count: questionCount } = await supabase
-          .from('questions')
-          .select('*', { count: 'exact', head: true })
-          .eq('subject_id', subject.id);
+    // Build question count map from raw data
+    const questionCountMap: Record<string, number> = {};
+    if (questionsResult.data) {
+      for (const q of questionsResult.data) {
+        questionCountMap[q.subject_id] = (questionCountMap[q.subject_id] || 0) + 1;
+      }
+    }
 
-        // Get available papers for this subject
-        const { data: papers } = await supabase
-          .from('chapters')
-          .select('name')
-          .eq('subject_id', subject.id);
+    // Build papers map from raw data
+    const papersMap: Record<string, Set<string>> = {};
+    if (chaptersResult.data) {
+      for (const c of chaptersResult.data) {
+        if (!papersMap[c.subject_id]) {
+          papersMap[c.subject_id] = new Set();
+        }
+        papersMap[c.subject_id].add(c.name);
+      }
+    }
 
-        const uniquePapers = papers
-          ? [...new Set(papers.map(p => p.name as 'Paper 1' | 'Paper 2'))]
-          : [];
-
-        return {
-          ...subject,
-          question_count: questionCount || 0,
-          chapter_count: subject.chapters?.[0]?.count || 0,
-          papers: uniquePapers,
-        };
-      })
-    );
+    // Map subjects with pre-computed stats (no additional queries!)
+    const subjectsWithStats: SubjectWithStats[] = subjectsResult.data.map((subject: any) => ({
+      ...subject,
+      question_count: questionCountMap[subject.id] || 0,
+      chapter_count: subject.chapters?.[0]?.count || 0,
+      papers: papersMap[subject.id]
+        ? [...papersMap[subject.id]] as ('Paper 1' | 'Paper 2')[]
+        : [],
+    }));
 
     return { data: subjectsWithStats, error: null };
   } catch (error) {

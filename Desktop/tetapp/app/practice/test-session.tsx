@@ -719,20 +719,6 @@ export default function TestSession() {
 
               <QuestionStats stats={questionStats} />
 
-              {/* Submit Test Button */}
-              <TouchableOpacity
-                onPress={handleFinishTest}
-                className="mt-4 rounded-xl overflow-hidden"
-                style={{ backgroundColor: '#4A7BA7' }}
-                activeOpacity={1}
-              >
-                <View className="py-3 px-6">
-                  <Text className="text-white text-center text-base font-bold">
-                    Submit Test
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
               {/* Font Size Adjustment */}
               <View className="mt-4">
                 <View className="flex-row justify-center items-center gap-3">
@@ -780,6 +766,20 @@ export default function TestSession() {
                 </View>
               </View>
               </View>
+
+              {/* Submit Test Button */}
+              <TouchableOpacity
+                onPress={handleFinishTest}
+                className="rounded-xl overflow-hidden mb-6"
+                style={{ backgroundColor: '#4A7BA7' }}
+                activeOpacity={0.8}
+              >
+                <View className="py-4 px-6">
+                  <Text className="text-white text-center text-lg font-bold">
+                    Submit Test
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </Animated.View>

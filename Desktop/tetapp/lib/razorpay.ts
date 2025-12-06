@@ -162,7 +162,8 @@ export async function verifyRazorpayPayment(
 export function getRazorpayCheckoutOptions(
   order: RazorpayOrder,
   userEmail?: string,
-  userName?: string
+  userName?: string,
+  userPhone?: string
 ): {
   key: string;
   amount: number;
@@ -173,6 +174,7 @@ export function getRazorpayCheckoutOptions(
   prefill: {
     email?: string;
     name?: string;
+    contact?: string;
   };
   theme: {
     color: string;
@@ -188,6 +190,7 @@ export function getRazorpayCheckoutOptions(
     prefill: {
       email: userEmail,
       name: userName,
+      contact: userPhone,
     },
     theme: {
       color: '#3b82f6', // Blue theme matching app
@@ -201,9 +204,10 @@ export function getRazorpayCheckoutOptions(
 export function generateRazorpayCheckoutHTML(
   order: RazorpayOrder,
   userEmail?: string,
-  userName?: string
+  userName?: string,
+  userPhone?: string
 ): string {
-  const options = getRazorpayCheckoutOptions(order, userEmail, userName);
+  const options = getRazorpayCheckoutOptions(order, userEmail, userName, userPhone);
 
   return `
 <!DOCTYPE html>

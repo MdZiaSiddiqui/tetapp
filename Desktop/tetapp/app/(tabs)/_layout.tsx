@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../lib/auth-context';
 
 export default function TabLayout() {
-  const { user, loading } = useAuth();
+  const { user, loading, isGuest } = useAuth();
 
   // Show loading spinner while checking auth
   if (loading) {
@@ -15,8 +15,8 @@ export default function TabLayout() {
     );
   }
 
-  // Redirect to login if not authenticated
-  if (!user) {
+  // Redirect to login if not authenticated (user OR guest)
+  if (!user && !isGuest) {
     return <Redirect href="/login" />;
   }
 

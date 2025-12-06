@@ -89,6 +89,7 @@ export interface UserProfile {
   email: string;
   full_name?: string;
   avatar_url?: string;
+  phone?: string; // User's phone number with country code (e.g., +919876543210)
 
   // Subscription tier management (legacy)
   tier: 'free' | 'pro';
@@ -104,6 +105,10 @@ export interface UserProfile {
   pro_expires_at?: string;
   razorpay_payment_id?: string;
   razorpay_order_id?: string;
+
+  // Separate paper expiry dates
+  paper1_expires_at?: string;
+  paper2_expires_at?: string;
 
   // OAuth provider info
   provider?: string;
@@ -165,6 +170,11 @@ export interface UserProStatus {
   pro_expires_at?: string;
   pro_status?: 'active' | 'expired' | 'inactive' | null;
   days_remaining?: number | null;
+  // Separate paper expiry dates
+  paper1_expires_at?: string;
+  paper2_expires_at?: string;
+  paper1_days_remaining?: number | null;
+  paper2_days_remaining?: number | null;
   razorpay_payment_id?: string;
   created_at: string;
   updated_at: string;

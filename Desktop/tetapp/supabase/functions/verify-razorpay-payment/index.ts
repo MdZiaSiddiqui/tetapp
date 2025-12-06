@@ -147,6 +147,42 @@ serve(async (req) => {
       )
     }
 
+    // Step 4b: Check if already captured (idempotency)
+    // This handles cases where webhook already processed the payment
+    if (paymentRecord.status === 'captured') {
+      console.log('Payment already captured (likely via webhook), returning success')
+
+      // Fetch updated user profile
+      const { data: userProfile } = await supabaseClient
+        .from('user_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Payment already verified and pro access granted',
+          user: userProfile,
+          payment: {
+            id: paymentRecord.payment_id || razorpay_payment_id,
+            order_id: razorpay_order_id,
+            tier: paymentRecord.tier,
+            package_type: paymentRecord.package_type,
+            amount: paymentRecord.amount,
+            status: 'captured',
+          },
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      )
+    }
+
     // Step 5: Validate amount
     if (paymentData.amount !== paymentRecord.amount) {
       console.error('Payment amount mismatch')

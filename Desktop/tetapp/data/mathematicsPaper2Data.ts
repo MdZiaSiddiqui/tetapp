@@ -69,18 +69,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Check if the triangle is a right-angled triangle using the Pythagorean theorem ($a^2 + b^2 = c^2$).\nLet $a=7$, $b=24$, and $c=25$.\n$a^2 + b^2 = 7^2 + 24^2 = 49 + 576 = 625$.\n$c^2 = 25^2 = 625$.\nSince $a^2 + b^2 = c^2$, the triangle is a right-angled triangle, with the hypotenuse being the longest side (25m).\n\nStep 2: Calculate the area of the triangle.\nFor a right-angled triangle, the area can be calculated using the two shorter sides as the base and height.\nArea = $\\frac{1}{2} \\times \\text{base} \\times \\text{height} = \\frac{1}{2} \\times 7 \\times 24 = 84$ square meters.\n\nStep 3: Find the altitude to the smallest side.\nThe smallest side is 7m. Let's consider this side as the new base and let 'h' be the altitude to this base.\nThe area of the triangle can also be expressed as:\nArea = $\\frac{1}{2} \\times \\text{smallest side} \\times \\text{altitude}$\n$84 = \\frac{1}{2} \\times 7 \\times h$\n\nStep 4: Solve for 'h'.\nIn this specific case, because it's a right-angled triangle, the altitude to the base '7m' is the other perpendicular side, which is '24m'.\nLet's verify with the formula:\n$84 = \\frac{7h}{2}$\n$168 = 7h$\n$h = \\frac{168}{7} = 24$ meters.\n\nTherefore, the length of the altitude to the smallest side is 24m."
   },
   {
-    "id": 6,
-    "question": "Choose a progression from the following which is NOT a geometric progression. (TSTET 22 May 2024)",
-    "options": [
-      "$\\frac{5}{2}, \\frac{5}{4}, \\frac{5}{8}, \\frac{5}{16}, ...$",
-      "$2, -6, 18, -54, ...$",
-      "$\\frac{1}{\\sqrt{2}}, -2, 4\\sqrt{2}, -8, ...$",
-      "$4, 8, \\frac{8}{25}, ...$"
-    ],
-    "correctAnswer": 3,
-    "explanation": "A geometric progression (GP) is a sequence of numbers where each term after the first is found by multiplying the previous one by a fixed, non-zero number called the common ratio (r).\n\n1. Sequence: $\\frac{5}{2}, \\frac{5}{4}, \\frac{5}{8}, \\frac{5}{16}, ...$\n   - Ratio: $\\frac{5/4}{5/2} = \\frac{1}{2}$; $\\frac{5/8}{5/4} = \\frac{1}{2}$. The common ratio is $\\frac{1}{2}$. This is a GP.\n\n2. Sequence: $2, -6, 18, -54, ...$\n   - Ratio: $\\frac{-6}{2} = -3$; $\\frac{18}{-6} = -3$. The common ratio is -3. This is a GP.\n\n3. Sequence: $\\frac{1}{\\sqrt{2}}, -2, 4\\sqrt{2}, -8, ...$\n   - Ratio 1: $\\frac{-2}{1/\\sqrt{2}} = -2\\sqrt{2}$.\n   - Ratio 2: $\\frac{4\\sqrt{2}}{-2} = -2\\sqrt{2}$.\n   - Ratio 3: $\\frac{-8}{4\\sqrt{2}} = \\frac{-2}{\\sqrt{2}} = -\\sqrt{2}$.\n   - Since the ratio between consecutive terms is not constant ($-2\\sqrt{2} \\neq -\\sqrt{2}$), this is NOT a GP. The term -8 should have been -16 for it to be a GP.\n\n4. Sequence: $4, 8, \\frac{8}{25}, ...$\n   - Ratio 1: $\\frac{8}{4} = 2$.\n   - Ratio 2: $\\frac{8/25}{8} = \\frac{1}{25}$.\n   - Since the ratios are not constant, this is also NOT a GP.\n\nNote: Both options 3 and 4 are not geometric progressions. This indicates a potential error in the question itself. However, based on the provided answer key, option 4 is marked as correct."
-  },
-  {
     "id": 7,
     "question": "Choose a correct statement related to straight lines from the following. (TSTET 22 May 2024)",
     "options": [
@@ -139,18 +127,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 1,
     "explanation": "To compare surds, we need to make their orders (the root index) the same.\n\nThe given surds are $\\sqrt[3]{4}, \\sqrt[12]{140}, \\sqrt[6]{14}$.\n\nStep 1: Find the Least Common Multiple (LCM) of the orders.\n- The orders are 3, 12, and 6.\n- LCM(3, 12, 6) = 12.\n\nStep 2: Convert each surd to an equivalent surd with an order of 12.\n- For $\\sqrt[3]{4}$: To change the order from 3 to 12, we multiply by 4. We must raise the number inside the root to the power of 4.\n  $\\sqrt[3]{4} = \\sqrt[3 \\times 4]{4^4} = \\sqrt[12]{256}$\n\n- For $\\sqrt[12]{140}$: The order is already 12, so it remains unchanged.\n  $\\sqrt[12]{140}$\n\n- For $\\sqrt[6]{14}$: To change the order from 6 to 12, we multiply by 2. We must raise the number inside the root to the power of 2.\n  $\\sqrt[6]{14} = \\sqrt[6 \\times 2]{14^2} = \\sqrt[12]{196}$\n\nStep 3: Compare the numbers inside the 12th root.\n- We are now comparing $\\sqrt[12]{256}$, $\\sqrt[12]{140}$, and $\\sqrt[12]{196}$.\n- Comparing the radicands (the numbers inside the root): $140 < 196 < 256$.\n\nStep 4: Arrange the original surds in ascending order based on the comparison.\n- Since $140 < 196 < 256$, it follows that $\\sqrt[12]{140} < \\sqrt[12]{196} < \\sqrt[12]{256}$.\n- Substituting the original surds back, the ascending order is: $\\sqrt[12]{140}, \\sqrt[6]{14}, \\sqrt[3]{4}$."
-  },
-  {
-    "id": 12,
-    "question": "If the polynomials $x^3+ax^2-14$ and $2x^3-5x+a$ are divided by $(x-2)$ leaves the same remainder, then the value of 'a' is (TSTET 22 May 2024)",
-    "options": [
-      "1",
-      "3",
-      "-3",
-      "-4"
-    ],
-    "correctAnswer": 1,
-    "explanation": "According to the Remainder Theorem, if a polynomial $P(x)$ is divided by $(x-c)$, the remainder is $P(c)$.\n\nStep 1: Define the polynomials and the divisor.\n- Let $P(x) = x^3 + ax^2 - 14$\n- Let $Q(x) = 2x^3 - 5x + a$\n- The divisor is $(x-2)$, so $c = 2$.\n\nStep 2: Find the remainder for each polynomial when divided by $(x-2)$.\n- The remainder for $P(x)$ is $P(2)$.\n  $P(2) = (2)^3 + a(2)^2 - 14 = 8 + 4a - 14 = 4a - 6$.\n- The remainder for $Q(x)$ is $Q(2)$.\n  $Q(2) = 2(2)^3 - 5(2) + a = 2(8) - 10 + a = 16 - 10 + a = 6 + a$.\n\nStep 3: Set the remainders equal to each other as given in the question.\n$P(2) = Q(2)$\n$4a - 6 = 6 + a$\n\nStep 4: Solve for 'a'.\n$4a - a = 6 + 6$\n$3a = 12$\n$a = 4$\n\nNote: The calculated value $a=4$ is not among the given options, and the provided answer key marks '3' as the correct answer. This indicates a significant error in the question or the provided options in the original exam paper. Based on the problem as written, the correct answer should be 4."
   },
   {
     "id": 13,
@@ -355,18 +331,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "The primary goal of assessment and feedback is to improve future learning. Let's analyze the options from this perspective:\n\n- **Recognize their mistakes and ignoring them:** Recognizing mistakes without taking corrective action does not lead to improvement.\n- **Tallying the total marks awarded only:** Focusing solely on the score is a performance-oriented approach, not a learning-oriented one. It doesn't help in understanding what went wrong or how to improve.\n- **Answer scripts should be hidden from parents:** This is an unproductive and often dishonest action that avoids accountability and the opportunity for support.\n- **Understanding their mistakes and correcting them for improvement:** This is the most desirable action. By analyzing their errors, students can identify gaps in their understanding, learn the correct concepts or procedures, and apply this knowledge in the future. This process of reflection and correction is fundamental to learning and improvement."
-  },
-  {
-    "id": "31",
-    "question": "A painter wants to paint a building of height 6m. He needs to reach 1.2m below the top of the building to paint. The ladder makes an angle of 30° with the ground. then the length of the ladder (in meters) is (TSTET 22 May 2024)",
-    "options": [
-      "12",
-      "4.8√3",
-      "1.6√3",
-      "9.6"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Step 1: Determine the vertical height the ladder needs to reach. The total height of the building is 6 m, and the painter needs to be 1.2 m below the top. So, the height (opposite side of the right triangle) is $6 - 1.2 = 4.8$ m.\n\nStep 2: Identify the trigonometric relationship. The ladder's length is the hypotenuse, and the height it reaches is the opposite side relative to the angle with the ground. The sine function relates these: $sin(\\theta) = \\frac{Opposite}{Hypotenuse}$.\n\nStep 3: Substitute the known values. We are given $\\theta = 30^{\\circ}$ and the opposite side is 4.8 m. Let 'L' be the length of the ladder.\n$sin(30^{\\circ}) = \\frac{4.8}{L}$\n\nStep 4: Solve for L. We know that $sin(30^{\\circ}) = 0.5$ or $\\frac{1}{2}$.\n$\\frac{1}{2} = \\frac{4.8}{L}$\n$L = 4.8 \\times 2 = 9.6$ m.\n\nNote: The provided source document incorrectly marks 12 (Option 1) as the correct answer. The correct mathematical answer is 9.6."
   },
   {
     "id": "32",
@@ -753,18 +717,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Convert all measurements to a single unit (meters).\nRoom Length = 4 m.\nRoom Width = 3 m 60 cm = 3.6 m.\nTile Side = 0.3 m.\n\nStep 2: Calculate the area of the room floor.\nArea of Room = Length × Width\nArea of Room = 4 m × 3.6 m = 14.4 m².\n\nStep 3: Calculate the area of a single tile.\nArea of Tile = Side × Side\nArea of Tile = 0.3 m × 0.3 m = 0.09 m².\n\nStep 4: Calculate the number of tiles required.\nNumber of Tiles = $\\frac{Area \\, of \\, Room}{Area \\, of \\, Tile}$\nNumber of Tiles = $\\frac{14.4}{0.09} = \\frac{1440}{9} = 160$.\nSo, 160 tiles are required."
   },
   {
-    "id": "64",
-    "question": "$12\\sqrt[3]{512} - 5\\sqrt[4]{625} + 2\\sqrt{289} - 15\\sqrt[2]{216}=$ (TSTET 21 May 2024)",
-    "options": [
-      "-3",
-      "6",
-      "9",
-      "15"
-    ],
-    "correctAnswer": 1,
-    "explanation": "There appears to be an error in the question or the provided answer key. Let's assume the last term is a typo and should be the cube root of 216, as 216 is a perfect cube ($6^3$) and not a perfect square.\n\nStep 1: Assuming the intended question is $12\\sqrt[3]{512} - 5\\sqrt[4]{625} + 2\\sqrt{289} - 15\\sqrt[3]{216}$.\n\nStep 2: Calculate the value of each root.\n$\\sqrt[3]{512} = 8$ (since $8^3 = 512$)\n$\\sqrt[4]{625} = 5$ (since $5^4 = 625$)\n$\\sqrt{289} = 17$ (since $17^2 = 289$)\n$\\sqrt[3]{216} = 6$ (since $6^3 = 216$)\n\nStep 3: Substitute these values back into the expression.\n$12(8) - 5(5) + 2(17) - 15(6)$\n$= 96 - 25 + 34 - 90$\n\nStep 4: Perform the addition and subtraction.\n$= (96 + 34) - (25 + 90)$\n$= 130 - 115 = 15$.\n\nNote: The correct mathematical answer, based on the most likely typo, is 15. However, the answer key provided in the source document marks 6 as the correct answer. It is not possible to arrive at the answer 6 from the given expression."
-  },
-  {
     "id": "65",
     "question": "If the coordinates of a centre of a circle are (3, 2) and the coordinates of one end of a diameter are (-5,6), then the coordinates of the other end of the diameter are (TSTET 21 May 2024)",
     "options": [
@@ -775,18 +727,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 0,
     "explanation": "Step 1: Recall the midpoint formula.\nThe center of a circle is the midpoint of any of its diameters. The midpoint $(x_m, y_m)$ of a line segment with endpoints $(x_1, y_1)$ and $(x_2, y_2)$ is given by:\n$x_m = \\frac{x_1 + x_2}{2}$ and $y_m = \\frac{y_1 + y_2}{2}$.\n\nStep 2: Assign the given coordinates.\nCenter $(x_m, y_m) = (3, 2)$.\nOne end of the diameter $(x_1, y_1) = (-5, 6)$.\nLet the other end of the diameter be $(x_2, y_2)$.\n\nStep 3: Solve for the x-coordinate of the other end ($x_2$).\n$3 = \\frac{-5 + x_2}{2}$\n$6 = -5 + x_2$\n$x_2 = 6 + 5 = 11$.\n\nStep 4: Solve for the y-coordinate of the other end ($y_2$).\n$2 = \\frac{6 + y_2}{2}$\n$4 = 6 + y_2$\n$y_2 = 4 - 6 = -2$.\n\nThus, the coordinates of the other end of the diameter are (11, -2)."
-  },
-  {
-    "id": "66",
-    "question": "A sum of ₹4500 is to be given in the form of 81 prizes. If the prize money is either ₹75 or ₹30, then the number of ₹75 prizes is (TSTET 21 May 2024)",
-    "options": [
-      "36",
-      "46",
-      "35",
-      "45"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Step 1: Set up the variables.\nLet 'x' be the number of prizes worth ₹75.\nLet 'y' be the number of prizes worth ₹30.\n\nStep 2: Formulate the equations based on the given information.\nEquation 1 (Total number of prizes): $x + y = 81$\nEquation 2 (Total value of prizes): $75x + 30y = 4500$\n\nStep 3: Solve the system of equations.\nFrom Equation 1, we can write $y = 81 - x$.\nSubstitute this into Equation 2:\n$75x + 30(81 - x) = 4500$\n$75x + 2430 - 30x = 4500$\n$45x = 4500 - 2430$\n$45x = 2070$\n\nStep 4: Solve for x.\n$x = \\frac{2070}{45} = 46$.\n\nStep 5: Verify the answer.\nIf there are 46 prizes of ₹75, there must be $81 - 46 = 35$ prizes of ₹30.\nTotal value = $(46 \\times 75) + (35 \\times 30) = 3450 + 1050 = 4500$. This matches the given total sum.\nThe number of ₹75 prizes is 46.\n\nNote: The correct mathematical answer is 46. The answer key provided in the source document marks 45 as the correct answer, which results in a total prize value of $45 \\times 75 + 36 \\times 30 = 3375 + 1080 = ₹4455$, not ₹4500."
   },
   {
     "id": "67",
@@ -1089,30 +1029,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "To convert the repeating decimal to a fraction, follow these steps:\n\nStep 1: Let the number be N.\n$N = 0.7\\overline{32} = 0.7323232...$\n\nStep 2: Multiply N by 10 to move the non-repeating part to the left of the decimal.\n$10N = 7.323232...$\n\nStep 3: Multiply N by 1000 (10 for the non-repeating part, 100 for the two repeating digits) to move one full repeating block to the left of the decimal.\n$1000N = 732.323232...$\n\nStep 4: Subtract the equation from Step 2 from the equation in Step 3 to eliminate the repeating part.\n$1000N - 10N = 732.3232... - 7.3232...$\n$990N = 725$\n\nStep 5: Solve for N to get the fraction.\n$N = \\frac{725}{990}$\n\nStep 6: Simplify the fraction to its simplest form by dividing the numerator and denominator by their greatest common divisor, which is 5.\n$x = 725 \\div 5 = 145$\n$y = 990 \\div 5 = 198$\nSo, the simplest fractional form is $\\frac{145}{198}$.\n\nStep 7: Calculate the value of $y - x$.\n$y - x = 198 - 145 = 53$."
   },
   {
-    "id": 92,
-    "question": "If $sin(A+4B)=1$ and $cos(A+2B)=\\frac{1}{2}$, where $A>B$ and A, B are acute angles, then the value of angle A is (TSTET 21 May 2024)",
-    "options": [
-      "$15^{\\circ}$",
-      "$30^{\\circ}$",
-      "$45^{\\circ}$",
-      "$60^{\\circ}$"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Solve the first trigonometric equation.\nGiven $sin(A+4B)=1$. Since A and B are acute angles, the angle whose sine is 1 is $90^{\\circ}$.\nTherefore, $A + 4B = 90^{\\circ}$  ---(Equation 1)\n\nStep 2: Solve the second trigonometric equation.\nGiven $cos(A+2B)=\\frac{1}{2}$. The acute angle whose cosine is $\\frac{1}{2}$ is $60^{\\circ}$.\nTherefore, $A + 2B = 60^{\\circ}$  ---(Equation 2)\n\nStep 3: Solve the system of linear equations.\nSubtract Equation 2 from Equation 1:\n$(A + 4B) - (A + 2B) = 90^{\\circ} - 60^{\\circ}$\n$2B = 30^{\\circ}$\n$B = 15^{\\circ}$\n\nStep 4: Substitute the value of B back into Equation 2 to find A.\n$A + 2(15^{\\circ}) = 60^{\\circ}$\n$A + 30^{\\circ} = 60^{\\circ}$\n$A = 30^{\\circ}$\n\nNote: The provided answer key marks $45^{\\circ}$ as correct, which is mathematically incorrect based on the given equations. The correct answer derived from the problem is $30^{\\circ}$."
-  },
-  {
-    "id": 93,
-    "question": "A circular flower bed is surrounded by a path with a uniform width and the area of the path is $263.76m^{2}$. The diameter of the flower bed is 8 meters, then the width of the path (in meters) is (Take $\\pi=3.14$) (TSTET 21 May 2024)",
-    "options": [
-      "6",
-      "8",
-      "4",
-      "2"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Step 1: Determine the radius of the inner flower bed.\nThe diameter of the flower bed is 8 meters.\nRadius (r) = Diameter / 2 = $8 / 2 = 4$ meters.\n\nStep 2: Set up the formula for the area of the path.\nLet the width of the path be 'w'.\nThe outer radius (R) of the path and flower bed together is $R = r + w = 4 + w$.\nThe area of the path is the area of the outer circle minus the area of the inner circle.\nArea of Path = $\\pi R^2 - \\pi r^2 = \\pi (R^2 - r^2)$\n\nStep 3: Substitute the known values and solve for the outer radius R.\nGiven Area of Path = $263.76 m^2$ and $\\pi = 3.14$.\n$263.76 = 3.14 (R^2 - 4^2)$\n$\\frac{263.76}{3.14} = R^2 - 16$\n$84 = R^2 - 16$\n$R^2 = 84 + 16 = 100$\n$R = \\sqrt{100} = 10$ meters.\n\nStep 4: Calculate the width of the path.\nWidth (w) = Outer Radius (R) - Inner Radius (r)\n$w = 10 - 4 = 6$ meters.\n\nNote: The provided answer key marks 4m as correct, which is mathematically incorrect. The correct width derived from the problem's data is 6m."
-  },
-  {
     "id": 94,
     "question": "Choose the measurements from the following with which a triangle can be constructed. (TSTET 21 May 2024)",
     "options": [
@@ -1231,30 +1147,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 1,
     "explanation": "To find the number to be subtracted, we need to find the largest perfect square less than 7776. We can do this using the long division method to find the square root.\n\nStep 1: Pair the digits from the right: 77 76.\n\nStep 2: Find the largest number whose square is less than or equal to the first pair (77). This is 8, since $8^2 = 64$.\nWrite 8 as the divisor and quotient.\n$77 - 64 = 13$. Bring down the next pair (76) to make the new dividend 1376.\n\nStep 3: Double the quotient (8) to get 16. This forms the new divisor's tens place. We need to find a digit 'x' such that 16x × x is less than or equal to 1376.\nTry $x=8$: $168 \\times 8 = 1344$.\nThis is the closest value.\n\nStep 4: The remainder is $1376 - 1344 = 32$.\nThis remainder is the amount by which 7776 exceeds the perfect square $88^2$ (which is 7744).\nTherefore, the least number to be subtracted from 7776 to make it a perfect square is 32."
-  },
-  {
-    "id": 104,
-    "question": "$\\frac{(64)^{\\frac{2n}{2}}\\times(27)^{\\frac{n}{6}}}{(48)^{\\frac{n}{2}}}=$ (TSTET 21 May 2024)",
-    "options": [
-      "$2^{n}$",
-      "$2^{2n}$",
-      "$3^{n}$",
-      "$6^{2n}$"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Simplify the expression by first writing the base numbers as powers of their prime factors.\n* $64 = 2^6$\n* $27 = 3^3$\n* $48 = 16 \\times 3 = 2^4 \\times 3$\n\nStep 2: Substitute these into the expression and simplify the exponents.\nNote the first exponent: $\\frac{2n}{2} = n$.\nThe expression becomes: $\\frac{(2^6)^{n} \\times (3^3)^{\\frac{n}{6}}}{(2^4 \\times 3)^{\\frac{n}{2}}}$\n\nStep 3: Apply the power of a power rule $(a^m)^k = a^{mk}$ to each term.\n* Numerator: $(2^{6n}) \\times (3^{3 \\cdot \\frac{n}{6}}) = 2^{6n} \\times 3^{\\frac{n}{2}}$\n* Denominator: $(2^{4 \\cdot \\frac{n}{2}}) \\times (3^{1 \\cdot \\frac{n}{2}}) = 2^{2n} \\times 3^{\\frac{n}{2}}$\n\nStep 4: Combine the terms.\nThe expression is now $\\frac{2^{6n} \\times 3^{\\frac{n}{2}}}{2^{2n} \\times 3^{\\frac{n}{2}}}$.\n\nStep 5: Cancel the common term $3^{\\frac{n}{2}}$ and apply the quotient rule for exponents $\\frac{a^m}{a^k} = a^{m-k}$.\n$= \\frac{2^{6n}}{2^{2n}} = 2^{6n-2n} = 2^{4n}$\n\nNote: The calculation results in $2^{4n}$. However, the provided answer key marks $2^{2n}$ as correct. This implies a probable typo in the question, where the base was intended to be 16 instead of 64. If the base were 16, the calculation would be $\\frac{(16)^n...}{(48)^{n/2}} = \\frac{(2^4)^n...}{(2^{2n} \\times 3^{n/2})} = \\frac{2^{4n}...}{2^{2n}...} = 2^{2n}$. Based on the provided text, the answer is $2^{4n}$."
-  },
-  {
-    "id": 105,
-    "question": "A cinema theater has 200 tickets which are numbered from 1 to 200. If one ticket is selected at randomly from them, then the probability that it bears a 3-digit number which is divisible by 6 is (TSTET 21 May 2024)",
-    "options": [
-      "$\\frac{33}{200}$",
-      "$\\frac{2}{25}$",
-      "$\\frac{17}{200}$",
-      "$\\frac{16}{101}$"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Step 1: Identify the total number of possible outcomes.\nThe total number of tickets is 200. So, Total Outcomes = 200.\n\nStep 2: Identify the favorable outcomes.\nWe need to find the number of 3-digit numbers (from 100 to 200) that are divisible by 6.\n* First 3-digit multiple of 6: Divide 100 by 6, which gives 16 with a remainder. The next integer is 17. So, $17 \\times 6 = 102$ is the first number.\n* Last multiple of 6 up to 200: Divide 200 by 6, which gives 33 with a remainder. So, $33 \\times 6 = 198$ is the last number.\n\nStep 3: Count the number of favorable outcomes.\nThe favorable numbers form an arithmetic sequence: 102, 108, ..., 198. We can count them using the formula: Count = $(\\frac{\\text{Last Term} - \\text{First Term}}{\\text{Common Difference}}) + 1$\nNumber of terms = $(\\frac{198 - 102}{6}) + 1 = (\\frac{96}{6}) + 1 = 16 + 1 = 17$.\nSo, there are 17 favorable outcomes.\n\nStep 4: Calculate the probability.\nProbability = $\\frac{\\text{Favorable Outcomes}}{\\text{Total Outcomes}} = \\frac{17}{200}$.\n\nNote: The derived answer is $\\frac{17}{200}$ (Option 3). The provided answer key marks $\\frac{2}{25}$ (which equals $\\frac{16}{200}$) as correct, suggesting a possible miscalculation in the source material."
   },
   {
     "id": 106,
@@ -1857,30 +1749,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: List the elements of set P.\nThe integers 'n' range from -4 to 4: {-4, -3, -2, -1, 0, 1, 2, 3, 4}.\nCalculate $x = 3n^2 - 1$ for each value of n:\nFor n = 0, $x = 3(0)^2 - 1 = -1$.\nFor n = ±1, $x = 3(1)^2 - 1 = 2$.\nFor n = ±2, $x = 3(2)^2 - 1 = 11$.\nFor n = ±3, $x = 3(3)^2 - 1 = 26$.\nFor n = ±4, $x = 3(4)^2 - 1 = 47$.\nSo, P = {-1, 2, 11, 26, 47}.\n\nStep 2: List the elements of set Q.\nQ contains prime numbers between 1 and 20.\nSo, Q = {2, 3, 5, 7, 11, 13, 17, 19}.\n\nStep 3: Find the intersection of P and Q, which contains elements common to both sets.\n$P \\cap Q = \\{2, 11\\}$.\n\nStep 4: Find the number of elements in the intersection, $n(P \\cap Q)$.\nThere are 2 elements in the intersection set.\nTherefore, $n(P \\cap Q) = 2$."
   },
   {
-    "id": "156",
-    "question": "If the pair of linear equations $x-ky=8$ and $(2k+1)x-3y=16$ are inconsistent, then the value of k is: (TSTET 20 May 2024)",
-    "options": [
-      "1",
-      "3/2",
-      "-1",
-      "3"
-    ],
-    "correctAnswer": 1,
-    "explanation": "For a pair of linear equations $a_1x + b_1y = c_1$ and $a_2x + b_2y = c_2$ to be inconsistent (parallel lines), the condition is:\n$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} \\neq \\frac{c_1}{c_2}$\n\nStep 1: Identify the coefficients from the given equations.\nFrom $x - ky = 8$: $a_1 = 1, b_1 = -k, c_1 = 8$.\nFrom $(2k+1)x - 3y = 16$: $a_2 = 2k+1, b_2 = -3, c_2 = 16$.\n\nStep 2: Apply the first part of the condition for inconsistency.\n$\\frac{a_1}{a_2} = \\frac{b_1}{b_2} \\implies \\frac{1}{2k+1} = \\frac{-k}{-3}$\n$3 = k(2k+1)$\n$3 = 2k^2 + k$\n$2k^2 + k - 3 = 0$\n\nStep 3: Solve the quadratic equation for k.\n$2k^2 + 3k - 2k - 3 = 0$\n$k(2k+3) - 1(2k+3) = 0$\n$(k-1)(2k+3) = 0$\nThis gives two possible values for k: $k = 1$ or $k = -\\frac{3}{2}$.\n\nStep 4: Apply the second part of the condition.\n$\\frac{b_1}{b_2} \\neq \\frac{c_1}{c_2} \\implies \\frac{-k}{-3} \\neq \\frac{8}{16}$\n$\\frac{k}{3} \\neq \\frac{1}{2} \\implies 2k \\neq 3 \\implies k \\neq \\frac{3}{2}$.\n\nStep 5: Check which values of k from Step 3 satisfy the condition from Step 4.\nBoth $k=1$ and $k=-3/2$ satisfy the condition $k \\neq 3/2$. Since 1 is one of the options, it is a correct answer.\n\nNote: The provided answer key marks 3/2 as the correct answer. This is mathematically incorrect. The value $k=3/2$ specifically violates the condition for inconsistency. There appears to be an error in the official answer key."
-  },
-  {
-    "id": "157",
-    "question": "$(64)^{-1}\\times2^{9}\\times(81)^{3/4}\\times(\\sqrt[2]{2})^{6}\\times(27)^{-1}=$ (TSTET 20 May 2024)",
-    "options": [
-      "108",
-      "64",
-      "32",
-      "54"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Step 1: Express each term in the expression as a power of its prime factors.\n$64 = 2^6$\n$81 = 3^4$\n$\\sqrt[2]{2} = 2^{1/2}$\n$27 = 3^3$\n\nStep 2: Substitute these into the expression.\n$(2^6)^{-1} \\times 2^9 \\times (3^4)^{3/4} \\times (2^{1/2})^{6} \\times (3^3)^{-1}$\n\nStep 3: Simplify the exponents using the rule $(a^m)^n = a^{mn}$.\n$2^{-6} \\times 2^9 \\times 3^{4 \\times 3/4} \\times 2^{1/2 \\times 6} \\times 3^{-3}$\n$2^{-6} \\times 2^9 \\times 3^3 \\times 2^3 \\times 3^{-3}$\n\nStep 4: Group the terms with the same base and add their exponents using the rule $a^m \\times a^n = a^{m+n}$.\n$(2^{-6} \\times 2^9 \\times 2^3) \\times (3^3 \\times 3^{-3})$\n$2^{-6+9+3} \\times 3^{3-3}$\n$2^6 \\times 3^0$\n\nStep 5: Calculate the final value.\n$64 \\times 1 = 64$.\n\nNote: The provided answer key marks 32 as correct. However, the mathematical calculation correctly yields 64. There is an error in the official answer key."
-  },
-  {
     "id": "158",
     "question": "A letter is chosen randomly from English alphabet, then the probability of selecting a letter that comes before the letter I is: (TSTET 20 May 2024)",
     "options": [
@@ -1975,18 +1843,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "Let's analyze each statement:\n- **Statement A:** If B is a subset of A ($B \\subset A$), the union of A and B ($A \\cup B$) contains all elements from both sets. Since all elements of B are already in A, their union is simply set A. This statement is **correct**.\n- **Statement B:** Disjoint sets are sets that have no elements in common. The intersection of two disjoint sets ($A \\cap B$) is therefore the empty set ($\emptyset$). This statement is **correct**.\n- **Statement C:** First, let's define set X. X = {2, 4, 6, 8, 10}. The statement claims that the set {2, 4, 6, 8, 10} is an *element* of X (indicated by the symbol $\\in$). This is false. The set {2, 4, 6, 8, 10} is *equal* to X, it is not an element within X. The elements of X are the numbers 2, 4, 6, 8, and 10. Therefore, this statement is **incorrect**.\n- **Statement D:** The Telugu Varnamala (alphabet) has a specific, countable number of letters. A set with a countable number of elements is a finite set. This statement is **correct**.\n\nThe incorrect statement is C."
-  },
-  {
-    "id": "166",
-    "question": "The points (1,7), (4, 2), (-1,-1)and(-4, 4) taken in order form the vertices of a: (TSTET 20 May 2024)",
-    "options": [
-      "Rhombus",
-      "Square",
-      "Rectangle",
-      "Parallelogram"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Let the points be A(1,7), B(4,2), C(-1,-1), and D(-4,4). We will use the distance formula $d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$.\n\nStep 1: Calculate the lengths of the four sides.\n$AB = \\sqrt{(4-1)^2 + (2-7)^2} = \\sqrt{3^2 + (-5)^2} = \\sqrt{9+25} = \\sqrt{34}$.\n$BC = \\sqrt{(-1-4)^2 + (-1-2)^2} = \\sqrt{(-5)^2 + (-3)^2} = \\sqrt{25+9} = \\sqrt{34}$.\n$CD = \\sqrt{(-4-(-1))^2 + (4-(-1))^2} = \\sqrt{(-3)^2 + 5^2} = \\sqrt{9+25} = \\sqrt{34}$.\n$DA = \\sqrt{(1-(-4))^2 + (7-4)^2} = \\sqrt{5^2 + 3^2} = \\sqrt{25+9} = \\sqrt{34}$.\nSince all four sides are equal, the quadrilateral is either a rhombus or a square.\n\nStep 2: Calculate the lengths of the diagonals.\n$AC = \\sqrt{(-1-1)^2 + (-1-7)^2} = \\sqrt{(-2)^2 + (-8)^2} = \\sqrt{4+64} = \\sqrt{68}$.\n$BD = \\sqrt{(-4-4)^2 + (4-2)^2} = \\sqrt{(-8)^2 + 2^2} = \\sqrt{64+4} = \\sqrt{68}$.\nSince the diagonals are also equal ($AC=BD$), the quadrilateral is a square.\n\nStep 3: Analyze the options. A square is a special type of rhombus (a rhombus with right angles). Both 'Rhombus' and 'Square' are technically correct. However, 'Square' is the most specific and accurate description.\n\nNote: The provided answer key marks 'Rhombus' as correct. While not wrong (as every square is a rhombus), 'Square' is the better answer. Given the options, there might be an ambiguity in the question's expectation or an error in the key."
   },
   {
     "id": "167",
@@ -2181,18 +2037,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Analyze the given information.\nIn a right-angled triangle ∆ABC, the right angle is at A, so $\\angle A = 90^{\\circ}$. The sum of angles in a triangle is $180^{\\circ}$, which means $\\angle B + \\angle C = 90^{\\circ}$. This implies B and C are complementary angles.\n\nStep 2: Determine the angles.\nWe are given tan B = 1. The angle for which the tangent is 1 is $45^{\\circ}$. So, $\\angle B = 45^{\\circ}$.\nSince $\\angle B + \\angle C = 90^{\\circ}$, we have $\\angle C = 90^{\\circ} - 45^{\\circ} = 45^{\\circ}$.\n\nStep 3: Calculate the value of sin B cos C.\n`sin B = sin 45^{\\circ} = \\frac{1}{\\sqrt{2}}$\n`cos C = cos 45^{\\circ} = \\frac{1}{\\sqrt{2}}$\n\nStep 4: Multiply the values.\nsin B cos C = $\\frac{1}{\\sqrt{2}} \\times \\frac{1}{\\sqrt{2}} = \\frac{1}{2}$."
   },
   {
-    "id": 183,
-    "question": "If A = {x: x is a two digit natural number such that the sum of its digits is 9}, then the number of subsets of A is (TSTET 01 June 2024)",
-    "options": [
-      "256",
-      "512",
-      "128",
-      "1024"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Identify the elements of the set A.\nSet A consists of all two-digit natural numbers (from 10 to 99) where the sum of the digits is 9. These numbers are: 18, 27, 36, 45, 54, 63, 72, 81, 90.\nSo, A = {18, 27, 36, 45, 54, 63, 72, 81, 90}.\n\nStep 2: Find the number of elements in set A, denoted as n(A).\nBy counting the elements, we find that n(A) = 9.\n\nStep 3: Calculate the number of subsets.\nThe formula for the number of subsets of a set with 'n' elements is $2^n$.\nNumber of subsets of A = $2^{n(A)} = 2^9 = 512$.\n\nNote: The provided answer key in the source document marks 256 (which is $2^8$) as correct, but the mathematical calculation based on the question leads to 512."
-  },
-  {
     "id": 184,
     "question": "The product of the additive inverses of $\\frac{-12}{5}, \\frac{6}{7}$ and add the multiplicative inverse of $\\frac{-5}{8}$ to the product, then the result is (TSTET 01 June 2024)",
     "options": [
@@ -2373,18 +2217,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "The area of the quadrilateral can be found by splitting it into two triangles, ∆ABD and ∆BCD, and summing their areas.\n\nStep 1: Calculate the area of the right-angled triangle ∆ABD.\nGiven $\\angle BAD = 90^{\\circ}$, the sides AB and AD are the base and height.\nArea(∆ABD) = $\\frac{1}{2} \\times \\text{base} \\times \\text{height} = \\frac{1}{2} \\times AB \\times AD = \\frac{1}{2} \\times 12 \\times 9 = 54$ cm².\n\nStep 2: Find the length of the diagonal BD using the Pythagorean theorem in ∆ABD.\n$BD^2 = AB^2 + AD^2 = 12^2 + 9^2 = 144 + 81 = 225$.\n$BD = \\sqrt{225} = 15$ cm.\n\nStep 3: Calculate the area of the right-angled triangle ∆BCD.\nGiven $\\angle DBC = 90^{\\circ}$, the sides DB and BC are the base and height.\nArea(∆BCD) = $\\frac{1}{2} \\times \\text{base} \\times \\text{height} = \\frac{1}{2} \\times DB \\times BC = \\frac{1}{2} \\times 15 \\times 20 = 150$ cm².\n\nStep 4: Calculate the total area of the quadrilateral ABCD.\nArea(ABCD) = Area(∆ABD) + Area(∆BCD) = $54 + 150 = 204$ cm²."
   },
   {
-    "id": 199,
-    "question": "The mean of all prime numbers between 40 and 70 is (TSTET 01 June 2024)",
-    "options": [
-      "51.67",
-      "61",
-      "52.75",
-      "53"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Step 1: List all the prime numbers between 40 and 70.\nThe prime numbers in this range are: 41, 43, 47, 53, 59, 61, 67.\n\nStep 2: Count the number of primes listed.\nThere are a total of 7 prime numbers.\n\nStep 3: Calculate the sum of these prime numbers.\nSum = $41 + 43 + 47 + 53 + 59 + 61 + 67 = 371$.\n\nStep 4: Calculate the mean (average).\nMean = $\\frac{\\text{Sum of numbers}}{\\text{Count of numbers}} = \\frac{371}{7} = 53$.\n\nNote: The provided answer key in the source document marks 52.75 as correct. However, the correct mathematical calculation results in 53. This indicates an error in the source answer key."
-  },
-  {
     "id": 200,
     "question": "The sum of the reciprocals of Vani's age (in years), 5 years ago and 7 years from now is $\\frac{2}{9}$. If present age of Vani is 'x' years, then this situation can be represented in the quadratic equation as (TSTET 01 June 2024)",
     "options": [
@@ -2527,18 +2359,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "The number of digits in an integer N is given by the formula $\\lfloor log_{10}N \\rfloor + 1$.\n\nStep 1: Let $N = 5^{2017}$. We need to find $log_{10}(5^{2017})$.\n$log_{10}(5^{2017}) = 2017 \\times log_{10}5$.\n\nStep 2: Calculate the value of $log_{10}5$.\nWe can write 5 as $\\frac{10}{2}$.\n$log_{10}5 = log_{10}(\\frac{10}{2}) = log_{10}10 - log_{10}2$.\nGiven $log_{10}2 = 0.301$, and we know $log_{10}10 = 1$.\n$log_{10}5 = 1 - 0.301 = 0.699$.\n\nStep 3: Calculate $log_{10}N$.\n$log_{10}N = 2017 \\times 0.699 = 1409.883$.\n\nStep 4: Find the number of digits.\nNumber of digits = $\\lfloor 1409.883 \\rfloor + 1 = 1409 + 1 = 1410$."
-  },
-  {
-    "id": 212,
-    "question": "If $x = \\frac{2}{2+\\sqrt{3}}$, then $\\sqrt{x} + \\frac{1}{\\sqrt{x}} = ...$ (TSTET 2017)",
-    "options": [
-      "$2\\sqrt{3}$",
-      "$-2\\sqrt{3}$",
-      "2",
-      "-2"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Note: The provided question is flawed as the calculated result does not match any of the options. The sum of two positive real numbers ($\sqrt{x}$ and $1/\sqrt{x}$) cannot be negative. However, working through the problem reveals the issue.\n\nStep 1: Simplify the expression for x by rationalizing the denominator.\n$x = \\frac{2}{2+\\sqrt{3}} \\times \\frac{2-\\sqrt{3}}{2-\\sqrt{3}} = \\frac{2(2-\\sqrt{3})}{4-3} = 4 - 2\\sqrt{3}$.\n\nStep 2: Find $\\sqrt{x}$ by expressing $4 - 2\\sqrt{3}$ as a perfect square of the form $(a-b)^2$.\n$4 - 2\\sqrt{3} = 3 + 1 - 2\\sqrt{3}(1) = (\\sqrt{3})^2 + 1^2 - 2(\\sqrt{3})(1) = (\\sqrt{3}-1)^2$.\nSo, $\\sqrt{x} = \\sqrt{(\\sqrt{3}-1)^2} = \\sqrt{3}-1$.\n\nStep 3: Find $\\frac{1}{\\sqrt{x}}$.\n$\\frac{1}{\\sqrt{x}} = \\frac{1}{\\sqrt{3}-1}$. Rationalizing this gives:\n$\\frac{1}{\\sqrt{3}-1} \\times \\frac{\\sqrt{3}+1}{\\sqrt{3}+1} = \\frac{\\sqrt{3}+1}{3-1} = \\frac{\\sqrt{3}+1}{2}$.\n\nStep 4: Calculate the sum.\n$\\sqrt{x} + \\frac{1}{\\sqrt{x}} = (\\sqrt{3}-1) + \\frac{\\sqrt{3}+1}{2} = \\frac{2(\\sqrt{3}-1) + (\\sqrt{3}+1)}{2} = \\frac{2\\sqrt{3}-2+\\sqrt{3}+1}{2} = \\frac{3\\sqrt{3}-1}{2}$.\nThis result is not among the options, indicating an error in the question paper."
   },
   {
     "id": 213,
@@ -2707,18 +2527,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "Step 1: Apply the Angle Bisector Theorem.\nThe angle bisector of $\\angle A$ will intersect the opposite side BC at a point D, dividing BC in the ratio of the lengths of the other two sides, AB and AC. That is, $\\frac{BD}{DC} = \\frac{AB}{AC}$.\n\nStep 2: Calculate the lengths of sides AB and AC using the distance formula, $d = \\sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$.\n$AB = \\sqrt{(3-1)^2 + (1-(-2))^2} = \\sqrt{2^2 + 3^2} = \\sqrt{4+9} = \\sqrt{13}$.\n$AC = \\sqrt{(-5-1)^2 + (2-(-2))^2} = \\sqrt{(-6)^2 + 4^2} = \\sqrt{36+16} = \\sqrt{52} = \\sqrt{4 \\times 13} = 2\\sqrt{13}$.\n\nStep 3: Determine the ratio in which D divides BC.\n$\\frac{BD}{DC} = \\frac{AB}{AC} = \\frac{\\sqrt{13}}{2\\sqrt{13}} = \\frac{1}{2}$.\nSo, D divides BC in the ratio 1:2.\n\nStep 4: Use the section formula to find the coordinates of D.\nLet B(3, 1) be $(x_1, y_1)$ and C(-5, 2) be $(x_2, y_2)$. The ratio m:n is 1:2.\nThe coordinates of D(x, y) are:\n$x = \\frac{mx_2 + nx_1}{m+n} = \\frac{1(-5) + 2(3)}{1+2} = \\frac{-5+6}{3} = \\frac{1}{3}$.\n$y = \\frac{my_2 + ny_1}{m+n} = \\frac{1(2) + 2(1)}{1+2} = \\frac{2+2}{3} = \\frac{4}{3}$.\nThe point of intersection is $(\\frac{1}{3}, \\frac{4}{3})$."
-  },
-  {
-    "id": 227,
-    "question": "If the slope of the straight line joining the points $(-cos~\\theta, sin~\\theta)$ and $(cos~\\theta, -sin~\\theta)$ is $cos^{4}\\theta+cos^{2}\\theta sin^{2}\\theta+sin^{2}\\theta$ ($0 < \\theta < \\frac{\\pi}{2}$), then $cos~\\theta=...$ (TSTET 2017)",
-    "options": [
-      "$\\frac{1}{\\sqrt{2}}$",
-      "$\\frac{\\sqrt{3}}{2}$",
-      "$\\frac{1}{2}$",
-      "1"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: This question contains a contradiction. The slope calculated from the points is negative, while the slope calculated from the expression is positive, making it unsolvable as written. The solution proceeds based on a likely typo in the points, assuming them to be $(cos\\theta, sin\\theta)$ and $(-cos\\theta, -sin\\theta)$.\n\nStep 1: Calculate the slope (m) from the given points.\n$m = \\frac{y_2-y_1}{x_2-x_1} = \\frac{-sin~\\theta - sin~\\theta}{cos~\\theta - (-cos~\\theta)} = \\frac{-2sin~\\theta}{2cos~\\theta} = -tan~\\theta$.\n\nStep 2: Simplify the given expression for the slope.\nSlope = $cos^4\\theta+cos^2\\theta sin^2\\theta+sin^2\\theta$\n= $cos^2\\theta(cos^2\\theta+sin^2\\theta)+sin^2\\theta$\nUsing the identity $cos^2\\theta+sin^2\\theta=1$:\n= $cos^2\\theta(1) + sin^2\\theta = cos^2\\theta + sin^2\\theta = 1$.\n\nStep 3: Equate the two results for the slope.\n$-tan~\\theta = 1 \\implies tan~\\theta = -1$.\nThis is a contradiction because the problem states $0 < \\theta < \\frac{\\pi}{2}$, a range where $tan~\\theta$ must be positive.\n\n**Assuming a Typo:** Let's assume the points were $(cos\\theta, sin\\theta)$ and $(-cos\\theta, -sin\\theta)$.\nCorrected Slope = $\\frac{-sin~\\theta - sin~\\theta}{-cos~\\theta - cos~\\theta} = \\frac{-2sin~\\theta}{-2cos~\\theta} = tan~\\theta$.\nNow, equating with the simplified expression: $tan~\\theta = 1$.\nFor $0 < \\theta < \\frac{\\pi}{2}$, this gives $\\theta = 45^{\\circ}$ or $\\frac{\\pi}{4}$.\nThen, $cos~\\theta = cos(45^{\\circ}) = \\frac{1}{\\sqrt{2}}$."
   },
   {
     "id": 228,
@@ -3801,18 +3609,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Total number of students = 40.\nLet M be the set of students who chose Mathematics (even roll numbers).\nNumber of even numbers from 1 to 40 is $n(M) = 40 / 2 = 20$.\n\nLet B be the set of students who chose Biology (roll numbers are multiples of 3).\nNumber of multiples of 3 from 1 to 40 is $n(B) = \\lfloor \\frac{40}{3} \\rfloor = 13$.\n\nThe set $M \\cap B$ represents students whose roll numbers are multiples of both 2 and 3, i.e., multiples of 6.\nNumber of multiples of 6 from 1 to 40 is $n(M \\cap B) = \\lfloor \\frac{40}{6} \\rfloor = 6$.\n\nThe number of students who chose at least one subject is $n(M \\cup B)$.\n$n(M \\cup B) = n(M) + n(B) - n(M \\cap B)$\n$n(M \\cup B) = 20 + 13 - 6 = 27$.\n\nThe number of students who did not choose any subject is the total number of students minus the number of students who chose at least one subject.\nNumber of students = Total students - $n(M \\cup B) = 40 - 27 = 13$."
   },
   {
-    "id": 318,
-    "question": "Choose a number from the following which is divisible by 7. (TSTET 24 June 2025)",
-    "options": [
-      "658321",
-      "762149",
-      "489963",
-      "920710"
-    ],
-    "correctAnswer": 3,
-    "explanation": "We can test each number for divisibility by 7 using direct division.\n1. $658321 \\div 7 = 94045$ with a remainder of 6.\n2. $762149 \\div 7 = 108878$ with a remainder of 3.\n3. $489963 \\div 7 = 69994$ with a remainder of 5.\n4. $920710 \\div 7 = 131530$ with a remainder of 0.\n\nOnly 920710 is perfectly divisible by 7.\nNote: The answer key in the source document marks option 3 (489963) as correct. However, mathematical calculation shows that 489963 is not divisible by 7, whereas 920710 is. There is an error in the provided answer key. The mathematically correct answer is 920710."
-  },
-  {
     "id": 319,
     "question": "Kamala went to a shop to buy a sewing machine. The selling price of the sewing machine is ₹13,500 after a discount of 20%, then the marked price of the sewing machine is (TSTET 24 June 2025)",
     "options": [
@@ -4029,18 +3825,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "The commutative property states that changing the order of the operands does not change the result. For addition, this is expressed as $a + b = b + a$.\n\n- Option 1 illustrates the associative property: $(a + b) + c = a + (b + c)$.\n- Option 2 illustrates the distributive property: $a(b + c) = ab + ac$.\n- Option 3 is an incorrect statement showing that subtraction is not commutative.\n- Option 4 correctly shows that the order of addition does not matter ($2+3=5$ and $3+2=5$), which is the definition of the commutative property of addition."
   },
   {
-    "id": 337,
-    "question": "If $\\frac{3-9x}{2x+6}=\\frac{-3}{2},$ then $x=$ (TSTET 19 June 2025)",
-    "options": [
-      "1",
-      "2",
-      "-2",
-      "4"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Start with the given equation.\n$\\frac{3-9x}{2x+6}=\\frac{-3}{2}$\n\nStep 2: Cross-multiply to eliminate the fractions.\n$2(3 - 9x) = -3(2x + 6)$\n\nStep 3: Distribute the numbers on both sides of the equation.\n$6 - 18x = -6x - 18$\n\nStep 4: Isolate the variable 'x'.\nAdd 18x to both sides: $6 = 12x - 18$\nAdd 18 to both sides: $24 = 12x$\n\nStep 5: Solve for x.\n$x = \\frac{24}{12}$\n$x = 2$\n\nNote: The provided source marks option 2 (value 2) as correct, which matches the calculation. The source PDF has a potential error in marking other questions, but in this case, the calculation confirms the marked answer."
-  },
-  {
     "id": 338,
     "question": "The length and breadth of a cuboid is 14 cm and 8 cm respectively. If the total surface area of the cuboid is 708 Sq.cm, then its height (in cm) is (TSTET 19 June 2025)",
     "options": [
@@ -4197,18 +3981,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Represent the numbers using the ratio.\nLet the numbers be 4x, 9x, and 16x.\n\nStep 2: Use the given sum to find the value of x.\nSum = $4x + 9x + 16x = 87$\n$29x = 87$\n$x = \\frac{87}{29} = 3$\n\nStep 3: Find the actual numbers.\nFirst number = 4x = 4(3) = 12.\nSecond number = 9x = 9(3) = 27.\nThird number = 16x = 16(3) = 48.\n\nStep 4: Calculate the product of the first and third numbers.\nProduct = 12 × 48 = 576."
   },
   {
-    "id": 351,
-    "question": "The sum of numbers between 100 and 200 which are divisible by 7 is (TSTET 19 June 2025)",
-    "options": [
-      "1897",
-      "1981",
-      "2107",
-      "2093"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Step 1: Find the first and last numbers in the range that are divisible by 7.\nFirst number > 100 divisible by 7: $105$ ($7 \\times 15$). So, $a = 105$.\nLast number < 200 divisible by 7: $196$ ($7 \\times 28$). So, $l = 196$.\n\nStep 2: Find the number of terms (n) in this arithmetic progression.\nThe formula for the last term is $l = a + (n-1)d$. Here, d=7.\n$196 = 105 + (n-1)7$\n$91 = (n-1)7$\n$13 = n-1$\n$n = 14$\n\nStep 3: Calculate the sum of the arithmetic progression.\nThe formula for the sum is $S_n = \\frac{n}{2}(a+l)$.\n$S_{14} = \\frac{14}{2}(105 + 196)$\n$S_{14} = 7(301)$\n$S_{14} = 2107$\n\nNote: The calculation yields 2107, which is option 3. The provided source marks option 4 (2093) as correct, which appears to be an error in the source's answer key."
-  },
-  {
     "id": 352,
     "question": "The median of first ten prime numbers is (TSTET 19 June 2025)",
     "options": [
@@ -4353,18 +4125,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Apply the rule for negative exponents, which is $a^{-n} = \\frac{1}{a^n}$.\n$(-1)^{-4} = \\frac{1}{(-1)^4}$.\n\nStep 2: Evaluate the term in the denominator.\n$(-1)^4 = (-1) \\times (-1) \\times (-1) \\times (-1)$.\nSince -1 is raised to an even power (4), the result is positive.\n$(-1)^4 = 1$.\n\nStep 3: Calculate the final value.\n$\\frac{1}{1} = 1$."
   },
   {
-    "id": "364",
-    "question": "Four identical circles each of radius 2cm are placed on a horizontal square surface touching one another. The area (in sq.cm) of the space left between them is (TSTET 18 June 2025)",
-    "options": [
-      "$2(4-\\pi)$",
-      "$4(16-\\pi)$",
-      "$16(4-\\pi)$",
-      "$4(2-4\\pi)$"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Step 1: When four identical circles touch each other, their centers form a square.\n\nStep 2: The side length of this square is the sum of the radii of two adjacent circles, which is $r + r = 2r$. Given $r = 2$ cm, the side of the square is $2 \\times 2 = 4$ cm.\n\nStep 3: The area of this square is side² = $4^2 = 16$ sq.cm.\n\nStep 4: Inside the square, there are four quadrants (sectors with a 90° angle), one from each circle. These four quadrants combine to form one full circle.\n\nStep 5: The area of these four quadrants is equal to the area of one circle: Area = $\\pi r^2 = \\pi (2)^2 = 4\\pi$ sq.cm.\n\nStep 6: The area of the space left between the circles is the area of the square minus the area of the four quadrants.\nArea of space = $16 - 4\\pi = 4(4 - \\pi)$ sq.cm.\n\nNote: The calculated answer is $4(4-\\pi)$. None of the provided options match this result, indicating an error in the question paper's options. Based on the provided source, option 1 is marked as correct, but it is mathematically inconsistent with the problem statement."
-  },
-  {
     "id": "365",
     "question": "The total surface area of a rectangular block is 7488 sq.cm. Its length, breadth and height are in the ratio 4:3:2. then its breadth (in cm) is (TSTET 18 June 2025)",
     "options": [
@@ -4471,18 +4231,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "A zero of a polynomial is a value of 'x' that makes the polynomial equal to zero. We can test each option by substituting it into the polynomial $P(x) = 6x^2 - 14x - 40$.\n\n- Test x = 3: $P(3) = 6(3)^2 - 14(3) - 40 = 6(9) - 42 - 40 = 54 - 82 = -28 \\neq 0$.\n- Test x = 0: $P(0) = 6(0)^2 - 14(0) - 40 = 0 - 0 - 40 = -40 \\neq 0$.\n- Test x = 7: $P(7) = 6(7)^2 - 14(7) - 40 = 6(49) - 98 - 40 = 294 - 138 = 156 \\neq 0$.\n- Test x = 4: $P(4) = 6(4)^2 - 14(4) - 40 = 6(16) - 56 - 40 = 96 - 96 = 0$.\n\nSince $P(4) = 0$, the number 4 is a zero of the polynomial."
-  },
-  {
-    "id": "374",
-    "question": "The sum of two-digit numbers that are divisible by both 3 and 7 is (TSTET 18 June 2025)",
-    "options": [
-      "220",
-      "210",
-      "126",
-      "315"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: A number divisible by both 3 and 7 must be divisible by their Least Common Multiple (LCM).\nThe LCM of 3 and 7 is 21.\n\nStep 2: List all the two-digit multiples of 21. A two-digit number is between 10 and 99.\n- $21 \\times 1 = 21$\n- $21 \\times 2 = 42$\n- $21 \\times 3 = 63$\n- $21 \\times 4 = 84$\n- $21 \\times 5 = 105$ (This is a three-digit number).\nThe required numbers are 21, 42, 63, and 84.\n\nStep 3: Calculate their sum.\nSum = $21 + 42 + 63 + 84 = 210$.\n\nNote: The provided source marks option 4 (315) as correct, which is mathematically incorrect. The correct sum is 210, which is option 2."
   },
   {
     "id": "375",
@@ -5109,18 +4857,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "**Step 1: Rewrite the equation using exponent rules.**\nUse the rule $a^{m+n} = a^m \\cdot a^n$ to expand $81^{x+1}$.\nThe equation becomes: $81^1 \\cdot 81^x = 720 + 81^x$.\n\n**Step 2: Isolate the term with the variable exponent.**\nSubtract $81^x$ from both sides:\n$81 \\cdot 81^x - 81^x = 720$\n\n**Step 3: Factor out the common term $81^x$.**\n$81^x (81 - 1) = 720$\n$81^x (80) = 720$\n\n**Step 4: Solve for $81^x$.**\nDivide both sides by 80:\n$81^x = \\frac{720}{80} = 9$\n\n**Step 5: Express the base in terms of a common number.**\nWe know that $81 = 9^2$. Substitute this into the equation:\n$(9^2)^x = 9^1$\n\n**Step 6: Simplify and solve for x.**\nUsing the rule $(a^m)^n = a^{mn}$, we get: $9^{2x} = 9^1$.\nSince the bases are equal, we can equate the exponents:\n$2x = 1$\n$x = \\frac{1}{2} = 0.5$"
   },
   {
-    "id": 427,
-    "question": "If 0.000875 is expressed in the form of $\\frac{p}{2^{m} \\times 5^{n}}$ for smallest value of whole numbers m and n then the value of (m+n) is (TSTET 18 June 2025)",
-    "options": [
-      "11",
-      "10",
-      "8",
-      "9"
-    ],
-    "correctAnswer": 3,
-    "explanation": "**Step 1: Convert the decimal to a fraction.**\n$0.000875 = \\frac{875}{1000000}$\n\n**Step 2: Simplify the fraction.**\nDivide the numerator and denominator by their greatest common divisor. We can divide by 125.\n* $875 \\div 125 = 7$\n* $1000000 \\div 125 = 8000$\nSo, the fraction is $\\frac{7}{8000}$.\n\n**Step 3: Find the prime factorization of the denominator.**\nThe denominator is 8000. We need to express it in the form $2^m \\times 5^n$.\n$8000 = 8 \\times 1000 = 2^3 \\times 10^3$\n$8000 = 2^3 \\times (2 \\times 5)^3 = 2^3 \\times 2^3 \\times 5^3 = 2^{3+3} \\times 5^3 = 2^6 \\times 5^3$.\n\n**Step 4: Identify m and n.**\nThe fraction in the required form is $\\frac{7}{2^6 \\times 5^3}$.\nHere, the smallest whole number values are $m = 6$ and $n = 3$.\n\n**Step 5: Calculate m + n.**\n$m + n = 6 + 3 = 9$.\n\n*Note: The answer key in the provided source seems to indicate 10 as the correct answer, but based on mathematical principles, the correct sum is 9.*"
-  },
-  {
     "id": 428,
     "question": "$(\\sqrt{3}-\\sqrt{2})(\\sqrt{3}+\\sqrt{2})(3^{0}+2^{0})(3^{2}+2^{2})=$ (TSTET 18 June 2025)",
     "options": [
@@ -5397,18 +5133,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "This question is asking for the definition of a key concept in assessment.\n* **Reliability:** This refers to the consistency of an assessment tool. A reliable test will produce the same or very similar results if administered again to the same students under the same conditions. This matches the description in the question perfectly.\n* **Validity:** This refers to whether the test accurately measures what it is intended to measure.\n* **Discrimination power:** This refers to an item's ability to distinguish between high- and low-performing students.\n* **Administrability:** This refers to how easy the test is to administer, score, and interpret."
   },
   {
-    "id": 451,
-    "question": "If the mean of the frequency distribution is 59.3 and $\\Sigma f_{i}x_{i}=1429+k$, $\\Sigma f_{i}=30$, then the value of 'k' is (TSTET 30 June 2025)",
-    "options": [
-      "350",
-      "300",
-      "250",
-      "200"
-    ],
-    "correctAnswer": 0,
-    "explanation": "The formula for the mean of a frequency distribution is Mean = $\\frac{\\Sigma f_{i}x_{i}}{\\Sigma f_{i}}$.\n\n**Step 1:** Substitute the given values into the formula.\nGiven: Mean = 59.3, $\\Sigma f_{i}x_{i} = 1429 + k$, and $\\Sigma f_{i} = 30$.\nSo, $59.3 = \\frac{1429 + k}{30}$.\n\n**Step 2:** Multiply both sides by 30 to solve for the numerator.\n$59.3 \\times 30 = 1429 + k$\n$1779 = 1429 + k$\n\n**Step 3:** Isolate 'k' by subtracting 1429 from both sides.\n$k = 1779 - 1429$\n$k = 350$\n\n*Note: The provided source document indicates 250 as the correct answer, but based on mathematical calculation, the correct value for k is 350.*"
-  },
-  {
     "id": 452,
     "question": "If sec $\\theta+tan~\\theta=\\sqrt{3}$ and $0^{\\circ}<\\theta<90^{\\circ}$ then cos $\\theta$ = (TSTET 30 June 2025)",
     "options": [
@@ -5493,18 +5217,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "**Step 1:** Rewrite the given equation using the identity $cosec\\theta = \\frac{1}{sin\\theta}$.\n$sin\\theta + \\frac{1}{sin\\theta} = 2$.\n\n**Step 2:** Let $x = sin\\theta$. The equation becomes $x + \\frac{1}{x} = 2$.\n\n**Step 3:** Solve for x.\nMultiply the entire equation by x: $x^2 + 1 = 2x$.\nRearrange into a quadratic equation: $x^2 - 2x + 1 = 0$.\nThis is a perfect square: $(x-1)^2 = 0$.\nTherefore, $x = 1$.\n\n**Step 4:** Substitute back $sin\\theta = x$.\nSo, $sin\\theta = 1$. Since $cosec\\theta = \\frac{1}{sin\\theta}$, then $cosec\\theta = \\frac{1}{1} = 1$.\n\n**Step 5:** Calculate the required expression.\n$sin^{3}\\theta+cosec^{3}\\theta = (1)^3 + (1)^3 = 1 + 1 = 2$."
   },
   {
-    "id": 459,
-    "question": "The time taken for ₹4800 amount to ₹5556, if simple interest is calculated at $6\\frac{3}{4}\\%$ per annum is (TSTET 30 June 2025)",
-    "options": [
-      "2 years 3 months",
-      "2 years 4 months",
-      "2 years 6 months",
-      "2 years 8 months"
-    ],
-    "correctAnswer": 1,
-    "explanation": "**Step 1:** Calculate the Simple Interest (SI).\nPrincipal (P) = ₹4800\nAmount (A) = ₹5556\nSI = A - P = 5556 - 4800 = ₹756\n\n**Step 2:** Convert the rate of interest (R) to a simple fraction or decimal.\nR = $6\\frac{3}{4}\\% = 6.75\\% = \\frac{27}{4}\\%$\n\n**Step 3:** Use the formula for Simple Interest to find the Time (T).\nThe formula is $SI = \\frac{P \\times R \\times T}{100}$. Rearranging for T gives $T = \\frac{SI \\times 100}{P \\times R}$.\n\n**Step 4:** Substitute the values and calculate T.\n$T = \\frac{756 \\times 100}{4800 \\times 6.75} = \\frac{75600}{32400} = \\frac{756}{324}$\nSimplifying the fraction: $T = \\frac{756 \\div 108}{324 \\div 108} = \\frac{7}{3}$ years.\n\n**Step 5:** Convert the time from years to years and months.\n$T = \\frac{7}{3}$ years = $2\\frac{1}{3}$ years.\n$2\\frac{1}{3}$ years = 2 years + $\\frac{1}{3}$ of a year.\n$\\frac{1}{3} \\times 12$ months = 4 months.\nSo, the total time is **2 years and 4 months**.\n\n*Note: The provided source document indicates 2 years 6 months as the correct answer, which is mathematically incorrect.*"
-  },
-  {
     "id": 460,
     "question": "$\\frac{12x^{-5}y^{4}z^{-3}}{15x^{2}y^{-3}z^{3}}=$ (TSTET 30 June 2025)",
     "options": [
@@ -5553,30 +5265,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "**Step 1:** Identify the properties of the cone formed from the sector.\n- The radius of the circular paper becomes the slant height (l) of the cone. So, $l = 20$ cm.\n- The arc length of the sector becomes the circumference of the base of the cone.\n\n**Step 2:** Calculate the arc length of the sector.\nArc Length = $(\\frac{\\text{sector angle}}{360°}) \\times 2\\pi R$\nArc Length = $(\\frac{216}{360}) \\times 2\\pi(20)$\nSimplifying the fraction: $\\frac{216}{360} = \\frac{6 \\times 36}{10 \\times 36} = \\frac{6}{10} = \\frac{3}{5}$.\nArc Length = $\\frac{3}{5} \\times 40\\pi = 24\\pi$ cm.\n\n**Step 3:** Find the radius (r) of the cone's base.\nThe circumference of the cone's base is $24\\pi$. The formula is $C = 2\\pi r$.\n$2\\pi r = 24\\pi$\n$r = 12$ cm.\n\n**Step 4:** Calculate the height (h) of the cone.\nThe slant height (l), radius (r), and height (h) of a cone form a right-angled triangle, with $l^2 = r^2 + h^2$.\n$20^2 = 12^2 + h^2$\n$400 = 144 + h^2$\n$h^2 = 400 - 144 = 256$\n$h = \\sqrt{256} = 16$ cm."
   },
   {
-    "id": 464,
-    "question": "Read the following statements related to subsets of a set.\nA) $P=\\{x:x$ is an odd natural number and $9<x<15\\}$, then the number of subsets of set P is 16.\nB) Q= {x: x is a letter in the word FOLLOW}, then the number of subsets of set Q is 16.\nChoose the correct answer. (TSTET 30 June 2025)",
-    "options": [
-      "Both the statements A and B are true.",
-      "Statement A is true and Statement B is false.",
-      "Statement A is false and Statement B is true.",
-      "Both the statements A and B are false."
-    ],
-    "correctAnswer": 2,
-    "explanation": "The number of subsets of a set with 'n' elements is given by the formula $2^n$.\n\n**Analysis of Statement A:**\n- The set P consists of odd natural numbers between 9 and 15.\n- The elements are {11, 13}.\n- The number of elements in P, n(P), is 2.\n- The number of subsets of P is $2^2 = 4$.\n- The statement claims the number of subsets is 16. Therefore, **Statement A is false**.\n\n**Analysis of Statement B:**\n- The set Q consists of the distinct letters in the word 'FOLLOW'.\n- The distinct letters are {F, O, L, W}.\n- The number of elements in Q, n(Q), is 4.\n- The number of subsets of Q is $2^4 = 16$.\n- The statement claims the number of subsets is 16. Therefore, **Statement B is true**.\n\nConclusion: Statement A is false and Statement B is true.\n\n*Note: The provided source document incorrectly marks 'Statement A is true and Statement B is false' as the correct answer.*"
-  },
-  {
-    "id": 465,
-    "question": "The discriminant of the equation $\\frac{1}{x}-\\frac{1}{x-2}=3$ $(x\\ne0,2)$ is (TSTET 30 June 2025)",
-    "options": [
-      "1",
-      "12",
-      "28",
-      "60"
-    ],
-    "correctAnswer": 1,
-    "explanation": "**Step 1:** Convert the given equation into the standard quadratic form $ax^2 + bx + c = 0$.\n$\\frac{1}{x}-\\frac{1}{x-2}=3$\nFind a common denominator for the left side: $\\frac{(x-2) - x}{x(x-2)} = 3$.\nSimplify the numerator: $\\frac{-2}{x^2 - 2x} = 3$.\nMultiply both sides by $(x^2 - 2x)$: $-2 = 3(x^2 - 2x)$.\nDistribute the 3: $-2 = 3x^2 - 6x$.\nRearrange into standard form: $3x^2 - 6x + 2 = 0$.\n\n**Step 2:** Identify the coefficients a, b, and c.\n$a = 3$, $b = -6$, $c = 2$.\n\n**Step 3:** Use the formula for the discriminant, $D = b^2 - 4ac$.\n$D = (-6)^2 - 4(3)(2)$\n$D = 36 - 24$\n$D = 12$.\n\n*Note: The provided source document indicates 28 as the correct answer, which is mathematically incorrect.*"
-  },
-  {
     "id": 466,
     "question": "The sum of odd natural numbers from 1 to 2025 is (TSTET 30 June 2025)",
     "options": [
@@ -5599,18 +5287,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "We need to evaluate each statement to find the one that is false.\n\n**Statement 1:** $5\\sqrt{2}-\\sqrt{8}=3\\sqrt{2}$\nSimplify $\\sqrt{8}$: $\\sqrt{8} = \\sqrt{4 \\times 2} = 2\\sqrt{2}$.\nThe statement becomes $5\\sqrt{2} - 2\\sqrt{2} = 3\\sqrt{2}$, which is true.\n\n**Statement 2:** $(7+4\\sqrt{3})+\\frac{1}{(7+4\\sqrt{3})}=14$\nRationalize the fraction: $\\frac{1}{7+4\\sqrt{3}} = \\frac{1}{7+4\\sqrt{3}} \\times \\frac{7-4\\sqrt{3}}{7-4\\sqrt{3}} = \\frac{7-4\\sqrt{3}}{7^2 - (4\\sqrt{3})^2} = \\frac{7-4\\sqrt{3}}{49 - 48} = 7-4\\sqrt{3}$.\nThe statement becomes $(7+4\\sqrt{3}) + (7-4\\sqrt{3}) = 7+7 = 14$, which is true.\n\n**Statement 3:** $(\\sqrt{3}+\\sqrt{5})^{2}=38$\nExpand the square: $(\\sqrt{3}+\\sqrt{5})^{2} = (\\sqrt{3})^2 + 2(\\sqrt{3})(\\sqrt{5}) + (\\sqrt{5})^2 = 3 + 2\\sqrt{15} + 5 = 8 + 2\\sqrt{15}$.\nSince $8 + 2\\sqrt{15} \\neq 38$, this statement is **INCORRECT**.\n\n**Statement 4:** $\\frac{1}{\\sqrt{6}-\\sqrt{5}}=\\sqrt{6}+\\sqrt{5}$\nRationalize the fraction: $\\frac{1}{\\sqrt{6}-\\sqrt{5}} = \\frac{1}{\\sqrt{6}-\\sqrt{5}} \\times \\frac{\\sqrt{6}+\\sqrt{5}}{\\sqrt{6}+\\sqrt{5}} = \\frac{\\sqrt{6}+\\sqrt{5}}{(\\sqrt{6})^2 - (\\sqrt{5})^2} = \\frac{\\sqrt{6}+\\sqrt{5}}{6-5} = \\sqrt{6}+\\sqrt{5}$, which is true."
-  },
-  {
-    "id": 468,
-    "question": "In $\\triangle XYZ$, $\\angle X=55^{\\circ}$ and $\\angle Z=50^{\\circ}$, then the sides of $\\triangle XYZ$ in ascending order of their lengths is (TSTET 30 June 2025)",
-    "options": [
-      "XY, YZ, ZX",
-      "YZ, ZX, XY",
-      "XY, ZX, YZ",
-      "ZX, YZ, XY"
-    ],
-    "correctAnswer": 0,
-    "explanation": "**Step 1:** Find the measure of the third angle, $\\angle Y$.\nThe sum of angles in a triangle is 180°.\n$\\angle Y = 180^{\\circ} - (\\angle X + \\angle Z) = 180^{\\circ} - (55^{\\circ} + 50^{\\circ}) = 180^{\\circ} - 105^{\\circ} = 75^{\\circ}$.\n\n**Step 2:** List the angles in ascending order.\n$\\angle Z (50^{\\circ}) < \\angle X (55^{\\circ}) < \\angle Y (75^{\\circ})$.\n\n**Step 3:** Apply the theorem that states in a triangle, the side opposite the smaller angle is shorter, and the side opposite the larger angle is longer.\n- The side opposite $\\angle Z$ is XY.\n- The side opposite $\\angle X$ is YZ.\n- The side opposite $\\angle Y$ is ZX.\n\n**Step 4:** Arrange the sides in ascending order based on the order of their opposite angles.\nSince $\\angle Z < \\angle X < \\angle Y$, the corresponding sides will be in the same order of length:\nXY < YZ < ZX.\nThe correct ascending order is **XY, YZ, ZX**.\n\n*Note: The provided source document incorrectly marks 'YZ, ZX, XY' as the correct answer.*"
   },
   {
     "id": 469,
@@ -5827,18 +5503,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "To convert an angle from degrees to radians, we use the conversion factor $\\pi$ radians = $180^{\\circ}$. The formula is:\nRadians = Degrees $\\times \\frac{\\pi}{180}$\n\n**Step 1:** Substitute the given angle in degrees into the formula.\nRadians = $150 \\times \\frac{\\pi}{180}$\n\n**Step 2:** Simplify the fraction.\nDivide both the numerator and the denominator by their greatest common divisor, which is 30.\nRadians = $\\frac{150 \\div 30}{180 \\div 30} \\pi = \\frac{5}{6}\\pi$\n\nSo, $150^{\\circ}$ is equal to **$\\frac{5\\pi}{6}$** radians."
-  },
-  {
-    "id": 487,
-    "question": "The digit at the unit place of the number $7^{77}$ is (TSTET 11 Jan 2025)",
-    "options": [
-      "3",
-      "1",
-      "7",
-      "9"
-    ],
-    "correctAnswer": 0,
-    "explanation": "To find the unit digit of $7^{77}$, we first need to identify the pattern of the unit digits of the powers of 7.\n\n**Step 1: Find the cyclicity of the unit digit of 7.**\n- $7^1 = 7$ (Unit digit: 7)\n- $7^2 = 49$ (Unit digit: 9)\n- $7^3 = 343$ (Unit digit: 3)\n- $7^4 = 2401$ (Unit digit: 1)\n- $7^5 = 16807$ (Unit digit: 7)\nThe pattern of the unit digits repeats every 4 powers. The cycle is {7, 9, 3, 1}.\n\n**Step 2: Find the remainder of the exponent when divided by the cycle length (4).**\nWe need to find the remainder of $77 \\div 4$.\n$77 = (4 \\times 19) + 1$. The remainder is 1.\n\n**Step 3: Determine the unit digit based on the remainder.**\n- A remainder of 1 corresponds to the 1st digit in the cycle (7).\n- A remainder of 2 corresponds to the 2nd digit in the cycle (9).\n- A remainder of 3 corresponds to the 3rd digit in the cycle (3).\n- A remainder of 0 corresponds to the 4th digit in the cycle (1).\nSince the remainder is 1, the unit digit of $7^{77}$ is the first digit in the cycle, which is **7**.\n\n**Note:** The provided source document marks '3' (Option 1) as the correct answer. Based on mathematical calculation, the correct answer is '7' (Option 3). The provided answer key in the source appears to be incorrect."
   },
   {
     "id": 488,
@@ -6273,18 +5937,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Convert each fractional part of the expression into its decimal equivalent.\n$\\frac{6}{10} = 0.6$\n$\\frac{5}{1000} = 0.005$ (The 5 is in the third decimal place, the thousandths place).\n$\\frac{4}{10000} = 0.0004$ (The 4 is in the fourth decimal place, the ten-thousandths place).\n\nStep 2: Add all the parts together.\nWe are adding: $5 + 0.6 + 0.005 + 0.0004$.\nAligning the decimal points for addition:\n  5.0000\n+ 0.6000\n+ 0.0050\n+ 0.0004\n----------\n  5.6054\n\nTherefore, the total value is 5.6054."
   },
   {
-    "id": 524,
-    "question": "A 3-digit number 5A5 is added to another 3-digit number 998 to give four digit number 15B3, which is divisible by 11. then $A+B=$ (TSTET 20 Jan 2025)",
-    "options": [
-      "11",
-      "13",
-      "14",
-      "12"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Step 1: Analyze the addition column by column.\n  5 A 5\n+ 9 9 8\n--------\n1 5 B 3\nUnits column: $5 + 8 = 13$. This gives the digit 3 and a carry-over of 1 to the tens column.\nTens column: $1 (carry) + A + 9 = 10 + A$. The resulting digit is B, and there must be a carry-over of 1 to the hundreds column. This means the units digit of $10+A$ (which is A) is equal to B. So, $A = B$.\nHundreds column: $1 (carry) + 5 + 9 = 15$. This confirms the final digits of the sum.\n\nStep 2: Use the divisibility rule for 11.\nThe resulting number is 15B3. Since A=B, the number is 15A3. A number is divisible by 11 if the difference between the sum of its alternate digits is 0 or a multiple of 11.\nSum of digits at odd places (from right) = $3 + 5 = 8$.\nSum of digits at even places = $A + 1$.\nDifference = $(A+1) - 8 = A - 7$.\n\nStep 3: Find the value of A.\nFor the number to be divisible by 11, $A - 7$ must be 0 or a multiple of 11.\nIf $A - 7 = 0$, then $A = 7$.\n(If $A - 7 = 11$, then $A=18$, which is not a single digit).\nSo, the only valid solution is $A=7$.\n\nStep 4: Find B and calculate A+B.\nSince we found $A=B$, then $B=7$.\n$A + B = 7 + 7 = 14$.\n\nNote: The provided source marks 12 as the correct answer, which is mathematically incorrect. Based on a rigorous calculation, the only possible answer is 14."
-  },
-  {
     "id": 525,
     "question": "If $a<0$ and $b>0$, then the point $P(a,b)$ lies in this quadrant. (TSTET 20 Jan 2025)",
     "options": [
@@ -6573,18 +6225,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "This question asks for the standard formulas for a right circular cylinder.\n\n1.  **Curved Surface Area (CSA):** The CSA is the area of the curved rectangular surface if the cylinder were unrolled. The length of this rectangle would be the circumference of the base ($2\\pi r$) and its width would be the height (h). Therefore, **CSA = $2\\pi rh$**.\n\n2.  **Volume:** The volume of a cylinder is found by multiplying the area of its circular base ($\\pi r^2$) by its height (h). Therefore, **Volume = $\\pi r^2h$**.\n\nThe correct pair of formulas is $2\\pi rh$ and $\\pi r^2h$."
   },
   {
-    "id": 549,
-    "question": "Median of numbers $\\frac{11}{13},\\frac{15}{17},\\frac{27}{31},\\frac{19}{24},\\frac{13}{18}$ is (TSTET 20 Jan 2025)",
-    "options": [
-      "$\\frac{15}{17}$",
-      "$\\frac{11}{13}$",
-      "$\\frac{27}{31}$",
-      "$\\frac{19}{24}$"
-    ],
-    "correctAnswer": 1,
-    "explanation": "To find the median, we must first arrange the numbers in ascending order.\n\nStep 1: Convert the fractions to decimal form for easy comparison.\n$\\frac{13}{18} \\approx 0.722$\n$\\frac{19}{24} \\approx 0.792$\n$\\frac{11}{13} \\approx 0.846$\n$\\frac{27}{31} \\approx 0.871$\n$\\frac{15}{17} \\approx 0.882$\n\nStep 2: Arrange the fractions in ascending order based on their decimal values.\n$\frac{13}{18}, \\frac{19}{24}, \\frac{11}{13}, \\frac{27}{31}, \\frac{15}{17}$\n\nStep 3: Identify the median. Since there are 5 numbers (an odd quantity), the median is the middle value in the sorted list, which is the 3rd number.\n\nThe median is $\\frac{11}{13}$.\n\nNote: The provided source marks $\\frac{15}{17}$ as the correct answer, which is mathematically incorrect. The correct median is the middle value, $\\frac{11}{13}$."
-  },
-  {
     "id": 550,
     "question": "How many perfect cube numbers are present from 1 to 1000? (TSTET 20 Jan 2025)",
     "options": [
@@ -6595,18 +6235,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "A perfect cube is a number that is the result of cubing an integer. We need to find how many perfect cubes exist in the range [1, 1000].\n\nStep 1: List the cubes of integers starting from 1 until the result exceeds 1000.\n$1^3 = 1$\n$2^3 = 8$\n$3^3 = 27$\n$4^3 = 64$\n$5^3 = 125$\n$6^3 = 216$\n$7^3 = 343$\n$8^3 = 512$\n$9^3 = 729$\n$10^3 = 1000$\n$11^3 = 1331$ (This is greater than 1000)\n\nStep 2: Count the number of perfect cubes that fall within the range [1, 1000].\nThe numbers are 1, 8, 27, 64, 125, 216, 343, 512, 729, and 1000. There are a total of **10** perfect cubes."
-  },
-  {
-    "id": 551,
-    "question": "The solution of the equation $\\frac{3}{2x-2}=\\frac{-2}{3x-3}$ is (TSTET 20 Jan 2025)",
-    "options": [
-      "0",
-      "1",
-      "-1",
-      "2"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Factor the denominators to identify any restrictions on the variable 'x'.\n$\\frac{3}{2(x-1)} = \\frac{-2}{3(x-1)}$\n\nStep 2: State the restriction. The denominators cannot be zero, which means $x-1 \\neq 0$, so $x \\neq 1$. Any solution that results in $x=1$ will be extraneous.\n\nStep 3: Solve the equation by cross-multiplication.\n$3 \\times 3(x-1) = -2 \\times 2(x-1)$\n$9(x-1) = -4(x-1)$\n\nStep 4: Distribute and solve for x.\n$9x - 9 = -4x + 4$\n$9x + 4x = 4 + 9$\n$13x = 13$\n$x = 1$\n\nStep 5: Check the solution against the restriction. The calculated solution is $x=1$, but we established in Step 2 that $x$ cannot be 1 because it would lead to division by zero. Therefore, the equation has **no solution**.\n\nNote: The provided source marks '1' as the correct answer. However, this value makes the original equation undefined, meaning there is no valid solution among the options."
   },
   {
     "id": 552,
@@ -6753,18 +6381,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "A line of symmetry is a line that divides a figure into two identical, mirror-image halves.\n\nA rhombus is a quadrilateral with all four sides of equal length. Its properties are:\n- Opposite sides are parallel.\n- Opposite angles are equal.\n- Diagonals bisect each other at right angles.\n\nThe lines of symmetry for a rhombus are its **two diagonals**. If you fold the rhombus along either diagonal, the two halves will match perfectly. Therefore, a rhombus has **2** lines of symmetry. (Note: A square is a special type of rhombus and has 4 lines of symmetry, but a general rhombus only has 2)."
   },
   {
-    "id": 564,
-    "question": "$\\frac{4}{5}$th of a number is greater than $\\frac{2}{3}$rd of that number by 4. The number is (TSTET 20 Jan 2025)",
-    "options": [
-      "60",
-      "30",
-      "25",
-      "40"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Step 1: Let the unknown number be 'x'.\n\nStep 2: Translate the statement into a mathematical equation.\n'$\\frac{4}{5}$th of a number' is $\\frac{4}{5}x$.\n'$\\frac{2}{3}$rd of that number' is $\\frac{2}{3}x$.\n'is greater than ... by 4' means their difference is 4.\nSo, the equation is: $\\frac{4}{5}x - \\frac{2}{3}x = 4$\n\nStep 3: Solve the equation for x. Find a common denominator for the fractions (which is 15).\n$\\frac{3 \\times 4}{15}x - \\frac{5 \\times 2}{15}x = 4$\n$\\frac{12x - 10x}{15} = 4$\n$\\frac{2x}{15} = 4$\n\nStep 4: Isolate x.\n$2x = 4 \\times 15$\n$2x = 60$\n$x = 30$\n\nNote: The provided source marks 60 as the correct answer. Let's test it: $\\frac{4}{5}(60) = 48$; $\\frac{2}{3}(60) = 40$. The difference is $48-40 = 8$, not 4. The mathematically correct answer is 30."
-  },
-  {
     "id": 565,
     "question": "If a student is able to list the types of quadrilaterals, then the student has achieved this objective: (TSTET 20 Jan 2025)",
     "options": [
@@ -6837,18 +6453,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "A **period plan** (or lesson plan) is a teacher's detailed guide for a single lesson.\n\n- 'Month wise division of units' and 'Number of school working days' are components of a long-term **yearly plan** or **unit plan**, not a daily period plan.\n- 'Goals of teaching mathematics' are broad, long-term aims that guide the entire curriculum, but they are too general for a single period plan.\n- **'Setting learning objectives for the topic'** is the most essential part of a period plan. Learning objectives are specific, measurable statements that describe what students will be able to do by the end of the lesson. All other components of the lesson (activities, assessment, materials) are designed to help students achieve these objectives."
   },
   {
-    "id": 571,
-    "question": "The least fraction in the following that must be subtracted from the sum of $2\\frac{1}{8}$ and $5\\frac{1}{3}$ so that the total results a whole number is (TSTET 19 Jan 2025)",
-    "options": [
-      "$\\frac{3}{8}$",
-      "$\\frac{5}{8}$",
-      "$\\frac{1}{8}$",
-      "$\\frac{7}{8}$"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Note: The question as written in the source document appears to have a typo. Based on the provided correct answer, the second number was likely intended to be $5\\frac{1}{2}$. The explanation below assumes this correction.\n\n**Step 1: Assume the corrected numbers and find their sum.**\nLet the numbers be $2\\frac{1}{8}$ and $5\\frac{1}{2}$.\nSum = $2\\frac{1}{8} + 5\\frac{1}{2}$\n\n**Step 2: Add the whole and fractional parts separately.**\nSum of whole parts = $2 + 5 = 7$.\nSum of fractional parts = $\\frac{1}{8} + \\frac{1}{2}$.\n\n**Step 3: Find a common denominator for the fractions and add them.**\nThe common denominator for 8 and 2 is 8.\n$\\frac{1}{8} + \\frac{1 \\times 4}{2 \\times 4} = \\frac{1}{8} + \\frac{4}{8} = \\frac{5}{8}$.\n\n**Step 4: Combine the whole and fractional parts.**\nThe total sum is $7 + \\frac{5}{8} = 7\\frac{5}{8}$.\n\n**Step 5: Determine the fraction to be subtracted.**\nTo make the result a whole number (in this case, 7), the fractional part must be subtracted.\nThe fractional part is $\\frac{5}{8}$.\n\n*If we were to use the original numbers ($2\\frac{1}{8}$ and $5\\frac{1}{3}$), the sum would be $7\\frac{11}{24}$, and the fraction to be subtracted would be $\\frac{11}{24}$, which is not among the options.*"
-  },
-  {
     "id": 572,
     "question": "Read the following statements related to sets.\nA) If $X=\\{x:x-6=0\\}$, $Y=\\{x:x^{2}=36$ and x > 0\\}, then sets X and Y are equal sets.\nB) If $P=\\{x:x^{2}+2x-15=0$ and $x\\in\\mathbb{N}\\}$, $Q=\\{3,-5\\}$, then sets P and Q are equal sets.\nChoose the correct answer. (TSTET 19 Jan 2025)",
     "options": [
@@ -6883,18 +6487,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 0,
     "explanation": "**Step 1: Find the radius of the circle.**\nThe area of a circle is given by the formula $A = \\pi r^2$.\nGiven $A = 2464~cm^2$ and $\\pi = \\frac{22}{7}$.\n$2464 = \\frac{22}{7} \\times r^2$.\n$r^2 = \\frac{2464 \\times 7}{22} = 112 \\times 7 = 784$.\n$r = \\sqrt{784} = 28$ cm.\n\n**Step 2: Find the length of the wire.**\nThe length of the wire is equal to the circumference of the circle.\nThe formula for circumference is $C = 2\\pi r$.\n$C = 2 \\times \\frac{22}{7} \\times 28 = 2 \\times 22 \\times 4 = 176$ cm.\n\n**Step 3: Find the side of the square.**\nThe same wire is bent into a square, so the perimeter of the square is equal to the length of the wire (176 cm).\nThe formula for the perimeter of a square is $P = 4 \\times side$.\n$176 = 4 \\times side$.\n$side = \\frac{176}{4} = 44$ cm."
-  },
-  {
-    "id": 575,
-    "question": "A card is selected at random from a deck of 52 playing cards. The probability that selected card is a black Jack or an Ace or a diamond card is (TSTET 19 Jan 2025)",
-    "options": [
-      "$\\frac{19}{52}$",
-      "$\\frac{9}{26}$",
-      "$\\frac{5}{13}$",
-      "$\\frac{21}{52}$"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: There is a likely typo in the question. 'black Jack' probably should have been just 'Jack' for the answer key to be correct. The explanation below assumes the question meant 'Jack'.\n\n**Step 1: Count the number of favorable outcomes for each category.**\nLet A be the event of drawing a Jack. There are 4 Jacks in a deck.\nLet B be the event of drawing an Ace. There are 4 Aces in a deck.\nLet C be the event of drawing a diamond card. There are 13 diamond cards in a deck.\n\n**Step 2: Identify and subtract the overlaps to avoid double-counting.**\nThe events are not mutually exclusive.\nOverlap between Jacks and diamonds: The Jack of Diamonds (1 card).\nOverlap between Aces and diamonds: The Ace of Diamonds (1 card).\n\n**Step 3: Calculate the total number of unique favorable cards.**\nTotal favorable cards = (Number of Jacks) + (Number of Aces) + (Number of diamonds) - (Overlaps).\nTotal = $4 + 4 + 13 - 1 - 1 = 19$.\n\n**Step 4: Calculate the probability.**\nProbability = $\\frac{\\text{Favorable Outcomes}}{\\text{Total Outcomes}} = \\frac{19}{52}$.\n\n*If the question is taken literally ('black Jack'), the favorable cards would be 2 black Jacks + 4 Aces + 13 diamonds - 1 Ace of Diamonds = 18 cards. The probability would be $\\frac{18}{52} = \\frac{9}{26}$.*"
   },
   {
     "id": 576,
@@ -7089,18 +6681,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "**Step 1: Find the radius (r) of the sphere from its volume.**\nThe formula for the volume of a sphere is $V = \\frac{4}{3} \\pi r^3$.\nGiven V = 38808.\n$38808 = \\frac{4}{3} \\times \\frac{22}{7} \\times r^3$.\n\n**Step 2: Solve for r^3.**\n$r^3 = \\frac{38808 \\times 3 \\times 7}{4 \\times 22} = \\frac{38808 \\times 21}{88}$.\nFirst, divide 38808 by 88:\n$38808 \\div 88 = 441$.\nSo, $r^3 = 441 \\times 21 = (21 \\times 21) \\times 21 = 21^3$.\nThis gives $r = 21$ cm.\n\n**Step 3: Calculate the total surface area of the sphere.**\nThe formula for the surface area of a sphere is $A = 4 \\pi r^2$.\n$A = 4 \\times \\frac{22}{7} \\times (21)^2 = 4 \\times \\frac{22}{7} \\times 441$.\n$A = 4 \\times 22 \\times (441 \\div 7) = 4 \\times 22 \\times 63$.\n$A = 88 \\times 63 = 5544$ sq. cm."
   },
   {
-    "id": 592,
-    "question": "Mean of the numbers $\\alpha_{1}, \\alpha_{2}, ... ,\\alpha_{10}$ is 56.1, mean of the numbers $\\alpha_{11}, \\alpha_{12}, ... ,\\alpha_{20}$ is 52.05, and mean of the numbers $\\alpha_{21}, \\alpha_{22}, ... ,\\alpha_{30}$ is 53.3, then the mean of all 30 numbers is (TSTET 19 Jan 2025)",
-    "options": [
-      "49.25",
-      "52.3",
-      "56.4",
-      "53.816"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Note: The question in the source PDF is extremely garbled and contradictory. The question has been reconstructed to be logically solvable, which may not match the intended question or the provided answer key.\n\n**Reconstructed Question:**\nThe mean of 10 numbers ($\alpha_1$ to $\alpha_{10}$) is 56.1.\nThe mean of the next 10 numbers ($\alpha_{11}$ to $\alpha_{20}$) is 52.05.\nThe mean of the next 10 numbers ($\alpha_{21}$ to $\alpha_{30}$) is 53.3.\nFind the mean of all 30 numbers combined.\n\n**Step 1: Calculate the sum of each group of numbers.**\n- Sum of first 10 = Mean × Count = $56.1 \\times 10 = 561$.\n- Sum of second 10 = $52.05 \\times 10 = 520.5$.\n- Sum of third 10 = $53.3 \\times 10 = 533$.\n\n**Step 2: Calculate the total sum of all 30 numbers.**\nTotal Sum = $561 + 520.5 + 533 = 1614.5$.\n\n**Step 3: Calculate the overall mean.**\nOverall Mean = $\\frac{\\text{Total Sum}}{\\text{Total Count}} = \\frac{1614.5}{30} \\approx 53.816...$\n\n*Since this result does not perfectly match any option and the original question text is flawed, it is impossible to be certain of the intended problem. The provided solution is based on the most logical interpretation of the jumbled data.*"
-  },
-  {
     "id": 593,
     "question": "If $A=\\{2,\\{3,5,7\\},8\\}$, then read the statements related to the set A.\nA) $\\{3,5,7\\}\\subset A$\nB) $\\{\\emptyset\\}\\subset A$\nC) $\\{3,5,7\\}\\in A$\nD) $\\emptyset\\subset A$\nE) $\\{2,8\\}\\subset A$\nChoose the correct answer. (TSTET 19 Jan 2025)",
     "options": [
@@ -7269,18 +6849,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: The principle of recasting is that the volume of the original object is equal to the total volume of the new objects.\n\nStep 2: Calculate the volume of the large solid cube.\nVolume of large cube = (edge)³ = (24 cm)³ = 24 × 24 × 24 cm³.\n\nStep 3: Calculate the volume of one small cube.\nVolume of small cube = (edge)³ = (3 cm)³ = 3 × 3 × 3 cm³.\n\nStep 4: Divide the volume of the large cube by the volume of a small cube to find the number of smaller cubes.\nNumber of smaller cubes = (Volume of large cube) / (Volume of small cube)\nNumber = (24 × 24 × 24) / (3 × 3 × 3)\nNumber = (24/3) × (24/3) × (24/3) = 8 × 8 × 8 = 512.\nTherefore, 512 smaller cubes can be formed."
   },
   {
-    "id": 607,
-    "question": "In an examination, Rani obtained 20% marks more than Jyothi, but 10% marks less than Anitha. If the marks obtained by Jyothi is 1200 out of 2400 marks, then the percentage of marks obtained by Anitha is (TSTET 19 Jan 2025)",
-    "options": [
-      "60%",
-      "58%",
-      "66%",
-      "54%"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: There is an error in the question's provided answer key. The correct mathematical answer for Anitha's percentage is 66.67%, which is closest to 66% (Option 3). The marked answer, 60% (Option 1), represents Rani's percentage, not Anitha's. Here is the correct step-by-step calculation for Anitha's percentage:\n\nStep 1: Calculate Rani's marks based on Jyothi's marks.\nJyothi's marks = 1200.\nRani's marks = 1200 + (20% of 1200) = 1200 + (0.20 × 1200) = 1200 + 240 = 1440.\n\nStep 2: Calculate Anitha's marks. Rani's marks (1440) are 10% less than Anitha's marks. This means Rani's marks are 90% of Anitha's marks. Let Anitha's marks be 'A'.\n0.90 × A = 1440\nA = 1440 / 0.90 = 14400 / 9 = 1600.\nSo, Anitha's marks are 1600.\n\nStep 3: Calculate the percentage of marks obtained by Anitha.\nTotal marks = 2400.\nAnitha's percentage = (Anitha's marks / Total marks) × 100\nAnitha's percentage = (1600 / 2400) × 100 = (2/3) × 100 = 66.67%.\n\n(Calculation for the provided answer: Rani's percentage is (1440/2400)*100 = 60%. The key likely made a mistake and provided Rani's percentage instead of Anitha's.)"
-  },
-  {
     "id": 608,
     "question": "A number when divided by 1763 gives a remainder 91. If the same number is divided by 41 then the remainder will be (TSTET 19 Jan 2025)",
     "options": [
@@ -7339,18 +6907,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "Step 1: Calculate the area for each of the four shapes.\n\n- **Circle:** Area = πr² = (22/7) × (√7)² = (22/7) × 7 = 22 cm².\n\n- **Square:** Area = side² = (4.5)² = 20.25 cm².\n\n- **Equilateral Triangle:** Area = (√3 / 4) × side² = (1.732 / 4) × 8² = (1.732 / 4) × 64 = 1.732 × 16 = 27.712 cm².\n\n- **Rectangle:** Area = length × breadth = 6 × 4 = 24 cm².\n\nStep 2: Compare the calculated areas.\nThe areas are 22 cm², 20.25 cm², 27.712 cm², and 24 cm².\n\nStep 3: Identify the largest area.\nComparing the values, 27.712 is the largest. This corresponds to the area of the equilateral triangle."
-  },
-  {
-    "id": 613,
-    "question": "The sum of numbers between 100 and 199 which are divisible by 8 is (TSTET 19 Jan 2025)",
-    "options": [
-      "1776",
-      "1784",
-      "1768",
-      "1780"
-    ],
-    "correctAnswer": 1,
-    "explanation": "Note: The provided answer key marks 1784 as correct, but the mathematical calculation results in 1776. There is an error in the source's key. The correct calculation is shown below.\n\nStep 1: Identify the sequence of numbers. This is an Arithmetic Progression (AP).\n- Find the first term (a): The first number greater than 100 divisible by 8 is 104 (since 8 × 13 = 104).\n- Find the last term (aₙ): The last number less than 199 divisible by 8 is 192 (since 8 × 24 = 192).\n- The common difference (d) is 8.\n\nStep 2: Find the number of terms (n) in this AP using the formula aₙ = a + (n-1)d.\n192 = 104 + (n-1)8\n88 = (n-1)8\n11 = n-1\nn = 12.\n\nStep 3: Calculate the sum of the AP using the formula Sₙ = n/2 (a + aₙ).\nS₁₂ = 12/2 (104 + 192)\nS₁₂ = 6 (296)\nS₁₂ = 1776.\n\nThus, the correct sum is 1776."
   },
   {
     "id": 614,
@@ -7435,18 +6991,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "Step 1: Simplify each square root term by factoring out perfect squares.\n- √48 = √(16 × 3) = √16 × √3 = 4√3\n- √75 = √(25 × 3) = √25 × √3 = 5√3\n- √27 = √(9 × 3) = √9 × √3 = 3√3\n\nStep 2: Substitute the simplified terms back into the original expression.\n4√3 - 5√3 + 3√3\n\nStep 3: Combine the terms since they are all like terms (multiples of √3).\n(4 - 5 + 3)√3\n(-1 + 3)√3\n2√3"
-  },
-  {
-    "id": 621,
-    "question": "(-2)⁻¹ = ? (TSTET 19 Jan 2025)",
-    "options": [
-      "0.5",
-      "2",
-      "-2",
-      "(2)⁻¹"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Note: The provided answer key is incorrect. A negative exponent indicates a reciprocal. The correct calculation is shown below.\n\nStep 1: Apply the rule of negative exponents, which states that a⁻ⁿ = 1/aⁿ.\n(-2)⁻¹ = 1 / (-2)¹\n\nStep 2: Simplify the expression.\n1 / (-2) = -1/2\n\nStep 3: Convert the fraction to a decimal.\n-1/2 = -0.5\n\nThe correct answer is -0.5. None of the options provided (0.5, 2, -2, 0.5) match this result. There is an error in the question or the provided options/key."
   },
   {
     "id": 622,
@@ -7581,18 +7125,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Identify the total number of trials.\nThe coins were tossed 25 times, so the total number of trials is 25.\n\nStep 2: Identify the number of favorable outcomes.\nA favorable outcome is the occurrence of 2 or less than 2 heads. This means we need to count how many times 0, 1, or 2 heads appeared.\n* Number of times '0 heads' occurred = 3\n* Number of times '1 head' occurred = 8\n* Number of times '2 heads' occurred = 7\n\nTotal number of favorable outcomes = 3 + 8 + 7 = 18.\n\nStep 3: Calculate the probability.\nProbability = (Number of favorable outcomes) / (Total number of trials)\nProbability = 18 / 25\n\nStep 4: Convert the fraction to a decimal.\nProbability = 18 ÷ 25 = 0.72."
   },
   {
-    "id": 633,
-    "question": "Two poles are standing opposite to each other on either side of the road, which is 150 feet wide. Height of one pole is 12 meters more than the height of the other pole. From a point on the road between the poles, the angle of elevation of the tallest pole is 60°, whereas that of the other pole is 30°. The position of the point (in feet) on the road from the foot of the taller pole is (use √3 = 1.73). (TSTET 11 Jan 2025)",
-    "options": [
-      "129.24",
-      "64.62",
-      "85.38",
-      "42.69"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Note: The question mixes units (feet and meters). We will assume '12 meters' should be '12 feet' for consistency.\n\nStep 1: Set up the variables.\n* Let the height of the shorter pole be 'h' feet.\n* Let the height of the taller pole be '(h + 12)' feet.\n* The width of the road is 150 feet.\n* Let 'x' be the distance from the point on the road to the foot of the taller pole.\n* The distance to the shorter pole will be '(150 - x)' feet.\n\nStep 2: Formulate trigonometric equations.\n* For the taller pole: $tan(60°) = \\frac{h + 12}{x} \\Rightarrow \\sqrt{3} = \\frac{h + 12}{x} \\Rightarrow h = x\\sqrt{3} - 12$ (Equation 1)\n* For the shorter pole: $tan(30°) = \\frac{h}{150 - x} \\Rightarrow \\frac{1}{\\sqrt{3}} = \\frac{h}{150 - x} \\Rightarrow h = \\frac{150 - x}{\\sqrt{3}}$ (Equation 2)\n\nStep 3: Solve for 'x'.\n* Set the expressions for 'h' from both equations equal to each other:\n$x\\sqrt{3} - 12 = \\frac{150 - x}{\\sqrt{3}}$\n* Multiply the entire equation by $\\sqrt{3}$:\n$x(\\sqrt{3} \\times \\sqrt{3}) - 12\\sqrt{3} = 150 - x$\n$3x - 12\\sqrt{3} = 150 - x$\n* Rearrange the terms to solve for x:\n$3x + x = 150 + 12\\sqrt{3}$\n$4x = 150 + 12(1.73)$\n$4x = 150 + 20.76$\n$4x = 170.76$\n$x = \\frac{170.76}{4} = 42.69$ feet."
-  },
-  {
     "id": 634,
     "question": "A wire is bent in the form of a circle with radius 21cm. It is straightened and made into a rectangle. The length and breadth of the rectangle formed are in the ratio 2:1, then the breadth of the rectangle (in centimeters) is (Use $\\pi = \\frac{22}{7}$). (TSTET 11 Jan 2025)",
     "options": [
@@ -7629,18 +7161,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "Step 1: Find the value of 'a' using the first equation.\nSince -2 is a root of $x^2 + ax + 10 = 0$, substitute $x = -2$ into the equation.\n$(-2)^2 + a(-2) + 10 = 0$\n$4 - 2a + 10 = 0$\n$14 - 2a = 0$\n$2a = 14 \\Rightarrow a = 7$.\n\nStep 2: Use the value of 'a' in the second equation.\nSubstitute $a = 7$ into $x^2 + (a - 1)x + q = 0$.\n$x^2 + (7 - 1)x + q = 0$\n$x^2 + 6x + q = 0$.\n\nStep 3: Find the value of 'q' using the condition of equal roots.\nFor a quadratic equation $Ax^2 + Bx + C = 0$ to have equal roots, its discriminant ($D = B^2 - 4AC$) must be zero.\nHere, A = 1, B = 6, and C = q.\n$D = 6^2 - 4(1)(q) = 0$\n$36 - 4q = 0$\n$4q = 36 \\Rightarrow q = 9$."
   },
   {
-    "id": 637,
-    "question": "Two cyclists cover the same distance at the speeds of 15 km/hr and 24 km/hr respectively. Then the distance (in km) covered by each one of them when one takes 12 minutes longer than the other is (TSTET 11 Jan 2025)",
-    "options": [
-      "13",
-      "11",
-      "10",
-      "8"
-    ],
-    "correctAnswer": 3,
-    "explanation": "Note: The provided answer key marks 10 as correct, but the mathematically correct answer is 8.\n\nStep 1: Set up the variables.\nLet the distance be 'd' km.\nSpeed of the slower cyclist = 15 km/hr.\nSpeed of the faster cyclist = 24 km/hr.\nTime taken by the slower cyclist, $t_1 = \\frac{d}{15}$ hours.\nTime taken by the faster cyclist, $t_2 = \\frac{d}{24}$ hours.\n\nStep 2: Formulate the equation based on the time difference.\nThe time difference is 12 minutes, which is $\\frac{12}{60} = \\frac{1}{5}$ hours.\nThe slower cyclist takes more time, so $t_1 - t_2 = \\frac{1}{5}$.\n$\\frac{d}{15} - \\frac{d}{24} = \\frac{1}{5}$.\n\nStep 3: Solve the equation for 'd'.\nFind a common denominator for 15 and 24, which is 120.\n$\\frac{8d - 5d}{120} = \\frac{1}{5}$\n$\\frac{3d}{120} = \\frac{1}{5}$\n$\\frac{d}{40} = \\frac{1}{5}$\n$d = \\frac{40}{5} = 8$ km.\n\nVerification: Time for 8 km at 15 km/hr = 8/15 hr = 32 minutes. Time for 8 km at 24 km/hr = 8/24 = 1/3 hr = 20 minutes. The difference is 32 - 20 = 12 minutes."
-  },
-  {
     "id": 638,
     "question": "Choose the finite sets from the following. A) {x: x is an odd number that leaves remainder zero when divided by 2}, B) {x: x is a prime factor of 25}, C) {x: x is an even natural number and less than 100}. (TSTET 11 Jan 2025)",
     "options": [
@@ -7663,18 +7183,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "This problem can be solved using the rule of alligation.\n\nStep 1: Set up the alligation diagram.\nWrite the means of the two groups on the top row and the combined mean in the center.\n\nMean of Group 1: 141\nMean of Group 2: 129\nCombined Mean: 136\n\nStep 2: Find the difference diagonally.\n* Difference between the combined mean and the mean of Group 2: $136 - 129 = 7$.\n* Difference between the mean of Group 1 and the combined mean: $141 - 136 = 5$.\n\nStep 3: Write the ratio.\nThe ratio of the number of persons in Group 1 to Group 2 is the ratio of the differences calculated in Step 2.\nRatio = (Difference from Group 2) : (Difference from Group 1)\nRatio = 7 : 5."
-  },
-  {
-    "id": 640,
-    "question": "If the base of an isosceles triangle is 16cm and the sum of its equal sides is 34cm, then its area (in sq.cm) is (TSTET 11 Jan 2025)",
-    "options": [
-      "120",
-      "240",
-      "60",
-      "136"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: The provided answer key marks 60 as correct, but the mathematically correct answer is 120.\n\nStep 1: Determine the lengths of the sides.\n* Base (b) = 16 cm.\n* Let the length of each of the two equal sides be 'a'.\n* Sum of equal sides = a + a = 2a = 34 cm.\n* Therefore, a = 34 / 2 = 17 cm.\n* The sides of the triangle are 17 cm, 17 cm, and 16 cm.\n\nStep 2: Calculate the height (h) of the triangle.\n* The altitude from the vertex between the equal sides to the base will bisect the base.\n* This forms two right-angled triangles with hypotenuse 17 cm, one side 16/2 = 8 cm, and the other side being the height 'h'.\n* Using the Pythagorean theorem ($a^2 + b^2 = c^2$):\n$h^2 + 8^2 = 17^2$\n$h^2 + 64 = 289$\n$h^2 = 289 - 64 = 225$\n$h = \\sqrt{225} = 15$ cm.\n\nStep 3: Calculate the area of the triangle.\n* Area = $\\frac{1}{2} \\times \\text{base} \\times \\text{height}$\n* Area = $\\frac{1}{2} \\times 16 \\times 15 = 8 \\times 15 = 120$ sq.cm."
   },
   {
     "id": 641,
@@ -7857,18 +7365,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     "explanation": "The concept of correlation in mathematics education refers to how mathematical concepts relate to other ideas.\n* **Internal correlation** is the connection between different topics *within* mathematics (e.g., using algebra to solve a geometry problem).\n* **External correlation** is the connection between mathematics and other subjects or real-life applications.\n\nThe scenario describes using mathematics (arithmetic, planning, optimization) for a real-life task (household budgeting). This is a prime example of applying mathematical principles to a context outside of the subject itself. Therefore, it demonstrates **external correlation**."
   },
   {
-    "id": 656,
-    "question": "Identify the factors that a mathematics teacher relies on to choose an appropriate method for teaching mathematics among the following: A) The intelligence level of the students in the class B) Available resources C) Topic to be taught D) His/her professional qualifications. (TSTET 11 Jan 2025)",
-    "options": [
-      "A, B & C only",
-      "B, C & D only",
-      "A, B & C only",
-      "A, B, C & D"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Note: The options in the PDF seem to have a typo, listing A, B & C twice. Assuming the correct option should be A, B, and the Topic (listed as C).\n\nWhen choosing a teaching method, a teacher must consider several dynamic factors related to the specific teaching situation:\n\n* **A) The intelligence level of the students:** The method must be appropriate for the students' cognitive abilities and prior knowledge. A method suitable for advanced students might not work for beginners.\n* **B) Available resources:** The availability of tools like manipulatives, technology, or lab equipment dictates which methods are feasible.\n* **C) Topic to be taught:** Different mathematical topics lend themselves to different approaches. For example, geometry is well-suited to visual and hands-on methods, while abstract algebra may require a more deductive approach.\n* **D) Professional qualifications:** While essential for a teacher's overall competence, qualifications are a static background factor. The choice of method for a *specific lesson* is an active decision based on the immediate context of the students, topic, and resources. Therefore, A, B, and C are the most direct factors in this decision-making process."
-  },
-  {
     "id": 657,
     "question": "'Examining logical arguments' is a learning indicator for this academic standard: (TSTET 11 Jan 2025)",
     "options": [
@@ -7915,18 +7411,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "Unit and period plans are specific, short-term instructional designs.\n* **Setting learning objectives (Essential):** Defines what students should be able to do by the end of the lesson/unit.\n* **Providing teaching and learning materials (Essential):** Lists the resources needed to conduct the lesson.\n* **Designing learning experiences (Essential):** Outlines the activities and tasks for the lesson.\n* **Goals of teaching mathematics (Not an essential part):** These are the broad, long-term aims of the entire mathematics curriculum (e.g., developing logical thinking). While a lesson plan should align with these goals, the goals themselves are too broad to be a specific component *within* a daily or unit plan. The plan focuses on specific objectives, not the overarching goals of the subject."
-  },
-  {
-    "id": "661",
-    "question": "Choose an INCORRECT statement from the following related to sets. (TSTET 5 Jan 2025)",
-    "options": [
-      "If P = {x: x is a natural number, x < 8 and x > 6}, then set P is an empty set.",
-      "If A and B are two non-empty disjoint sets, then n(A U B) = n(A) + n(B).",
-      "The set of lines passing through a given point in a plane is an infinite set.",
-      "If A = {x: x is an even prime number and x > 2}, then set A is a finite set."
-    ],
-    "correctAnswer": 0,
-    "explanation": "To find the incorrect statement, let's analyze each option:\n\n* **Option 1:** P = {x: x is a natural number, x < 8 and x > 6}. The only natural number that is greater than 6 and less than 8 is 7. So, P = {7}. This is a singleton set, not an empty set. Therefore, the statement is **incorrect**.\n\n* **Option 2:** For any two disjoint sets A and B, the number of elements in their union is the sum of the number of elements in each set, i.e., n(A U B) = n(A) + n(B). This statement is **correct**.\n\n* **Option 3:** An infinite number of lines can be drawn through a single point in a plane. This statement is **correct**.\n\n* **Option 4:** A = {x: x is an even prime number and x > 2}. The only even prime number is 2. There are no even prime numbers greater than 2. Therefore, set A is the empty set, A = ∅. The empty set has zero elements and is considered a finite set. This statement is **correct**.\n\nThe question asks for the INCORRECT statement, which is Option 1. (Note: The provided source document incorrectly marks option 4 as the answer.)"
   },
   {
     "id": "662",
@@ -8395,18 +7879,6 @@ const rawMathematicsPaper2Data: MathsPaper2RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "A pie diagram represents the whole as a full circle of $360^{\\circ}$. The angle of a slice (component part) is proportional to its value relative to the total value.\n\nStep 1: Find the proportion of the component part relative to the whole. This is calculated as the fraction: $\\frac{\\text{Component value}}{\\text{Total value}}$.\n\nStep 2: To find the degree measure for this component, multiply its proportion by the total degrees in a circle.\nAngle = $(\\frac{\\text{Component value}}{\\text{Total value}}) \\times 360^{\\circ}$.\n\nStep 3: The expression in Option 2 matches this standard formula. The expression in Option 4, $(\\frac{360^{\\circ}}{\\text{Total value}}) \\times \\text{Component value}$, is an algebraically equivalent representation of the same formula. Based on the provided answer key, this representation is the correct choice."
-  },
-  {
-    "id": 701,
-    "question": "If $A=2x^{3}+3x^{2}-2x-1$, $B=4x^{3}-6x^{2}-4x+8$, $C=3x^{3}-2x^{2}-3x+3$, then $A-B+C$ is (APTET 2011)",
-    "options": [
-      "$x^{3}+7x^{2}-9x-6$",
-      "$x^{3}-7x^{2}+9x+6$",
-      "$x^{3}+7x^{2}+9x-6$",
-      "$x^{3}-7x^{2}-9x+6$"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Step 1: Write out the expression for $A-B+C$.\n$(2x^{3}+3x^{2}-2x-1) - (4x^{3}-6x^{2}-4x+8) + (3x^{3}-2x^{2}-3x+3)$\n\nStep 2: Distribute the negative sign to all terms in polynomial B.\n$2x^{3}+3x^{2}-2x-1 - 4x^{3}+6x^{2}+4x-8 + 3x^{3}-2x^{2}-3x+3$\n\nStep 3: Group and combine like terms.\n$x^3$ terms: $2x^3 - 4x^3 + 3x^3 = (2 - 4 + 3)x^3 = x^3$\n$x^2$ terms: $3x^2 + 6x^2 - 2x^2 = (3 + 6 - 2)x^2 = 7x^2$\n$x$ terms: $-2x + 4x - 3x = (-2 + 4 - 3)x = -x$\nConstant terms: $-1 - 8 + 3 = -9 + 3 = -6$\n\nStep 4: The calculated result is $x^3 + 7x^2 - x - 6$.\n\n**Note:** The calculated answer does not match any of the provided options, which suggests there is an error in the question paper or the options. The provided key indicates option 3 is the correct answer, which would require a different set of original polynomials."
   },
   {
     "id": 702,

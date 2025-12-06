@@ -52,10 +52,13 @@ tetapp/
 │   ├── functions/
 │   │   ├── create-razorpay-order/
 │   │   │   └── index.ts                    ✅ Deployed
-│   │   └── verify-razorpay-payment/
-│   │       └── index.ts                    ✅ Deployed
+│   │   ├── verify-razorpay-payment/
+│   │   │   └── index.ts                    ✅ Updated (idempotency)
+│   │   └── razorpay-webhook/
+│   │       └── index.ts                    🆕 Webhook handler
 │   └── migrations/
-│       └── add_pro_access_fields.sql       ✅ Applied
+│       ├── add_pro_access_fields.sql       ✅ Applied
+│       └── add_webhook_tracking.sql        🆕 Webhook tracking
 │
 ├── lib/
 │   ├── razorpay.ts                         ✅ Updated to use Edge Functions
@@ -371,6 +374,56 @@ npx expo run:android
 
 ---
 
+## 🔔 Webhook Configuration (NEW!)
+
+The webhook handler provides **backup payment verification** when client-side verification fails (e.g., app crash after payment).
+
+### Files Added
+```
+supabase/functions/razorpay-webhook/index.ts    # Webhook handler
+supabase/migrations/add_webhook_tracking.sql    # Tracking columns
+```
+
+### Step 1: Deploy Webhook Function
+```bash
+supabase functions deploy razorpay-webhook --project-ref thvucacdrsexfcpkswpv
+```
+
+### Step 2: Set Webhook Secret
+```bash
+export SUPABASE_ACCESS_TOKEN=sbp_e120c348bd6e8229463879447e2f14dd9c4f9026
+supabase secrets set RAZORPAY_WEBHOOK_SECRET=your_webhook_secret_here --project-ref thvucacdrsexfcpkswpv
+```
+
+### Step 3: Configure in Razorpay Dashboard
+1. Go to **Razorpay Dashboard** → **Settings** → **Webhooks**
+2. Click **Add New Webhook**
+3. Enter URL: `https://thvucacdrsexfcpkswpv.supabase.co/functions/v1/razorpay-webhook`
+4. Select events:
+   - `payment.captured`
+   - `payment.failed`
+5. Copy the **Secret** and use it in Step 2
+6. Click **Create Webhook**
+
+### Step 4: Apply Migration
+```bash
+supabase db push --project-ref thvucacdrsexfcpkswpv
+```
+
+### How It Works
+1. User completes payment on Razorpay
+2. Client-side calls `verify-razorpay-payment` (primary flow)
+3. Razorpay sends webhook to your server (backup flow)
+4. Webhook grants pro access if client-side failed
+5. Both flows are **idempotent** - safe if both execute
+
+### Testing Webhooks
+1. In Razorpay Dashboard → Webhooks → Click on your webhook
+2. Click **"Test"** to send a test event
+3. Check logs: `supabase functions logs razorpay-webhook --project-ref thvucacdrsexfcpkswpv`
+
+---
+
 ## 🚀 Production Checklist
 
 Before going live:
@@ -408,7 +461,7 @@ supabase secrets set RAZORPAY_KEY_SECRET=your_live_secret --project-ref thvucacd
 - [ ] Display pricing clearly
 
 ### 5. Optional Enhancements
-- [ ] Set up Razorpay webhooks for automatic status sync
+- [x] Set up Razorpay webhooks for automatic status sync ✅ DONE
 - [ ] Add payment history screen
 - [ ] Implement automatic expiry notifications
 - [ ] Add referral/coupon system

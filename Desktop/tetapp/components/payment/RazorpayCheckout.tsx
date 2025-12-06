@@ -7,10 +7,16 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import RazorpayCheckoutSDK from 'react-native-razorpay';
+
+const { width } = Dimensions.get('window');
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../lib/auth-context';
+import { supabase } from '../../lib/supabase';
 import {
   createRazorpayOrder,
   verifyRazorpayPayment,
@@ -54,6 +60,25 @@ export default function RazorpayCheckout({
 
     console.log('🔵 [RazorpayCheckout] Creating order for:', { tier, package: packageType });
 
+    // Fetch user phone from profile before creating order
+    let userPhone: string | undefined;
+    if (user?.id) {
+      try {
+        const { data, error } = await supabase
+          .from('user_profiles')
+          .select('phone')
+          .eq('id', user.id)
+          .single();
+
+        if (!error && data?.phone) {
+          userPhone = data.phone;
+          console.log('📱 [RazorpayCheckout] User phone fetched:', userPhone);
+        }
+      } catch (err) {
+        console.log('Could not fetch user phone:', err);
+      }
+    }
+
     const { success, order, error, details } = await createRazorpayOrder(tier, packageType);
 
     console.log('📊 [RazorpayCheckout] Order creation result:', { success, order: order?.id, error });
@@ -86,16 +111,23 @@ export default function RazorpayCheckout({
 
     console.log('✅ [RazorpayCheckout] Order created successfully, opening native checkout...');
 
-    // Open native Razorpay checkout
-    openNativeCheckout(order);
+    // Open native Razorpay checkout with phone
+    openNativeCheckout(order, userPhone);
   };
 
-  const openNativeCheckout = (order: RazorpayOrder) => {
+  const openNativeCheckout = (order: RazorpayOrder, userPhone?: string) => {
     const options = getRazorpayCheckoutOptions(
       order,
       user?.email,
-      user?.user_metadata?.full_name
+      user?.user_metadata?.full_name,
+      userPhone
     );
+
+    console.log('🛒 [RazorpayCheckout] Opening checkout with prefill:', {
+      email: user?.email,
+      name: user?.user_metadata?.full_name,
+      contact: userPhone,
+    });
 
     setPaymentState({
       status: 'awaiting_payment',
@@ -211,15 +243,7 @@ export default function RazorpayCheckout({
     setPaymentState({
       status: 'cancelled',
     });
-
-    Alert.alert(
-      'Payment Cancelled',
-      'You cancelled the payment. Would you like to try again?',
-      [
-        { text: 'Try Again', onPress: () => setPaymentState({ status: 'idle' }) },
-        { text: 'Close', onPress: onClose, style: 'cancel' },
-      ]
-    );
+    // Custom styled UI is shown via renderContent()
   };
 
   const renderContent = () => {
@@ -264,6 +288,55 @@ export default function RazorpayCheckout({
             <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={1}>
               <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
+          </View>
+        );
+
+      case 'cancelled':
+        return (
+          <View style={styles.cancelledContainer}>
+            {/* Icon */}
+            <View style={styles.cancelledIconContainer}>
+              <Ionicons name="close-circle" size={64} color="#f59e0b" />
+            </View>
+
+            {/* Title */}
+            <Text style={styles.cancelledTitle}>Payment Cancelled</Text>
+
+            {/* Message */}
+            <Text style={styles.cancelledMessage}>
+              You cancelled the payment. Would you like to try again?
+            </Text>
+
+            {/* Buttons */}
+            <View style={styles.cancelledButtonsContainer}>
+              <TouchableOpacity
+                style={styles.tryAgainButton}
+                onPress={() => {
+                  setPaymentState({ status: 'idle' });
+                  // Directly trigger order creation for smooth experience
+                  setTimeout(() => handleCreateOrder(), 100);
+                }}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={['#fbbf24', '#f59e0b', '#d97706']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.tryAgainButtonGradient}
+                >
+                  <Ionicons name="refresh" size={20} color="#ffffff" />
+                  <Text style={styles.tryAgainButtonText}>Try Again</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.cancelledCloseButton}
+                onPress={onClose}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.cancelledCloseButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         );
 
@@ -375,5 +448,89 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: '#6b7280',
     fontSize: 16,
+  },
+  // Cancelled State Styles
+  cancelledContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: width - 64,
+    maxWidth: width - 48,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  cancelledIconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#fef3c7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  cancelledTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 12,
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+  cancelledMessage: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 24,
+    paddingHorizontal: 8,
+  },
+  cancelledButtonsContainer: {
+    width: '100%',
+    gap: 12,
+  },
+  tryAgainButton: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#d97706',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  tryAgainButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+  },
+  tryAgainButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  cancelledCloseButton: {
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    borderRadius: 16,
+    backgroundColor: '#f3f4f6',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  cancelledCloseButtonText: {
+    color: '#6b7280',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

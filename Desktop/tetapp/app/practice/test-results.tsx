@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -51,42 +51,43 @@ interface QuestionWithAnswer extends Question {
   isCorrect?: boolean;
   status: 'correct' | 'incorrect' | 'unanswered';
   markedForReview?: boolean;
+  originalIndex: number;
 }
 
 export default function TestResults() {
   const params = useLocalSearchParams();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [filter, setFilter] = useState<'all' | 'correct' | 'incorrect'>('all');
   const scrollViewRef = useRef<ScrollView>(null);
   const questionSectionY = useRef<number>(0);
 
-  // Defensive check for navigation context - show loading if params not ready
-  if (!params || Object.keys(params).length === 0) {
-    return (
-      <View className="flex-1 items-center justify-center bg-purple-50">
-        <ActivityIndicator size="large" color="#7c3aed" />
-        <Text className="mt-4 text-gray-600">Loading results...</Text>
-      </View>
-    );
-  }
+  // Gesture animation values - must be called before any conditional returns
+  const translateX = useSharedValue(0);
 
-  // Parse params
-  const totalQuestions = parseInt(params.totalQuestions as string) || 0;
-  const answeredCount = parseInt(params.answeredCount as string) || 0;
-  const correctCount = parseInt(params.correctCount as string) || 0;
-  const incorrectCount = parseInt(params.incorrectCount as string) || 0;
-  const skippedCount = parseInt(params.skippedCount as string) || 0;
+  // Animated style for content - must be called before any conditional returns
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: translateX.value }],
+    };
+  });
+
+  // Parse params (safe to do even if params is empty)
+  const totalQuestions = parseInt(params?.totalQuestions as string) || 0;
+  const answeredCount = parseInt(params?.answeredCount as string) || 0;
+  const correctCount = parseInt(params?.correctCount as string) || 0;
+  const incorrectCount = parseInt(params?.incorrectCount as string) || 0;
+  const skippedCount = parseInt(params?.skippedCount as string) || 0;
   const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
 
   // Check if subject is Urdu (RTL language)
-  const subjectId = params.subjectId as string | undefined;
-  const subjectName = params.subjectName as string | undefined;
+  const subjectId = params?.subjectId as string | undefined;
+  const subjectName = params?.subjectName as string | undefined;
   const isUrduSubject = subjectId?.toLowerCase() === 'urdu' || subjectName?.toLowerCase() === 'urdu';
 
   // Parse questions data
-  const questionsData: Question[] = (() => {
+  const questionsData: Question[] = useMemo(() => {
     try {
-      if (!params.questions) {
-        console.warn('[test-results] No questions param found');
+      if (!params?.questions) {
         return [];
       }
       const rawParam = params.questions as string;
@@ -100,60 +101,79 @@ export default function TestResults() {
       console.error('[test-results] Error parsing questions:', error);
       return [];
     }
-  })();
+  }, [params?.questions]);
 
   // Parse answers data
-  const answersData: Record<string, string> = (() => {
+  const answersData: Record<string, string> = useMemo(() => {
     try {
-      if (!params.answers) return {};
+      if (!params?.answers) return {};
       return JSON.parse(params.answers as string);
     } catch (error) {
       console.error('[test-results] Error parsing answers:', error);
       return {};
     }
-  })();
+  }, [params?.answers]);
 
   // Parse marked for review data (array of question indices)
-  const markedForReviewData: Set<number> = (() => {
+  const markedForReviewData: Set<number> = useMemo(() => {
     try {
-      if (!params.markedForReview) return new Set();
+      if (!params?.markedForReview) return new Set();
       const parsed = JSON.parse(params.markedForReview as string);
       return new Set(Array.isArray(parsed) ? parsed.map(Number) : []);
     } catch (error) {
       console.error('[test-results] Error parsing markedForReview:', error);
       return new Set();
     }
-  })();
+  }, [params?.markedForReview]);
 
   // Create questions with answers
-  const questionsWithAnswers: QuestionWithAnswer[] = questionsData.map((question, index) => {
-    const userAnswerKey = answersData[index]; // This is "A", "B", "C", or "D"
+  const questionsWithAnswers: QuestionWithAnswer[] = useMemo(() => {
+    return questionsData.map((question, index) => {
+      const userAnswerKey = answersData[index]; // This is "A", "B", "C", or "D"
 
-    // Convert option key to option text for comparison
-    const optionsArray = Array.isArray(question.options) ? question.options : [];
-    const optionsMap = optionsArray.reduce((acc, option, idx) => {
-      const key = String.fromCharCode(65 + idx); // A, B, C, D
-      acc[key] = option;
-      return acc;
-    }, {} as Record<string, string>);
+      // Convert option key to option text for comparison
+      const optionsArray = Array.isArray(question.options) ? question.options : [];
+      const optionsMap = optionsArray.reduce((acc, option, idx) => {
+        const key = String.fromCharCode(65 + idx); // A, B, C, D
+        acc[key] = option;
+        return acc;
+      }, {} as Record<string, string>);
 
-    const userAnswerText = userAnswerKey ? optionsMap[userAnswerKey] : undefined;
-    // Use trimmed comparison to avoid whitespace issues
-    const isCorrect = userAnswerText?.trim() === question.correct_answer?.trim();
-    const status = !userAnswerKey ? 'unanswered' : isCorrect ? 'correct' : 'incorrect';
-    const markedForReview = markedForReviewData.has(index);
+      const userAnswerText = userAnswerKey ? optionsMap[userAnswerKey] : undefined;
+      // Use trimmed comparison to avoid whitespace issues
+      const isCorrect = userAnswerText?.trim() === question.correct_answer?.trim();
+      const status = !userAnswerKey ? 'unanswered' : isCorrect ? 'correct' : 'incorrect';
+      const markedForReview = markedForReviewData.has(index);
 
-    return {
-      ...question,
-      userAnswer: userAnswerKey, // Keep as key for display purposes
-      isCorrect,
-      status,
-      markedForReview,
-    };
-  });
+      return {
+        ...question,
+        userAnswer: userAnswerKey, // Keep as key for display purposes
+        isCorrect,
+        status,
+        markedForReview,
+        originalIndex: index,
+      };
+    });
+  }, [questionsData, answersData, markedForReviewData]);
 
-  // Get current question
-  const currentQuestion = questionsWithAnswers[currentQuestionIndex];
+  // Filter questions based on selected filter
+  const filteredQuestions = useMemo(() => {
+    if (filter === 'all') return questionsWithAnswers;
+    if (filter === 'correct') return questionsWithAnswers.filter(q => q.status === 'correct');
+    return questionsWithAnswers.filter(q => q.status === 'incorrect' || q.status === 'unanswered');
+  }, [questionsWithAnswers, filter]);
+
+  // Count questions by status for filter badges
+  const correctQuestionsCount = questionsWithAnswers.filter(q => q.status === 'correct').length;
+  const incorrectQuestionsCount = questionsWithAnswers.filter(q => q.status === 'incorrect' || q.status === 'unanswered').length;
+
+  // Reset to first question when filter changes
+  useEffect(() => {
+    setCurrentQuestionIndex(0);
+  }, [filter]);
+
+  // Get current question from filtered list
+  const currentQuestion = filteredQuestions[currentQuestionIndex];
 
   // Scroll to question section
   const scrollToQuestion = useCallback(() => {
@@ -164,38 +184,35 @@ export default function TestResults() {
   }, []);
 
   // Navigation handlers
-  const handleNext = () => {
-    if (currentQuestionIndex < questionsWithAnswers.length - 1) {
+  const handleNext = useCallback(() => {
+    if (currentQuestionIndex < filteredQuestions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       scrollToQuestion();
     }
-  };
+  }, [currentQuestionIndex, filteredQuestions.length, scrollToQuestion]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
       scrollToQuestion();
     }
-  };
-
-  // Gesture animation values
-  const translateX = useSharedValue(0);
+  }, [currentQuestionIndex, scrollToQuestion]);
 
   // Swipe gesture handlers
   const handleSwipeNext = useCallback(() => {
     handleNext();
-  }, [currentQuestionIndex, questionsWithAnswers.length]);
+  }, [handleNext]);
 
   const handleSwipePrevious = useCallback(() => {
     handlePrevious();
-  }, [currentQuestionIndex]);
+  }, [handlePrevious]);
 
   // Pan gesture for swipe navigation
-  const panGesture = Gesture.Pan()
+  const panGesture = useMemo(() => Gesture.Pan()
     .activeOffsetX([-10, 10])
     .failOffsetY([-15, 15])
     .onUpdate((event) => {
-      const canSwipeLeft = currentQuestionIndex < questionsWithAnswers.length - 1;
+      const canSwipeLeft = currentQuestionIndex < filteredQuestions.length - 1;
       const canSwipeRight = currentQuestionIndex > 0;
 
       if (event.translationX < 0 && !canSwipeLeft) {
@@ -213,7 +230,7 @@ export default function TestResults() {
       const swipeThreshold = SCREEN_WIDTH * 0.12;
       const velocityThreshold = 500;
 
-      const shouldSwipeLeft = (event.translationX < -swipeThreshold || event.velocityX < -velocityThreshold) && currentQuestionIndex < questionsWithAnswers.length - 1;
+      const shouldSwipeLeft = (event.translationX < -swipeThreshold || event.velocityX < -velocityThreshold) && currentQuestionIndex < filteredQuestions.length - 1;
       const shouldSwipeRight = (event.translationX > swipeThreshold || event.velocityX > velocityThreshold) && currentQuestionIndex > 0;
 
       if (shouldSwipeLeft) {
@@ -242,14 +259,17 @@ export default function TestResults() {
           stiffness: 300,
         });
       }
-    });
+    }), [currentQuestionIndex, filteredQuestions.length, handleSwipeNext, handleSwipePrevious]);
 
-  // Animated style for content
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-    };
-  });
+  // Defensive check for navigation context - show loading if params not ready
+  if (!params || Object.keys(params).length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center bg-purple-50">
+        <ActivityIndicator size="large" color="#7c3aed" />
+        <Text className="mt-4 text-gray-600">Loading results...</Text>
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -295,20 +315,20 @@ export default function TestResults() {
 
               <View className="flex-row justify-around">
                 <View className="items-center flex-1">
-                  <View className="w-12 h-12 rounded-full bg-emerald-100 items-center justify-center mb-2">
-                    <Text className="text-2xl font-bold text-emerald-600">
-                      {correctCount}
-                    </Text>
-                  </View>
-                  <Text className="text-gray-600 text-xs font-medium">Correct</Text>
+                  <Text className="text-sm font-semibold text-gray-600 mb-2">
+                    Correct
+                  </Text>
+                  <Text className="text-4xl font-bold text-purple-700">
+                    {correctCount}
+                  </Text>
                 </View>
                 <View className="items-center flex-1">
-                  <View className="w-12 h-12 rounded-full bg-rose-100 items-center justify-center mb-2">
-                    <Text className="text-2xl font-bold text-rose-600">
-                      {incorrectCount}
-                    </Text>
-                  </View>
-                  <Text className="text-gray-600 text-xs font-medium">Incorrect</Text>
+                  <Text className="text-sm font-semibold text-gray-600 mb-2">
+                    Incorrect
+                  </Text>
+                  <Text className="text-4xl font-bold text-purple-700">
+                    {incorrectCount}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -316,7 +336,7 @@ export default function TestResults() {
 
             {/* Question Review Section */}
             <View
-              className="flex-row items-center justify-between mb-4"
+              className="mb-4"
               onLayout={(event) => {
                 questionSectionY.current = event.nativeEvent.layout.y;
               }}
@@ -324,12 +344,60 @@ export default function TestResults() {
               <Text className="text-2xl font-bold text-gray-800">
                 Question Review
               </Text>
-              <Text className="text-sm text-gray-500">
-                Swipe to navigate
-              </Text>
+            </View>
+
+            {/* Filter Toggle */}
+            <View className="flex-row mb-4 gap-2">
+              <TouchableOpacity
+                onPress={() => setFilter('all')}
+                className={`flex-1 py-2 px-3 rounded-full ${
+                  filter === 'all' ? 'bg-purple-600' : 'bg-white border border-gray-300'
+                }`}
+                activeOpacity={0.7}
+              >
+                <Text className={`text-center font-semibold ${
+                  filter === 'all' ? 'text-white' : 'text-gray-700'
+                }`}>
+                  All
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setFilter('correct')}
+                className={`flex-1 py-2 px-3 rounded-full ${
+                  filter === 'correct' ? 'bg-emerald-600' : 'bg-white border border-gray-300'
+                }`}
+                activeOpacity={0.7}
+              >
+                <Text className={`text-center font-semibold ${
+                  filter === 'correct' ? 'text-white' : 'text-gray-700'
+                }`}>
+                  Correct
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setFilter('incorrect')}
+                className={`flex-1 py-2 px-3 rounded-full ${
+                  filter === 'incorrect' ? 'bg-rose-600' : 'bg-white border border-gray-300'
+                }`}
+                activeOpacity={0.7}
+              >
+                <Text className={`text-center font-semibold ${
+                  filter === 'incorrect' ? 'text-white' : 'text-gray-700'
+                }`}>
+                  Incorrect
+                </Text>
+              </TouchableOpacity>
             </View>
 
             {/* Single Question Display with Swipe */}
+            {filteredQuestions.length === 0 ? (
+              <View className="bg-white p-8 rounded-2xl items-center mb-6">
+                <Ionicons name="search-outline" size={48} color="#9CA3AF" />
+                <Text className="text-gray-500 text-center mt-4 text-lg">
+                  No {filter === 'correct' ? 'correct' : 'incorrect'} answers to review
+                </Text>
+              </View>
+            ) : (
             <GestureDetector gesture={panGesture}>
               <Animated.View style={animatedStyle}>
                 {currentQuestion && (() => {
@@ -353,7 +421,12 @@ export default function TestResults() {
                 {/* Question Header */}
                 <View className="bg-white p-4 border-b border-gray-200">
                   <Text className="text-lg font-bold text-gray-800">
-                    Question {currentQuestionIndex + 1}
+                    Question {currentQuestion.originalIndex + 1}
+                    {filter !== 'all' && (
+                      <Text className="text-sm font-normal text-gray-500">
+                        {' '}({currentQuestionIndex + 1} of {filteredQuestions.length})
+                      </Text>
+                    )}
                   </Text>
                 </View>
 
@@ -496,8 +569,10 @@ export default function TestResults() {
           })()}
               </Animated.View>
             </GestureDetector>
+            )}
 
             {/* Navigation Buttons */}
+            {filteredQuestions.length > 0 && (
             <View className="flex-row gap-3 mb-6">
               <TouchableOpacity
                 onPress={handlePrevious}
@@ -521,24 +596,25 @@ export default function TestResults() {
 
               <TouchableOpacity
                 onPress={handleNext}
-                disabled={currentQuestionIndex === questionsWithAnswers.length - 1}
+                disabled={currentQuestionIndex === filteredQuestions.length - 1}
                 className={`flex-1 flex-row items-center justify-center py-4 rounded-xl ${
-                  currentQuestionIndex === questionsWithAnswers.length - 1 ? 'bg-gray-200' : 'bg-indigo-600'
+                  currentQuestionIndex === filteredQuestions.length - 1 ? 'bg-gray-200' : 'bg-indigo-600'
                 }`}
                 activeOpacity={0.7}
               >
                 <Text className={`mr-2 font-bold text-lg ${
-                  currentQuestionIndex === questionsWithAnswers.length - 1 ? 'text-gray-400' : 'text-white'
+                  currentQuestionIndex === filteredQuestions.length - 1 ? 'text-gray-400' : 'text-white'
                 }`}>
                   Next
                 </Text>
                 <Ionicons
                   name="chevron-forward"
                   size={24}
-                  color={currentQuestionIndex === questionsWithAnswers.length - 1 ? '#9CA3AF' : 'white'}
+                  color={currentQuestionIndex === filteredQuestions.length - 1 ? '#9CA3AF' : 'white'}
                 />
               </TouchableOpacity>
             </View>
+            )}
           </View>
         </ScrollView>
       </LinearGradient>

@@ -5,20 +5,55 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../lib/auth-context';
+import { supabase } from '../lib/supabase';
 import GoogleLogo from '../components/GoogleLogo';
 
 export default function Login() {
   const router = useRouter();
-  const { user, signInWithGoogle } = useAuth();
+  const { user, isGuest, signInWithGoogle, signInAsGuest } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Redirect to home if already logged in
+  // Redirect to appropriate screen if already logged in or guest
   useEffect(() => {
-    if (user) {
-      router.replace('/(tabs)/home');
-    }
-  }, [user]);
+    const checkUserAndRedirect = async () => {
+      if (isGuest) {
+        router.replace('/(tabs)/home');
+        return;
+      }
+
+      if (user) {
+        try {
+          // Check if user has phone number
+          const { data: userData, error } = await supabase
+            .from('user_profiles')
+            .select('phone')
+            .eq('id', user.id)
+            .single();
+
+          if (error) {
+            console.log('Error checking phone:', error);
+            router.replace('/(tabs)/home');
+            return;
+          }
+
+          // If no phone, go to onboarding
+          if (!userData?.phone) {
+            router.replace('/onboarding/phone');
+            return;
+          }
+
+          // Has phone, go to home
+          router.replace('/(tabs)/home');
+        } catch (err) {
+          console.error('Error in checkUserAndRedirect:', err);
+          router.replace('/(tabs)/home');
+        }
+      }
+    };
+
+    checkUserAndRedirect();
+  }, [user, isGuest]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -31,13 +66,47 @@ export default function Login() {
       console.log('Sign in result:', result);
 
       if (result.success) {
-        console.log('✅ Sign in successful, navigating to home...');
+        console.log('✅ Sign in successful, checking phone number...');
         // Use setTimeout to ensure session is fully propagated
-        setTimeout(() => {
-          router.replace({
-            pathname: '/(tabs)/home',
-            params: { showPaperSelector: 'true' }
-          });
+        setTimeout(async () => {
+          try {
+            // Get the current session to get user ID
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (session?.user?.id) {
+              // Check if user has phone number
+              const { data: userData, error: userError } = await supabase
+                .from('user_profiles')
+                .select('phone')
+                .eq('id', session.user.id)
+                .single();
+
+              if (userError) {
+                console.log('Error fetching user data:', userError);
+              }
+
+              // If no phone number, redirect to onboarding
+              if (!userData?.phone) {
+                console.log('No phone number found, redirecting to onboarding...');
+                router.replace('/onboarding/phone');
+                return;
+              }
+            }
+
+            // User has phone, go to home
+            console.log('Phone number exists, navigating to home...');
+            router.replace({
+              pathname: '/(tabs)/home',
+              params: { showPaperSelector: 'true' }
+            });
+          } catch (err) {
+            console.error('Error checking phone:', err);
+            // On error, still navigate to home
+            router.replace({
+              pathname: '/(tabs)/home',
+              params: { showPaperSelector: 'true' }
+            });
+          }
         }, 500);
       } else if (result.error) {
         console.error('Sign in failed:', result.error);
@@ -152,6 +221,22 @@ export default function Login() {
                 </Text>
               </>
             )}
+          </TouchableOpacity>
+
+          {/* Guest Button */}
+          <TouchableOpacity
+            onPress={() => {
+              signInAsGuest();
+              // Navigation is handled by the useEffect watching isGuest
+            }}
+            disabled={loading}
+            className="border-2 border-gray-300 rounded-full py-4 px-6 flex-row items-center justify-center mb-6"
+            activeOpacity={0.7}
+          >
+            <Ionicons name="person-outline" size={22} color="#6b7280" />
+            <Text className="text-gray-600 font-semibold text-lg ml-3">
+              Continue as Guest
+            </Text>
           </TouchableOpacity>
 
           {/* Terms & Privacy */}

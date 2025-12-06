@@ -15,11 +15,17 @@ export interface ProAccessInfo {
   tier: 'free' | 'paper1' | 'paper2' | 'both';
   accessiblePapers: number[]; // [1, 2]
 
-  // Subscription details
+  // Subscription details (legacy - combined)
   expiresAt: Date | null;
   daysRemaining: number | null;
   packageType: '3_months' | '1_year' | null;
   purchasedAt: Date | null;
+
+  // Separate paper expiry dates
+  paper1ExpiresAt: Date | null;
+  paper2ExpiresAt: Date | null;
+  paper1DaysRemaining: number | null;
+  paper2DaysRemaining: number | null;
 
   // Loading and error states
   loading: boolean;
@@ -68,23 +74,42 @@ export function useProAccess(): ProAccessInfo {
           throw profileError;
         }
 
+        // Calculate paper access based on separate expiry dates
+        const paper1Active = profileData.paper1_expires_at && new Date(profileData.paper1_expires_at) > new Date();
+        const paper2Active = profileData.paper2_expires_at && new Date(profileData.paper2_expires_at) > new Date();
+
+        // Derive tier from which papers are active
+        let derivedTier: 'free' | 'paper1' | 'paper2' | 'both' = 'free';
+        if (paper1Active && paper2Active) {
+          derivedTier = 'both';
+        } else if (paper1Active) {
+          derivedTier = 'paper1';
+        } else if (paper2Active) {
+          derivedTier = 'paper2';
+        }
+
         // Transform profile data to UserProStatus format
         const transformedData: UserProStatus = {
           user_id: profileData.id,
           email: profileData.email,
           full_name: profileData.full_name,
-          pro_tier: profileData.pro_tier || 'free',
+          pro_tier: derivedTier,
           pro_access_paper: profileData.pro_access_paper || [],
           pro_package_type: profileData.pro_package_type,
           pro_purchased_at: profileData.pro_purchased_at,
           pro_expires_at: profileData.pro_expires_at,
-          pro_status: profileData.pro_expires_at && new Date(profileData.pro_expires_at) > new Date()
-            ? 'active'
-            : profileData.pro_expires_at
-            ? 'expired'
-            : 'inactive',
+          pro_status: paper1Active || paper2Active ? 'active' : profileData.pro_expires_at ? 'expired' : 'inactive',
           days_remaining: profileData.pro_expires_at
             ? Math.floor((new Date(profileData.pro_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+            : null,
+          // Separate paper expiry dates
+          paper1_expires_at: profileData.paper1_expires_at,
+          paper2_expires_at: profileData.paper2_expires_at,
+          paper1_days_remaining: profileData.paper1_expires_at
+            ? Math.max(0, Math.floor((new Date(profileData.paper1_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+            : null,
+          paper2_days_remaining: profileData.paper2_expires_at
+            ? Math.max(0, Math.floor((new Date(profileData.paper2_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
             : null,
           razorpay_payment_id: profileData.razorpay_payment_id,
           created_at: profileData.created_at,
@@ -107,15 +132,32 @@ export function useProAccess(): ProAccessInfo {
     fetchProStatus();
   }, [user?.id]);
 
-  // Compute access information
-  const tier = proStatus?.pro_tier || 'free';
-  const isProActive = proStatus?.pro_status === 'active';
-  const isFree = tier === 'free' || !isProActive;
+  // Compute access information based on separate paper expiry dates
+  const paper1ExpiresAt = proStatus?.paper1_expires_at ? new Date(proStatus.paper1_expires_at) : null;
+  const paper2ExpiresAt = proStatus?.paper2_expires_at ? new Date(proStatus.paper2_expires_at) : null;
+  const paper1DaysRemaining = proStatus?.paper1_days_remaining ?? null;
+  const paper2DaysRemaining = proStatus?.paper2_days_remaining ?? null;
+
+  // Determine paper access based on separate expiry dates
+  const hasPaper1Access = paper1ExpiresAt ? paper1ExpiresAt > new Date() : false;
+  const hasPaper2Access = paper2ExpiresAt ? paper2ExpiresAt > new Date() : false;
+
+  // Derive tier from which papers are active
+  let tier: 'free' | 'paper1' | 'paper2' | 'both' = 'free';
+  if (hasPaper1Access && hasPaper2Access) {
+    tier = 'both';
+  } else if (hasPaper1Access) {
+    tier = 'paper1';
+  } else if (hasPaper2Access) {
+    tier = 'paper2';
+  }
+
+  const isProActive = hasPaper1Access || hasPaper2Access;
+  const isFree = !isProActive;
 
   const accessiblePapers = isProActive ? getTierPapers(tier) : [];
-  const hasPaper1Access = isProActive && (tier === 'paper1' || tier === 'both');
-  const hasPaper2Access = isProActive && (tier === 'paper2' || tier === 'both');
 
+  // Legacy combined expiry (max of both)
   const expiresAt = proStatus?.pro_expires_at ? new Date(proStatus.pro_expires_at) : null;
   const purchasedAt = proStatus?.pro_purchased_at ? new Date(proStatus.pro_purchased_at) : null;
   const daysRemaining = proStatus?.days_remaining ?? null;
@@ -132,11 +174,17 @@ export function useProAccess(): ProAccessInfo {
     tier,
     accessiblePapers,
 
-    // Subscription details
+    // Subscription details (legacy - combined)
     expiresAt,
     daysRemaining,
     packageType,
     purchasedAt,
+
+    // Separate paper expiry dates
+    paper1ExpiresAt,
+    paper2ExpiresAt,
+    paper1DaysRemaining,
+    paper2DaysRemaining,
 
     // Loading and error states
     loading,

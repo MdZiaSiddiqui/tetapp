@@ -7,6 +7,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import * as path from 'path';
+import { fileURLToPath, pathToFileURL } from 'url';
+
+// ESM equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 config();
@@ -155,7 +160,8 @@ function normalizeQuestion(q: TETQuestion, mapping: FileMapping, chapterId: stri
 async function loadQuestionsFromFile(filename: string): Promise<TETQuestion[]> {
   try {
     const filePath = path.join(__dirname, '..', 'data', filename);
-    const module = await import(filePath);
+    const fileUrl = pathToFileURL(filePath).href;
+    const module = await import(fileUrl);
 
     // Get the export name (e.g., childDevelopmentPaper1Questions)
     const exportName = getExportName(filename);

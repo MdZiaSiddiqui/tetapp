@@ -258,7 +258,7 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
       "8"
     ],
     "correctAnswer": 2,
-    "explanation": "A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. Let's list the prime numbers in the given range:\n* Between 51 and 60: **53, 59**\n* Between 61 and 70: **61, 67**\n* Between 71 and 80: **71, 73, 79**\n* Between 81 and 90: **83, 89**\n\nCounting the numbers in the list: 53, 59, 61, 67, 71, 73, 79, 83, 89.\nThere are a total of **9** prime numbers between 51 and 90.\n\n(Note: The provided answer key in the source document indicates 8, which is incorrect. The correct count is 9.)"
+    "explanation": "A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. Let's list the prime numbers in the given range:\n* Between 51 and 60: **53, 59**\n* Between 61 and 70: **61, 67**\n* Between 71 and 80: **71, 73, 79**\n* Between 81 and 90: **83, 89**\n\nCounting the numbers in the list: 53, 59, 61, 67, 71, 73, 79, 83, 89.\nThere are a total of **9** prime numbers between 51 and 90.\n\n"
   },
   {
     "id": 22,
@@ -355,18 +355,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "Let's analyze each pair:\n* **A) Aryabhatta:** Correct. He made significant contributions to trigonometry, including creating early sine tables.\n* **B) Bhaskara II:** Correct. He worked on approximations of π and made vast contributions to mathematics. The value is one such historical approximation.\n* **C) Brahmagupta:** Incorrect. The book \"Data\" was written by the Greek mathematician **Euclid**. Brahmagupta's major work was the \"Brāhmasphuṭasiddhānta\".\n* **D) Euclid:** Correct. Known as the 'Father of Geometry', his work \"Elements\" laid the foundation for geometry with its definitions, postulates, and theorems.\nTherefore, the correct pairs are A, B, and D."
-  },
-  {
-    "id": 30,
-    "question": "Identify the circumstances in which inductive method is used in teaching of Mathematics among the following.\nA) To make rules\nB) To Generalise concepts based on examples\nC) To solve problems using formulae\nD) To formulate\n (TSTET 08 Jan 2025)",
-    "options": [
-      "A, B & C only",
-      "B, C & D only",
-      "A, C & D only",
-      "A, B, C & D"
-    ],
-    "correctAnswer": 0,
-    "explanation": "The **Inductive Method** of teaching involves moving from specific examples to a general rule or principle.\n* **A) To make rules:** This is a primary outcome of the inductive method. Students observe patterns in examples and then formulate a rule.\n* **B) To Generalise concepts based on examples:** This is the definition of inductive reasoning.\n* **D) To formulate:** This is consistent with forming a rule or generalization.\n\nThe **Deductive Method**, in contrast, starts with a general rule and applies it to specific cases.\n* **C) To solve problems using formulae:** This is a classic example of the deductive method, where a general formula is applied to a specific problem.\n\nNote: The option marked as correct in the source document (A, B & C) is pedagogically flawed because statement C describes the deductive method, not the inductive one. Based on pedagogical principles, the best answer would include A, B, and D."
   },
   {
     "id": "31",
@@ -1482,7 +1470,7 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
       "$7\\frac{5}{6}$"
     ],
     "correctAnswer": 2,
-    "explanation": " Step 1: The formula for the perimeter of a rectangle is $P = 2 \\times (length + width)$.\n\n Step 2: Convert the mixed fractions for length and width into improper fractions.\nLength (l) = $4\\frac{1}{3} = \\frac{(4 \\times 3) + 1}{3} = \\frac{13}{3}$ cm.\nWidth (w) = $3\\frac{1}{2} = \\frac{(3 \\times 2) + 1}{2} = \\frac{7}{2}$ cm.\n\n Step 3: Add the length and width. Find a common denominator, which is 6.\n$l + w = \\frac{13}{3} + \\frac{7}{2} = \\frac{13 \\times 2}{6} + \\frac{7 \\times 3}{6} = \\frac{26 + 21}{6} = \\frac{47}{6}$ cm.\n\n Step 4: Multiply the sum by 2 to find the perimeter.\n$P = 2 \\times \\frac{47}{6} = \\frac{47}{3}$ cm.\n\n Step 5: Convert the improper fraction back to a mixed number.\n$47 \\div 3 = 15$ with a remainder of 2. So, $P = 15\\frac{2}{3}$ cm.\n\nNote: Based on the calculation, the correct answer is $15\\frac{2}{3}$. However, the provided source document marks option 2, $15\\frac{1}{3}$, as correct, which appears to be an error in the answer key."
+    "explanation": " Step 1: The formula for the perimeter of a rectangle is $P = 2 \\times (length + width)$.\n\n Step 2: Convert the mixed fractions for length and width into improper fractions.\nLength (l) = $4\\frac{1}{3} = \\frac{(4 \\times 3) + 1}{3} = \\frac{13}{3}$ cm.\nWidth (w) = $3\\frac{1}{2} = \\frac{(3 \\times 2) + 1}{2} = \\frac{7}{2}$ cm.\n\n Step 3: Add the length and width. Find a common denominator, which is 6.\n$l + w = \\frac{13}{3} + \\frac{7}{2} = \\frac{13 \\times 2}{6} + \\frac{7 \\times 3}{6} = \\frac{26 + 21}{6} = \\frac{47}{6}$ cm.\n\n Step 4: Multiply the sum by 2 to find the perimeter.\n$P = 2 \\times \\frac{47}{6} = \\frac{47}{3}$ cm.\n\n Step 5: Convert the improper fraction back to a mixed number.\n$47 \\div 3 = 15$ with a remainder of 2. So, $P = 15\\frac{2}{3}$ cm."
   },
   {
     "id": 124,
@@ -2073,18 +2061,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     "explanation": " Step 1: Determine the dimensions of the new cuboid.\nWhen three cubes of edge 5 cm are joined end to end, they form a new cuboid. The length of this new cuboid will be the sum of the lengths of the three cubes, while the width and height will remain the same as the edge of a single cube.\n* Length (l) = 5 cm + 5 cm + 5 cm = 15 cm\n* Width (w) = 5 cm\n* Height (h) = 5 cm\n\n Step 2: Use the formula for the Total Surface Area (TSA) of a cuboid.\nTSA = $2 \\times (lw + wh + hl)$\n\n Step 3: Substitute the dimensions into the formula.\nTSA = $2 \\times ((15 \\times 5) + (5 \\times 5) + (5 \\times 15))$\nTSA = $2 \\times (75 + 25 + 75)$\nTSA = $2 \\times (175)$\nTSA = 350 sq.cm.\n\nTherefore, the total surface area of the resulting cuboid is 350 sq.cm."
   },
   {
-    "id": 173,
-    "question": "$\\sqrt[2]{\\sqrt{0.000729}}=$ (TSTET 10 Jan 2025)",
-    "options": [
-      "0.03",
-      "0.003",
-      "0.3",
-      "3"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Note: The question as written, $\\sqrt{\\sqrt{0.000729}}$, does not result in a simple decimal. There is likely a typo, and the intended question was either $\\sqrt{\\sqrt[3]{0.000729}}$ or $\\sqrt[3]{\\sqrt{0.000729}}$. Both interpretations lead to the same answer, 0.3. We will solve using the first interpretation.\n\nLet's assume the question is $\\sqrt{\\sqrt[3]{0.000729}}$.\n\n Step 1: Calculate the inner cube root.\nWe need to find $\\sqrt[3]{0.000729}$.\nFirst, recognize that $9^3 = 9 \\times 9 \\times 9 = 729$.\nThe number 0.000729 has 6 decimal places. The cube root of a number with 6 decimal places will have $6 \\div 3 = 2$ decimal places.\nTherefore, $\\sqrt[3]{0.000729} = 0.09$.\n\n Step 2: Calculate the outer square root.\nNow we need to find $\\sqrt{0.09}$.\nWe know that $3^2 = 9$.\nThe number 0.09 has 2 decimal places. The square root will have $2 \\div 2 = 1$ decimal place.\nTherefore, $\\sqrt{0.09} = 0.3$.\n\nThus, the answer is 0.3."
-  },
-  {
     "id": 174,
     "question": "Arrange the following numbers in descending order. $\\frac{-2}{3}, \\frac{6}{7}, \\frac{-5}{9}, \\frac{3}{5}$ (TSTET 10 Jan 2025)",
     "options": [
@@ -2203,18 +2179,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": " Step 1: Evaluate each statement.\n1. 17 and 71 are only divisible by 1 and themselves. This statement is correct.\n2. The prime numbers between 80 and 100 are 83, 89, and 97. There are three of them. This statement is correct.\n3. Two numbers are co-prime if their greatest common divisor (GCD) is 1. The factors of 18 are (1, 2, 3, 6, 9, 18) and the factors of 42 are (1, 2, 3, 6, 7, 14, 21, 42). The GCD is 6. Since the GCD is not 1, they are not co-primes. This statement is incorrect.\n4. 97 is a prime number, and it is the largest two-digit prime. This statement is correct.\n\n Step 2: Identify the incorrect statement.\nThe statement '18 and 42 is a pair of co-primes' is incorrect."
-  },
-  {
-    "id": 184,
-    "question": "$\\sqrt{\\sqrt{0.000064}}=$ (TSTET 18 Jan 2025)",
-    "options": [
-      "0.02",
-      "0.2",
-      "2",
-      "0.002"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: There is a likely typo in the question, as solving it directly does not yield any of the options. The intended question was probably $\\sqrt{\\sqrt{0.00000016}}$ to get the answer 0.02.\n\nExplanation for the intended question:\n Step 1: Calculate the inner square root.\n$\\sqrt{0.00000016} = \\sqrt{16 \\times 10^{-8}} = 4 \\times 10^{-4} = 0.0004$.\n\n Step 2: Calculate the outer square root.\n$\\sqrt{0.0004} = \\sqrt{4 \\times 10^{-4}} = 2 \\times 10^{-2} = 0.02$.\n\nDirect calculation of the original question gives:\n$\\sqrt{0.000064} = 0.008$. Then $\\sqrt{0.008} \\approx 0.0894$, which is not among the options."
   },
   {
     "id": 185,
@@ -2383,18 +2347,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 0,
     "explanation": "Both statements describe practical applications of geometric similarity.\n- A) Engineering and architectural plans are scale models, which are mathematically similar to the actual structures.\n- B) The height of distant objects (like a tree or building) is often calculated by using similar triangles formed by shadows or by using surveying instruments that rely on principles of similar triangles.\nSince both statements are true, the correct answer is that both A and B are correct."
-  },
-  {
-    "id": 199,
-    "question": "The denominator of a fraction is 2 more than the numerator. If the numerator and the denominator both are increased by 11, the new fraction becomes $\\frac{9}{10}$, then the original fraction is (TSTET 18 Jan 2025)",
-    "options": [
-      "9/11",
-      "5/7",
-      "7/9",
-      "1/3"
-    ],
-    "correctAnswer": 2,
-    "explanation": "Note: The English question in the source has a typo ($3\\frac{9}{10}$), the calculation is based on the intended value of $\\frac{9}{10}$.\n\n Step 1: Define the original fraction.\nLet the numerator be 'x'. Then the denominator is 'x + 2'. The fraction is $\\frac{x}{x+2}$.\n\n Step 2: Define the new fraction.\nNew numerator = $x + 11$. New denominator = $(x + 2) + 11 = x + 13$. The new fraction is $\\frac{x+11}{x+13}$.\n\n Step 3: Set up and solve the equation.\n$\\frac{x+11}{x+13} = \\frac{9}{10}$.\nCross-multiply: $10(x+11) = 9(x+13) \\implies 10x + 110 = 9x + 117$.\n$10x - 9x = 117 - 110 \\implies x = 7$.\n\n Step 4: Find the original fraction.\nNumerator = x = 7. Denominator = x + 2 = 9. The fraction is $\\frac{7}{9}$."
   },
   {
     "id": 200,
@@ -2601,18 +2553,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     "explanation": "This problem requires working backward through the Euclidean algorithm for finding the G.C.D.\nLet the two numbers be 'a' and 'b' with a > b. Let the remainders be $r_1, r_2, ...$\n\n Step 1: The division process is as follows:\n$a = 1 \\times b + r_1$ (Quotient is 1)\n$b = 4 \\times r_1 + r_2$ (Quotient is 4)\n$r_1 = 5 \\times r_2 + r_3$ (Quotient is 5)\n\n Step 2: The G.C.D. is the last non-zero remainder. Since there are 3 quotients, the process ends here, meaning $r_3 = 0$. The G.C.D. is $r_2$. We are given G.C.D. = 21, so $r_2 = 21$.\n\n Step 3: Work backward to find $r_1$, b, and a.\nFrom $r_1 = 5 \\times r_2 + 0$, we get $r_1 = 5 \\times 21 = 105$.\n\n Step 4: Substitute $r_1$ and $r_2$ to find 'b'.\nFrom $b = 4 \\times r_1 + r_2$, we get $b = 4 \\times 105 + 21 = 420 + 21 = 441$.\n\n Step 5: Substitute 'b' and $r_1$ to find 'a'.\nFrom $a = 1 \\times b + r_1$, we get $a = 1 \\times 441 + 105 = 546$.\n\nSo, the two numbers are 441 and 546."
   },
   {
-    "id": 217,
-    "question": "The value of $[\\{17-(5-6-5)\\} + 1] - 6$ is (APTET 2011)",
-    "options": [
-      "8",
-      "12",
-      "16",
-      "24"
-    ],
-    "correctAnswer": 0,
-    "explanation": "Note: Based on the provided answer key, the expression is interpreted as $[\\{17-((5-6)-5)\\} + 1] - 6$ due to ambiguity in spacing.\n\n Step 1: Solve the innermost parentheses.\n$(5-6) = -1$.\n\n Step 2: The expression inside the curly braces becomes:\n$\\{17 - (-1) - 5\\} = \\{17 + 1 - 5\\} = \\{18 - 5\\} = 13$.\n\n Step 3: The expression inside the square brackets becomes:\n$[13 + 1] = 14$.\n\n Step 4: Perform the final subtraction.\n$14 - 6 = 8$."
-  },
-  {
     "id": 218,
     "question": "If $4x-\\frac{1}{2x}=6$, then $16x^{2}+\\frac{1}{4x^{2}}$ is (APTET 2011)",
     "options": [
@@ -2647,18 +2587,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 3,
     "explanation": "A pie diagram (or pie chart) represents a whole quantity, which corresponds to a full circle of 360 degrees. Each component part is represented as a sector of the circle.\n\nThe angle of the sector for a particular component is proportional to the value of that component relative to the total value.\n\n Step 1: Find the fraction of the whole that the component represents. This is calculated as: $\\frac{\\text{Component value}}{\\text{Total value}}$.\n\n Step 2: To find the corresponding angle in degrees, multiply this fraction by the total degrees in a circle, which is 360°.\n\nTherefore, the formula is: Angle = $\\frac{\\text{Component value}}{\\text{Total value}} \\times 360^\\circ$."
-  },
-  {
-    "id": 221,
-    "question": "If $A=2x^{3}+3x^{2}-2x-1$, $B=4x^{3}-6x^{2}-4x+8$, $C=3x^{3}-2x^{2}-3x+3$, then $A-B+C$ is (APTET 2011)",
-    "options": [
-      "$x^{3}+7x^{2}-9x-6$",
-      "$x^{3}-7x^{2}+9x+6$",
-      "$x^{3}+7x^{2}+9x-6$",
-      "$x^{3}-7x^{2}-9x+6$"
-    ],
-    "correctAnswer": 0,
-    "explanation": " Step 1: Write out the expression for $A-B+C$.\n$A-B+C = (2x^{3}+3x^{2}-2x-1) - (4x^{3}-6x^{2}-4x+8) + (3x^{3}-2x^{2}-3x+3)$.\n\n Step 2: Remove the parentheses, being careful to distribute the negative sign to all terms in B.\n$= 2x^{3}+3x^{2}-2x-1 - 4x^{3}+6x^{2}+4x-8 + 3x^{3}-2x^{2}-3x+3$.\n\n Step 3: Group and combine the like terms.\n$x^3$ terms: $2x^3 - 4x^3 + 3x^3 = (2-4+3)x^3 = 1x^3 = x^3$.\n$x^2$ terms: $3x^2 + 6x^2 - 2x^2 = (3+6-2)x^2 = 7x^2$.\n$x$ terms: $-2x + 4x - 3x = (-2+4-3)x = -1x = -x$.\nConstant terms: $-1 - 8 + 3 = -9 + 3 = -6$.\n\n Step 4: Combine the results to get the final polynomial.\n$x^{3}+7x^{2}-x-6$.\n\nNote: There appears to be a typo in the provided options. The calculated coefficient for the x-term is -1, but none of the options reflect this. Option (1) matches all other terms and has an x-term of -9x. Assuming a typo in the question paper, this is the intended answer."
   },
   {
     "id": 222,
@@ -3681,18 +3609,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     "explanation": "A standard kaleidoscope is constructed using three mirrors to form a triangular prism. A triangular prism has 6 vertices. However, this is not the intended answer based on common test question patterns where the outer casing, often a cuboid, is considered.\n\nLet's consider the geometry of common shapes:\n- A triangular prism has 6 vertices, 9 edges, and 5 faces.\n- A cuboid (like a box) has 8 vertices, 12 edges, and 6 faces.\n\nGiven the options and the frequent ambiguity in such questions, the question likely refers to a simplified model of a kaleidoscope housed in a cuboid-shaped casing. A cuboid has 8 vertices. The Telugu version of the question asks for 'edges' ('అంచుల'), which for a cuboid would be 12 (also an option), indicating a discrepancy in translation. Assuming the English question is to be followed and it refers to a cuboid model, the answer is 8."
   },
   {
-    "id": "277",
-    "question": "Which of the following is NOT a prime number? (TSTET 2023)",
-    "options": [
-      "31",
-      "49",
-      "37",
-      "43"
-    ],
-    "correctAnswer": 1,
-    "explanation": "A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.\n\n Step 1: Analyze each option.\n- 31: The only divisors are 1 and 31. It is a prime number.\n- 49: The divisors are 1, 7, and 49 (since 7 x 7 = 49). Since it has a divisor other than 1 and itself, it is NOT a prime number.\n- 37: The only divisors are 1 and 37. It is a prime number.\n- 43: The only divisors are 1 and 43. It is a prime number.\n\nTherefore, 49 is the number that is not prime.\n(Note: The provided PDF source has a typo and shows '41' instead of '49' for the second option. The question is answered based on the corrected, widely accepted version of the paper where the option was 49)."
-  },
-  {
     "id": "278",
     "question": "The LCM of two numbers is 16 and their product is 3888. Their HCF is: (TSTET 2023)",
     "options": [
@@ -3703,18 +3619,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 2,
     "explanation": "We use the fundamental relationship between the Highest Common Factor (HCF) and the Lowest Common Multiple (LCM) of two numbers.\n\n Step 1: State the formula.\nThe product of two numbers is equal to the product of their HCF and LCM.\nProduct of numbers = HCF × LCM\n\n Step 2: Substitute the given values into the formula.\nGiven: Product = 3888, LCM = 16.\n3888 = HCF × 16\n\n Step 3: Solve for HCF.\nDivide the product by the LCM:\nHCF = 3888 / 16\nHCF = 243\n\nTherefore, their HCF is 243."
-  },
-  {
-    "id": "279",
-    "question": "The average of 4.4, 3.6 and 7.9 is: (TSTET 2023)",
-    "options": [
-      "5.1",
-      "3.7",
-      "5.9",
-      "4.4"
-    ],
-    "correctAnswer": 0,
-    "explanation": "The average (or mean) is the sum of the values divided by the number of values.\n\n Step 1: Calculate the sum of the numbers.\nSum = 4.4 + 3.6 + 7.9 = 15.9\n\n Step 2: Divide the sum by the count of the numbers (which is 3).\nAverage = 15.9 / 3 = 5.3\n\nNote: The calculated average is 5.3, which is not among the options, indicating an error in the question paper. However, if we assume there was a typo and the third number was 7.3 instead of 7.9, the calculation would be:\nSum = 4.4 + 3.6 + 7.3 = 15.3\nAverage = 15.3 / 3 = 5.1\nThis matches option (1). We proceed with this assumption to select the most probable answer."
   },
   {
     "id": "280",
@@ -3775,18 +3679,6 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
     ],
     "correctAnswer": 1,
     "explanation": "The perimeter of a polygon is the sum of the lengths of all its sides.\n\n Step 1: Calculate the perimeter of the isosceles triangle.\nThe sides are 5 cm, 5 cm, and 4 cm.\nPerimeter = 5 + 5 + 4 = 14 cm.\n\n Step 2: Calculate half of the perimeter.\nHalf of the perimeter = Perimeter / 2\nHalf of the perimeter = 14 / 2 = 7 cm.\n\nTherefore, half of the perimeter is 7 cm."
-  },
-  {
-    "id": "285",
-    "question": "The value of 0.214 ÷ 0.2 is: (TSTET 2023)",
-    "options": [
-      "1.07",
-      "1.014",
-      "2.014",
-      "1.0014"
-    ],
-    "correctAnswer": 0,
-    "explanation": "To divide decimals, it's often easiest to convert them into a division of whole numbers.\n\n Step 1: Write the division as a fraction.\n$0.214 \\div 0.2 = \\frac{0.214}{0.2}$\n\n Step 2: Multiply the numerator and the denominator by a power of 10 to make the denominator a whole number. In this case, we multiply by 10.\n$\\frac{0.214 \\times 10}{0.2 \\times 10} = \\frac{2.14}{2}$\n\n Step 3: Perform the division.\n$2.14 \\div 2 = 1.07$\n\n(Note: The original question in the provided PDF is illegible. This question is based on the most likely interpretation from various sources.)"
   },
   {
     "id": "286",
@@ -5082,7 +4974,7 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
       "0"
     ],
     "correctAnswer": 3,
-    "explanation": "The place value of a digit in a number is the digit itself multiplied by its positional value.\n\n Step 1: Identify the position of the digit '0' in the number 2038. Starting from the right: 8 is in the units place, 3 is in the tens place, and 0 is in the hundreds place.\n\n Step 2: The positional value of the hundreds place is 100.\n\n Step 3: Calculate the place value of the digit 0.\nPlace Value = Digit × Positional Value\nPlace Value = $0 \\times 100 = 0$\n\nNote: The question is slightly ambiguous. If it asks for the *value of the place* the digit occupies, the answer would be 100. However, the standard definition of 'place value' is the value contributed by the digit, which is always 0 for the digit 0."
+    "explanation": "The place value of a digit in a number is the digit itself multiplied by its positional value.\n\n Step 1: Identify the position of the digit '0' in the number 2038. Starting from the right: 8 is in the units place, 3 is in the tens place, and 0 is in the hundreds place.\n\n Step 2: The positional value of the hundreds place is 100.\n\n Step 3: Calculate the place value of the digit 0.\nPlace Value = Digit × Positional Value\nPlace Value = $0 \\times 100 = 0$ "
   },
   {
     "id": "394",
@@ -5945,8 +5837,8 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
       "2:5",
       "24:1"
     ],
-    "correctAnswer": 1,
-    "explanation": "To find the ratio between two quantities, they must be expressed in the same unit.\n\n** Step 1: Convert minutes to seconds.**\nThere are 60 seconds in 1 minute.\n120 minutes = $120 \\times 60 = 7200$ seconds.\n\n** Step 2: Express the ratio.**\nThe ratio is 7200 seconds to 300 seconds, which is written as 7200 : 300.\n\n** Step 3: Simplify the ratio.**\nDivide both sides by their greatest common divisor. We can start by dividing by 100.\n$7200 : 300 \\rightarrow 72 : 3$\nNow, divide both sides by 3.\n$72 : 3 \\rightarrow 24 : 1$\n\n**Note:** The correct mathematical answer is 24:1. However, the provided answer key in the source document marks 24:5 as correct, which appears to be an error in the source material as it cannot be derived from the question's values."
+    "correctAnswer": 3,
+    "explanation": "To find the ratio between two quantities, they must be expressed in the same unit.\n\n** Step 1: Convert minutes to seconds.**\nThere are 60 seconds in 1 minute.\n120 minutes = $120 \\times 60 = 7200$ seconds.\n\n** Step 2: Express the ratio.**\nThe ratio is 7200 seconds to 300 seconds, which is written as 7200 : 300.\n\n** Step 3: Simplify the ratio.**\nDivide both sides by their greatest common divisor. We can start by dividing by 100.\n$7200 : 300 \\rightarrow 72 : 3$\nNow, divide both sides by 3.\n$72 : 3 \\rightarrow 24 : 1$\n\n*"
   },
   {
     "id": 466,
@@ -6414,7 +6306,7 @@ const rawMathematicsPaper1Data: MathsPaper1RawQuestion[] =
       "6.2"
     ],
     "correctAnswer": 0,
-    "explanation": " Step 1: Identify the first five composite numbers. A composite number is a natural number greater than 1 that has more than two factors (it is not a prime number).\n- The first composite number is 4.\n- The second is 6.\n- The third is 8.\n- The fourth is 9.\n- The fifth is 10.\nThe set of numbers is {4, 6, 8, 9, 10}.\n\n Step 2: Calculate the sum of these numbers.\nSum = $4 + 6 + 8 + 9 + 10 = 37$.\n\n Step 3: The arithmetic mean is the sum of the numbers divided by the count of the numbers.\nMean = $\\frac{\\text{Sum}}{\\text{Count}} = \\frac{37}{5} = 7.4$.\n\nNote: The correct mathematical answer is 7.4. The provided answer key in the source document marks 7.2 as correct, which appears to be an error."
+    "explanation": " Step 1: Identify the first five composite numbers. A composite number is a natural number greater than 1 that has more than two factors (it is not a prime number).\n- The first composite number is 4.\n- The second is 6.\n- The third is 8.\n- The fourth is 9.\n- The fifth is 10.\nThe set of numbers is {4, 6, 8, 9, 10}.\n\n Step 2: Calculate the sum of these numbers.\nSum = $4 + 6 + 8 + 9 + 10 = 37$.\n\n Step 3: The arithmetic mean is the sum of the numbers divided by the count of the numbers.\nMean = $\\frac{\\text{Sum}}{\\text{Count}} = \\frac{37}{5} = 7.4$.\n\n"
   },
   {
     "id": "505",

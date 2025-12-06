@@ -99,6 +99,8 @@ export default function PracticeSession() {
   const [questionExplanations, setQuestionExplanations] = useState<{ [key: number]: boolean }>({});
   // Font size control
   const [fontSize, setFontSize] = useState<'xs' | 'small' | 'medium' | 'large' | 'xl' | '2xl' | '3xl'>('medium');
+  // Explanation position: 'inline' = between options (current), 'bottom' = after all options
+  const [explanationPosition, setExplanationPosition] = useState<'inline' | 'bottom'>('inline');
   // Exit confirmation modal
   const [showExitModal, setShowExitModal] = useState(false);
 
@@ -623,21 +625,20 @@ export default function PracticeSession() {
       {/* Header */}
       <View className="px-6 pt-16 pb-4 bg-white border-b border-gray-200">
         <View className="flex-row justify-between items-center mb-4">
-          <TouchableOpacity onPress={handleExit} className="flex items-center justify-center z-10" activeOpacity={1}>
-            <Ionicons name="chevron-back" size={24} color="#000000" />
-          </TouchableOpacity>
+          <Text className="text-gray-900 font-bold text-base">
+            Question {currentQuestionIndex + 1} of {questions.length}
+          </Text>
 
-          <View className="absolute left-0 right-0 items-center" style={{ pointerEvents: 'none' }}>
-            <Text className="text-gray-900 font-bold text-base">
-              Question {currentQuestionIndex + 1} of {questions.length}
+          <LinearGradient
+            colors={['#8b5cf6', '#a855f7']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 }}
+          >
+            <Text style={{ color: '#ffffff', fontWeight: '800', fontSize: 14, letterSpacing: 1.2 }}>
+              SCORE: {totalAnswered === 0 ? '0' : correctAnswers}
             </Text>
-          </View>
-
-          <View style={{ backgroundColor: '#ffffff', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, borderWidth: 2, borderColor: '#000000', zIndex: 10 }}>
-            <Text style={{ color: '#000000', fontWeight: 'bold', fontSize: 14 }}>
-              Score : {totalAnswered === 0 ? '0' : correctAnswers}
-            </Text>
-          </View>
+          </LinearGradient>
         </View>
 
         {/* Progress bar */}
@@ -682,62 +683,85 @@ export default function PracticeSession() {
 
           {/* Options */}
           <View className="mb-6">
-            {Object.entries(options).map(([key, value]) => {
-              const isSelected = selectedAnswer === key;
-              const isCorrectOption = key === correctAnswerKey;
-              const showCorrect = showExplanation && isCorrectOption;
-              const showWrong = showExplanation && isSelected && !isCorrect;
+            {(() => {
+              // For inline mode: reorder options when explanation is shown
+              // For bottom mode: show all options in original order
+              let optionEntries = Object.entries(options);
 
-              // When explanation is shown, only show correct option and selected wrong option
-              if (showExplanation && !isCorrectOption && !isSelected) {
-                return null;
+              if (explanationPosition === 'inline') {
+                // INLINE MODE: Show only selected/correct options first, then explanation, then rest
+                if (showExplanation && !isCorrect && selectedAnswer && correctAnswerKey) {
+                  // Filter to only correct and selected options, ordered: correct first, then selected wrong
+                  const correctEntry = optionEntries.find(([key]) => key === correctAnswerKey);
+                  const selectedEntry = optionEntries.find(([key]) => key === selectedAnswer);
+                  optionEntries = [correctEntry, selectedEntry].filter(Boolean) as [string, string][];
+                } else if (showExplanation && isCorrect) {
+                  // For correct answers, only show the selected (correct) option
+                  optionEntries = optionEntries.filter(([key]) => key === selectedAnswer);
+                }
               }
+              // BOTTOM MODE: Keep all options in original order (no filtering)
 
-              let containerStyle = 'bg-white border-gray-100 shadow-md';
-              let textStyle = 'text-black font-semibold';
+              return optionEntries.map(([key, value]) => {
+                const isSelected = selectedAnswer === key;
+                const isCorrectOption = key === correctAnswerKey;
+                const showCorrect = showExplanation && isCorrectOption;
+                const showWrong = showExplanation && isSelected && !isCorrect;
+                const isOtherIncorrect = showExplanation && !isCorrectOption && !isSelected;
 
-              if (showCorrect) {
-                containerStyle = 'bg-green-100 border-gray-100 shadow-lg';
-                textStyle = 'text-black font-semibold';
-              } else if (showWrong) {
-                containerStyle = 'bg-red-200 border-gray-100 shadow-lg';
-                textStyle = 'text-black font-semibold';
-              } else if (isSelected) {
-                containerStyle = 'bg-blue-500 border-blue-500 shadow-lg';
-                textStyle = 'text-white font-semibold';
-              }
+                // For INLINE mode: skip non-selected, non-correct options (shown later)
+                if (explanationPosition === 'inline' && showExplanation && !isCorrectOption && !isSelected) {
+                  return null;
+                }
 
-              return (
-                <TouchableOpacity
-                  key={key}
-                  onPress={() => handleAnswerSelect(key)}
-                  disabled={showExplanation}
-                  className={`p-4 rounded-2xl mb-5 border ${containerStyle}`}
-                  activeOpacity={1}
-                >
-                  <View className={`flex-row items-center ${isUrduSubject ? 'flex-row-reverse' : ''}`}>
-                    <MathText
-                      text={value}
-                      fontSize={fontSize}
-                      color={showCorrect ? '#111827' : showWrong ? '#111827' : isSelected ? '#ffffff' : '#000000'}
-                      style={{ flex: 1, fontWeight: '600' }}
-                      isRTL={isUrduSubject}
-                    />
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                let containerStyle = 'bg-white border-gray-100 shadow-md';
+                let textStyle = 'text-black font-semibold';
+
+                if (showCorrect) {
+                  containerStyle = 'bg-green-100 border-gray-100 shadow-lg';
+                  textStyle = 'text-black font-semibold';
+                } else if (showWrong) {
+                  containerStyle = 'bg-red-100 border-gray-100 shadow-lg';
+                  textStyle = 'text-black font-semibold';
+                } else if (isOtherIncorrect) {
+                  // Other incorrect options (only shown in bottom mode) - grey-red tint
+                  containerStyle = 'bg-gray-200 border-gray-100 shadow-md';
+                  textStyle = 'text-gray-600 font-semibold';
+                } else if (isSelected) {
+                  containerStyle = 'bg-blue-500 border-blue-500 shadow-lg';
+                  textStyle = 'text-white font-semibold';
+                }
+
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    onPress={() => handleAnswerSelect(key)}
+                    disabled={showExplanation}
+                    className={`p-4 rounded-2xl mb-5 border ${containerStyle}`}
+                    activeOpacity={1}
+                  >
+                    <View className={`flex-row items-center ${isUrduSubject ? 'flex-row-reverse' : ''}`}>
+                      <MathText
+                        text={value}
+                        fontSize={fontSize}
+                        color={showCorrect ? '#111827' : showWrong ? '#111827' : isOtherIncorrect ? '#111827' : isSelected ? '#ffffff' : '#000000'}
+                        style={{ flex: 1, fontWeight: '600' }}
+                        isRTL={isUrduSubject}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                );
+              });
+            })()}
           </View>
 
-          {/* Explanation */}
-          {showExplanation && isCorrect && (
+          {/* Explanation - INLINE position (between options) */}
+          {showExplanation && explanationPosition === 'inline' && isCorrect && (
             <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500" style={{ overflow: 'hidden', borderRadius: 16 }}>
               <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
               <View style={{ width: '100%' }}>
                 {(() => {
-                  // Check for both 'solutions' and 'explanation' fields (data sources use different names)
                   const explanationText = getQuestionExplanation(currentQuestion);
-                  // Debug: log explanation result to help trace empty explanations
                   try {
                     console.log('[practice-session] explanationText for question', currentQuestion.id || currentQuestion.question_number || currentQuestion.question?.substring?.(0,40) || 'unknown', {
                       type: typeof explanationText,
@@ -766,7 +790,7 @@ export default function PracticeSession() {
               </View>
             </View>
           )}
-          {showExplanation && !isCorrect && (
+          {showExplanation && explanationPosition === 'inline' && !isCorrect && (
             <LinearGradient
               colors={['#9333ea', '#c084fc', '#9333ea']}
               start={{ x: 0, y: 0 }}
@@ -777,7 +801,6 @@ export default function PracticeSession() {
                 <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
                 <View style={{ width: '100%' }}>
                   {(() => {
-                    // Check for both 'solutions' and 'explanation' fields (data sources use different names)
                     const explanationText = getQuestionExplanation(currentQuestion);
                     const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
 
@@ -800,8 +823,8 @@ export default function PracticeSession() {
             </LinearGradient>
           )}
 
-          {/* Other incorrect options - shown below explanation */}
-          {showExplanation && (
+          {/* Other incorrect options - shown below explanation (INLINE mode only) */}
+          {showExplanation && explanationPosition === 'inline' && (
             <View className="mt-4 mb-6">
               {Object.entries(options).map(([key, value]) => {
                 const isSelected = selectedAnswer === key;
@@ -812,17 +835,17 @@ export default function PracticeSession() {
                   return null;
                 }
 
-                // Show all other incorrect options
+                // Show all other incorrect options - grey-red tint
                 return (
                   <View
                     key={key}
-                    className="p-4 rounded-2xl mb-5 bg-red-100 border border-gray-100 shadow-md"
+                    className="p-4 rounded-2xl mb-5 bg-gray-200 border border-gray-100 shadow-md"
                   >
                     <View className={`flex-row items-center ${isUrduSubject ? 'flex-row-reverse' : ''}`}>
                       <MathText
                         text={value}
                         fontSize={fontSize}
-                        color="#111827"
+                        color="#4b5563"
                         style={{ flex: 1, fontWeight: '600' }}
                         isRTL={isUrduSubject}
                       />
@@ -833,8 +856,67 @@ export default function PracticeSession() {
             </View>
           )}
 
+          {/* Explanation - BOTTOM position (after all options) */}
+          {showExplanation && explanationPosition === 'bottom' && isCorrect && (
+            <View className="mt-0 bg-white p-4 rounded-2xl shadow-md border-2 border-green-500" style={{ overflow: 'hidden', borderRadius: 16 }}>
+              <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
+              <View style={{ width: '100%' }}>
+                {(() => {
+                  const explanationText = getQuestionExplanation(currentQuestion);
+                  const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
+
+                  return hasExplanation ? (
+                    <MathText
+                      text={explanationText}
+                      fontSize={getExplanationFontSize()}
+                      color="#111827"
+                      style={{ width: '100%' }}
+                      isRTL={isUrduSubject}
+                    />
+                  ) : (
+                    <Text className={`text-gray-500 italic text-sm ${isUrduSubject ? 'text-right' : ''}`}>
+                      No explanation available for this question.
+                    </Text>
+                  );
+                })()}
+              </View>
+            </View>
+          )}
+          {showExplanation && explanationPosition === 'bottom' && !isCorrect && (
+            <LinearGradient
+              colors={['#9333ea', '#c084fc', '#9333ea']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ marginTop: 0, borderRadius: 16, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3, padding: 2, overflow: 'hidden' }}
+            >
+              <View className="bg-white p-4" style={{ borderRadius: 14, overflow: 'hidden' }}>
+                <Text className={`text-gray-700 font-bold mb-2 text-base ${isUrduSubject ? 'text-right' : ''}`}>Explanation:</Text>
+                <View style={{ width: '100%' }}>
+                  {(() => {
+                    const explanationText = getQuestionExplanation(currentQuestion);
+                    const hasExplanation = typeof explanationText === 'string' && explanationText.trim().length > 0;
+
+                    return hasExplanation ? (
+                      <MathText
+                        text={explanationText}
+                        fontSize={getExplanationFontSize()}
+                        color="#111827"
+                        style={{ width: '100%' }}
+                        isRTL={isUrduSubject}
+                      />
+                    ) : (
+                      <Text className={`text-gray-500 italic text-sm ${isUrduSubject ? 'text-right' : ''}`}>
+                        No explanation available for this question.
+                      </Text>
+                    );
+                  })()}
+                </View>
+              </View>
+            </LinearGradient>
+          )}
+
           {/* Question number bubbles - Grid layout with 5 per row */}
-          <View className="mt-6 mb-4 bg-gray-100 border-2 border-gray-300 rounded-2xl p-4">
+          <View className="mt-6 mb-4 bg-gray-50 rounded-2xl p-4">
             <View className="flex-row flex-wrap justify-center gap-2">
               {questions.map((_, index) => {
                 const status = getQuestionStatus(index);
@@ -855,13 +937,13 @@ export default function PracticeSession() {
                         style={{
                           width: 48,
                           height: 48,
-                          backgroundColor: '#7CC94D',
+                          backgroundColor: '#dcfce7',
                           borderRadius: 8,
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}
                       >
-                        <Text className="text-white font-bold text-base">
+                        <Text style={{ color: '#166534', fontWeight: 'bold', fontSize: 14 }}>
                           {index + 1}
                         </Text>
                       </View>
@@ -881,13 +963,13 @@ export default function PracticeSession() {
                         style={{
                           width: 48,
                           height: 48,
-                          backgroundColor: '#ef4444',
+                          backgroundColor: '#fecaca',
                           borderRadius: 8,
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}
                       >
-                        <Text className="text-white font-bold text-base">
+                        <Text style={{ color: '#991b1b', fontWeight: 'bold', fontSize: 14 }}>
                           {index + 1}
                         </Text>
                       </View>
@@ -923,49 +1005,84 @@ export default function PracticeSession() {
                 }
               })}
             </View>
+          </View>
 
-            {/* Font Size Adjustment */}
-            <View className="mt-4">
-              <View className="flex-row justify-center items-center gap-3">
-                <Text className="text-gray-700 font-medium">Text Size:</Text>
+          {/* Font Size Adjustment - Outside grid card */}
+          <View className="mt-4">
+            <View className="flex-row justify-start items-center gap-3">
+              <Text className="text-gray-700 font-medium">Text Size:</Text>
 
+              <TouchableOpacity
+                onPress={() => {
+                  if (fontSize === 'small') setFontSize('xs');
+                  else if (fontSize === 'medium') setFontSize('small');
+                  else if (fontSize === 'large') setFontSize('medium');
+                  else if (fontSize === 'xl') setFontSize('large');
+                  else if (fontSize === '2xl') setFontSize('xl');
+                  else if (fontSize === '3xl') setFontSize('2xl');
+                }}
+                disabled={fontSize === 'xs'}
+                className={`w-10 h-10 rounded-full items-center justify-center ${
+                  fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
+                }`}
+                activeOpacity={1}
+              >
+                <Text className={`text-xl font-bold ${fontSize === 'xs' ? 'text-gray-400' : 'text-white'}`}>
+                  −
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => {
+                  if (fontSize === 'xs') setFontSize('small');
+                  else if (fontSize === 'small') setFontSize('medium');
+                  else if (fontSize === 'medium') setFontSize('large');
+                  else if (fontSize === 'large') setFontSize('xl');
+                  else if (fontSize === 'xl') setFontSize('2xl');
+                  else if (fontSize === '2xl') setFontSize('3xl');
+                }}
+                disabled={fontSize === '3xl'}
+                className={`w-10 h-10 rounded-full items-center justify-center ${
+                  fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
+                }`}
+                activeOpacity={1}
+              >
+                <Text className={`text-xl font-bold ${fontSize === '3xl' ? 'text-gray-400' : 'text-white'}`}>
+                  +
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Explanation Position Toggle - Outside grid card */}
+          <View className="mt-4">
+            <View className="flex-row justify-start items-center gap-3">
+              <Text className="text-gray-700 font-medium">Explanation:</Text>
+              <View className="flex-row bg-gray-200 rounded-full p-1">
                 <TouchableOpacity
-                  onPress={() => {
-                    if (fontSize === 'small') setFontSize('xs');
-                    else if (fontSize === 'medium') setFontSize('small');
-                    else if (fontSize === 'large') setFontSize('medium');
-                    else if (fontSize === 'xl') setFontSize('large');
-                    else if (fontSize === '2xl') setFontSize('xl');
-                    else if (fontSize === '3xl') setFontSize('2xl');
-                  }}
-                  disabled={fontSize === 'xs'}
-                  className={`w-10 h-10 rounded-full items-center justify-center ${
-                    fontSize === 'xs' ? 'bg-gray-200' : 'bg-black'
+                  onPress={() => setExplanationPosition('inline')}
+                  className={`px-4 py-2 rounded-full ${
+                    explanationPosition === 'inline' ? 'bg-black' : 'bg-transparent'
                   }`}
                   activeOpacity={1}
                 >
-                  <Text className={`text-xl font-bold ${fontSize === 'xs' ? 'text-gray-400' : 'text-white'}`}>
-                    −
+                  <Text className={`text-sm font-medium ${
+                    explanationPosition === 'inline' ? 'text-white' : 'text-gray-600'
+                  }`}>
+                    Inline
                   </Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity
-                  onPress={() => {
-                    if (fontSize === 'xs') setFontSize('small');
-                    else if (fontSize === 'small') setFontSize('medium');
-                    else if (fontSize === 'medium') setFontSize('large');
-                    else if (fontSize === 'large') setFontSize('xl');
-                    else if (fontSize === 'xl') setFontSize('2xl');
-                    else if (fontSize === '2xl') setFontSize('3xl');
-                  }}
-                  disabled={fontSize === '3xl'}
-                  className={`w-10 h-10 rounded-full items-center justify-center ${
-                    fontSize === '3xl' ? 'bg-gray-200' : 'bg-black'
+                  onPress={() => setExplanationPosition('bottom')}
+                  className={`px-4 py-2 rounded-full ${
+                    explanationPosition === 'bottom' ? 'bg-black' : 'bg-transparent'
                   }`}
                   activeOpacity={1}
                 >
-                  <Text className={`text-xl font-bold ${fontSize === '3xl' ? 'text-gray-400' : 'text-white'}`}>
-                    +
+                  <Text className={`text-sm font-medium ${
+                    explanationPosition === 'bottom' ? 'text-white' : 'text-gray-600'
+                  }`}>
+                    Bottom
                   </Text>
                 </TouchableOpacity>
               </View>

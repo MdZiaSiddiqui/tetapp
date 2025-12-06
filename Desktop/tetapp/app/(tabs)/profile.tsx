@@ -1,24 +1,31 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert, Linking, Share } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Linking, Share, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../lib/auth-context';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { Ionicons } from '@expo/vector-icons';
 import { useProAccess } from '../../hooks/useProAccess';
 import { TIER_NAMES } from '../../lib/pricing-config';
+import { useState } from 'react';
 
 export default function Profile() {
   const router = useRouter();
-  const { user, signOut, loading } = useAuth();
+  const { user, signOut, loading, isGuest } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Phone edit state
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [phoneValue, setPhoneValue] = useState('');
+  const [isSavingPhone, setIsSavingPhone] = useState(false);
 
   // Fetch user profile
-  const { data: profile } = useQuery({
+  const { data: profile, refetch: refetchProfile } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('users')
+        .from('user_profiles')
         .select('*')
         .eq('id', user?.id)
         .single();
@@ -36,6 +43,12 @@ export default function Profile() {
     expiresAt,
     daysRemaining,
     packageType,
+    hasPaper1Access,
+    hasPaper2Access,
+    paper1ExpiresAt,
+    paper2ExpiresAt,
+    paper1DaysRemaining,
+    paper2DaysRemaining,
     loading: proLoading,
   } = useProAccess();
 
@@ -89,9 +102,41 @@ export default function Profile() {
     router.push('/legal/terms');
   };
 
+  const handleEditPhone = () => {
+    setPhoneValue(profile?.phone || '');
+    setIsEditingPhone(true);
+  };
 
-  // Redirect to login if not authenticated
-  if (!user && !loading) {
+  const handleCancelPhoneEdit = () => {
+    setIsEditingPhone(false);
+    setPhoneValue('');
+  };
+
+  const handleSavePhone = async () => {
+    if (!user?.id) return;
+
+    setIsSavingPhone(true);
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ phone: phoneValue.trim() || null })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      await queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
+      setIsEditingPhone(false);
+      setPhoneValue('');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update phone number. Please try again.');
+      console.error('Error updating phone:', error);
+    } finally {
+      setIsSavingPhone(false);
+    }
+  };
+
+  // Redirect to login if not authenticated (and not guest)
+  if (!user && !isGuest && !loading) {
     router.replace('/login');
     return null;
   }
@@ -127,12 +172,51 @@ export default function Profile() {
             </View>
           </View>
 
-          {/* Phone/Number placeholder */}
+          {/* Phone/Number */}
           <View>
             <Text className="text-xs text-gray-400 mb-2">Number</Text>
-            <Text className="text-sm text-gray-700">
-              {profile?.phone || 'Not provided'}
-            </Text>
+            {isEditingPhone ? (
+              <View className="flex-row items-center">
+                <TextInput
+                  value={phoneValue}
+                  onChangeText={setPhoneValue}
+                  placeholder="Enter phone number"
+                  keyboardType="phone-pad"
+                  className="flex-1 text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200"
+                  autoFocus
+                />
+                <TouchableOpacity
+                  onPress={handleSavePhone}
+                  disabled={isSavingPhone}
+                  className="ml-2 bg-gray-900 px-3 py-2 rounded-lg"
+                  activeOpacity={0.7}
+                >
+                  <Text className="text-white text-xs font-medium">
+                    {isSavingPhone ? 'Saving...' : 'Save'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleCancelPhoneEdit}
+                  className="ml-2 px-3 py-2"
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="close" size={18} color="#6B7280" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View className="flex-row items-center justify-between">
+                <Text className="text-sm text-gray-700 flex-1">
+                  {profile?.phone || 'Not provided'}
+                </Text>
+                <TouchableOpacity
+                  onPress={handleEditPhone}
+                  className="p-2"
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="pencil" size={16} color="#6B7280" />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
 
@@ -153,79 +237,81 @@ export default function Profile() {
               )}
             </View>
 
-            {/* Plan Description */}
-            <Text className="text-gray-600 text-sm mb-3">
-              {isFree
-                ? 'Limited access to practice questions'
-                : isProActive
-                ? tier === 'both'
-                  ? 'Full access to Paper-1 & Paper-2'
-                  : tier === 'paper1'
-                  ? 'Full access to Paper-1'
-                  : 'Full access to Paper-2'
-                : 'Plan expired'}
-            </Text>
-
-            {/* Validity Information */}
+            {/* Validity Information - Simplified UI */}
             {!isFree && (
-              <View className="bg-gray-50 p-4 rounded-xl">
-                {isProActive ? (
-                  <>
-                    <View className="flex-row items-center mb-2">
-                      <Ionicons name="calendar-outline" size={16} color="#6B7280" />
-                      <Text className="text-gray-600 text-xs ml-2">Valid Until</Text>
-                    </View>
-                    <Text className="text-gray-900 text-base font-medium mb-1">
-                      {expiresAt?.toLocaleDateString('en-IN', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </Text>
-                    <Text className="text-gray-500 text-xs">
-                      {daysRemaining !== null &&
-                        `${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} remaining`}
-                    </Text>
-                  </>
-                ) : (
-                  <>
-                    <View className="flex-row items-center mb-2">
-                      <Ionicons name="warning-outline" size={16} color="#DC2626" />
-                      <Text className="text-red-600 text-xs ml-2 font-medium">Plan Expired</Text>
-                    </View>
-                    <Text className="text-gray-600 text-sm">
-                      Your subscription expired on{' '}
-                      {expiresAt?.toLocaleDateString('en-IN', {
+              <>
+                {/* Paper 1 only - show validity directly */}
+                {tier === 'paper1' && paper1ExpiresAt && (
+                  <View className="mt-1">
+                    <Text className="text-gray-700 text-sm">
+                      {hasPaper1Access ? 'Valid until' : 'Expired on'}{' '}
+                      {paper1ExpiresAt.toLocaleDateString('en-IN', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </Text>
-                  </>
+                    {hasPaper1Access && paper1DaysRemaining !== null && (
+                      <Text className="text-gray-500 text-xs mt-1">
+                        {paper1DaysRemaining} {paper1DaysRemaining === 1 ? 'day' : 'days'} remaining
+                      </Text>
+                    )}
+                  </View>
                 )}
-              </View>
-            )}
 
-            {/* Package Type for Active Plans */}
-            {isProActive && packageType && (
-              <View className="mt-3 flex-row items-center">
-                <Ionicons name="time-outline" size={14} color="#6B7280" />
-                <Text className="text-gray-500 text-xs ml-1">
-                  {packageType === '3_months' ? '3 Months' : '1 Year'} Plan
-                </Text>
-              </View>
+                {/* Paper 2 only - show validity directly */}
+                {tier === 'paper2' && paper2ExpiresAt && (
+                  <View className="mt-1">
+                    <Text className="text-gray-700 text-sm">
+                      {hasPaper2Access ? 'Valid until' : 'Expired on'}{' '}
+                      {paper2ExpiresAt.toLocaleDateString('en-IN', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                    {hasPaper2Access && paper2DaysRemaining !== null && (
+                      <Text className="text-gray-500 text-xs mt-1">
+                        {paper2DaysRemaining} {paper2DaysRemaining === 1 ? 'day' : 'days'} remaining
+                      </Text>
+                    )}
+                  </View>
+                )}
+
+                {/* Both papers - show compact rows */}
+                {tier === 'both' && (
+                  <View className="mt-3 gap-2">
+                    {paper1ExpiresAt && (
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-gray-700 text-sm">Paper 1</Text>
+                        <Text className="text-gray-500 text-sm">
+                          {hasPaper1Access ? `${paper1DaysRemaining} days left` : 'Expired'}
+                        </Text>
+                      </View>
+                    )}
+                    {paper2ExpiresAt && (
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-gray-700 text-sm">Paper 2</Text>
+                        <Text className="text-gray-500 text-sm">
+                          {hasPaper2Access ? `${paper2DaysRemaining} days left` : 'Expired'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+              </>
             )}
           </View>
 
           {/* Upgrade/Renew Button */}
-          {(isFree || !isProActive) && (
+          {(isFree || !hasPaper1Access || !hasPaper2Access) && (
             <TouchableOpacity
               className="bg-gray-900 rounded-xl p-4 flex-row items-center justify-between"
               activeOpacity={1}
               onPress={() => router.push('/(tabs)/pricing')}
             >
               <Text className="text-white font-semibold text-base">
-                {isFree ? 'Upgrade to Pro' : 'Renew Subscription'}
+                {isFree ? 'Upgrade to Pro' : !hasPaper1Access && !hasPaper2Access ? 'Renew Subscription' : 'Extend or Add Plan'}
               </Text>
               <Ionicons name="arrow-forward" size={20} color="white" />
             </TouchableOpacity>

@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '../lib/auth-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { LogBox } from 'react-native';
+import { useEffect } from 'react';
+import { preloadSubjectsCache } from '../hooks/useSupabaseData';
 import '../global.css';
 
 // Suppress known dependency warnings
@@ -21,7 +23,15 @@ const queryClient = new QueryClient({
   },
 });
 
+// Preload subjects cache immediately (runs before component mount)
+preloadSubjectsCache(queryClient);
+
 export default function RootLayout() {
+  // Also trigger preload on mount in case the initial one was too early
+  useEffect(() => {
+    preloadSubjectsCache(queryClient);
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
@@ -34,6 +44,7 @@ export default function RootLayout() {
           >
             <Stack.Screen name="index" />
             <Stack.Screen name="login" />
+            <Stack.Screen name="onboarding" />
             <Stack.Screen name="auth/callback" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="subjects/[id]" />

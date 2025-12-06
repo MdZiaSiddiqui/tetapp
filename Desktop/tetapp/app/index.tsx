@@ -3,7 +3,7 @@ import { useAuth } from '../lib/auth-context';
 import { View, ActivityIndicator } from 'react-native';
 
 export default function Index() {
-  const { user, loading } = useAuth();
+  const { user, loading, isGuest } = useAuth();
 
   // Show loading spinner while checking auth state
   if (loading) {
@@ -14,8 +14,8 @@ export default function Index() {
     );
   }
 
-  // Redirect based on auth state
-  if (user) {
+  // Redirect based on auth state (user OR guest)
+  if (user || isGuest) {
     return <Redirect href="/(tabs)/home" />;
   }
 
