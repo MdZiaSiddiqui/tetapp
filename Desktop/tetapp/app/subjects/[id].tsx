@@ -1,12 +1,15 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getQuestionsBySubjectAndMode } from '../../lib/api/questions';
 import { getBookCover } from '../../lib/notes-data';
 import { useProAccess } from '../../hooks/useProAccess';
+import { useSubjectSessionStats, getSessionStatsForCard, useSessionHistory } from '../../hooks/useSessionStats';
+import SessionHistoryModal from '../../components/SessionHistoryModal';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Language subjects that don't need language toggle
 const LANGUAGE_SUBJECTS = ['english', 'hindi', 'telugu', 'urdu'];
@@ -87,6 +90,27 @@ export default function SubjectDetail() {
   const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Telugu' | 'Urdu' | 'Hindi'>(defaultLanguage);
   const [fetchingQuestions, setFetchingQuestions] = useState(false);
 
+  // Session history state
+  const [historyModalVisible, setHistoryModalVisible] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<{
+    sessionNumber: number;
+    mode: 'practice' | 'test';
+  } | null>(null);
+
+  // Query client for invalidating queries after navigation back
+  const queryClient = useQueryClient();
+
+  // Fetch session stats for all cards
+  const { data: sessionStats, isLoading: statsLoading } = useSubjectSessionStats(subjectId);
+
+  // Fetch history for currently selected session (for modal)
+  const { data: sessionHistory, isLoading: historyLoading } = useSessionHistory(
+    subjectId,
+    selectedSession?.sessionNumber || 0,
+    selectedSession?.mode || 'practice',
+    historyModalVisible && !!selectedSession
+  );
+
   // Check if this is a language subject
   const isLanguageSubject = LANGUAGE_SUBJECTS.includes(subjectId.toLowerCase());
 
@@ -112,6 +136,45 @@ export default function SubjectDetail() {
   const handleLockedPress = () => {
     router.push('/(tabs)/pricing');
   };
+
+  // Handle card press - show history modal if session has attempts
+  const handleCardPress = (sessionNumber: number, mode: 'practice' | 'test', isLocked: boolean) => {
+    if (isLocked) {
+      handleLockedPress();
+      return;
+    }
+
+    // Check if session has any history
+    const stats = getSessionStatsForCard(sessionStats, sessionNumber, mode);
+    if (stats && stats.attemptCount > 0) {
+      // Show history modal
+      setSelectedSession({ sessionNumber, mode });
+      setHistoryModalVisible(true);
+    } else {
+      // No history - start new session directly
+      handleModePress(currentPaper, mode, sessionNumber);
+    }
+  };
+
+  // Handle starting a new session from modal
+  const handleStartNew = useCallback(() => {
+    if (!selectedSession) return;
+    setHistoryModalVisible(false);
+    handleModePress(currentPaper, selectedSession.mode, selectedSession.sessionNumber);
+  }, [selectedSession, currentPaper]);
+
+  // Handle viewing a previous attempt
+  const handleViewAttempt = useCallback((attemptId: string) => {
+    setHistoryModalVisible(false);
+    router.push({
+      pathname: '/practice/session-history',
+      params: {
+        sessionId: attemptId,
+        subjectId,
+        subjectName,
+      },
+    });
+  }, [router, subjectId, subjectName]);
 
   const handleModePress = async (paper: 'Paper 1' | 'Paper 2', mode: 'practice' | 'test' | 'notes', sessionNumber: number = 1) => {
     try {
@@ -139,13 +202,14 @@ export default function SubjectDetail() {
       // Determine question count: 60 for social subject, 30 for others
       const questionCount = subjectId === 'social' ? 60 : 30;
 
-      // Fetch random questions
+      // Fetch fixed question set for this session number
       const { data: questions, error } = await getQuestionsBySubjectAndMode(
         subjectId,
         language,
         paper,
         mode,
-        questionCount
+        questionCount,
+        sessionNumber
       );
 
       setFetchingQuestions(false);
@@ -430,12 +494,16 @@ export default function SubjectDetail() {
               const isLastItem = index === 49; // Check if this is the last item
               const questionBadge = subjectId === 'social' ? '60Q' : '30Q'; // Dynamic badge based on subject
 
+              // Get session stats for history indicators
+              const practiceStats = getSessionStatsForCard(sessionStats, sessionNumber, 'practice');
+              const testStats = getSessionStatsForCard(sessionStats, sessionNumber, 'test');
+
               return (
                 <View key={sessionNumber} className="mb-4">
                   <View className="flex-row justify-between">
                   {/* Practice Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'practice', sessionNumber)}
+                    onPress={() => handleCardPress(sessionNumber, 'practice', isLocked)}
                     disabled={fetchingQuestions}
                     activeOpacity={1}
                     className="flex-1 mr-2"
@@ -470,13 +538,22 @@ export default function SubjectDetail() {
                           Practice-{sessionNumber}
                         </Text>
 
-                        {/* Subtitle */}
-                        <View className="flex-row items-center">
-                          <Ionicons name="checkmark-circle" size={14} color="rgba(255,255,255,0.8)" />
-                          <Text className="text-white/80 text-xs ml-1">
-                            Instant Feedback
-                          </Text>
-                        </View>
+                        {/* Subtitle - Show history if exists, otherwise show default */}
+                        {practiceStats && practiceStats.attemptCount > 0 ? (
+                          <View className="flex-row items-center">
+                            <Ionicons name="trophy" size={14} color="rgba(255,255,255,0.9)" />
+                            <Text className="text-white/90 text-xs ml-1 font-medium">
+                              Best: {practiceStats.bestAccuracy.toFixed(0)}% ({practiceStats.attemptCount} {practiceStats.attemptCount === 1 ? 'try' : 'tries'})
+                            </Text>
+                          </View>
+                        ) : (
+                          <View className="flex-row items-center">
+                            <Ionicons name="checkmark-circle" size={14} color="rgba(255,255,255,0.8)" />
+                            <Text className="text-white/80 text-xs ml-1">
+                              Instant Feedback
+                            </Text>
+                          </View>
+                        )}
                       </LinearGradient>
 
                       {/* Lock Icon Overlay */}
@@ -505,7 +582,7 @@ export default function SubjectDetail() {
 
                   {/* Test Box */}
                   <TouchableOpacity
-                    onPress={isLocked ? handleLockedPress : () => handleModePress(currentPaper, 'test', sessionNumber)}
+                    onPress={() => handleCardPress(sessionNumber, 'test', isLocked)}
                     disabled={fetchingQuestions}
                     activeOpacity={1}
                     className="flex-1 ml-2"
@@ -540,13 +617,22 @@ export default function SubjectDetail() {
                           Test-{sessionNumber}
                         </Text>
 
-                        {/* Subtitle */}
-                        <View className="flex-row items-center">
-                          <Ionicons name="trophy" size={14} color="rgba(255,255,255,0.8)" />
-                          <Text className="text-white/80 text-xs ml-1">
-                            Timed Challenge
-                          </Text>
-                        </View>
+                        {/* Subtitle - Show history if exists, otherwise show default */}
+                        {testStats && testStats.attemptCount > 0 ? (
+                          <View className="flex-row items-center">
+                            <Ionicons name="trophy" size={14} color="rgba(255,255,255,0.9)" />
+                            <Text className="text-white/90 text-xs ml-1 font-medium">
+                              Best: {testStats.bestAccuracy.toFixed(0)}% ({testStats.attemptCount} {testStats.attemptCount === 1 ? 'try' : 'tries'})
+                            </Text>
+                          </View>
+                        ) : (
+                          <View className="flex-row items-center">
+                            <Ionicons name="time-outline" size={14} color="rgba(255,255,255,0.8)" />
+                            <Text className="text-white/80 text-xs ml-1">
+                              Timed Challenge
+                            </Text>
+                          </View>
+                        )}
                       </LinearGradient>
 
                       {/* Lock Icon Overlay */}
@@ -588,6 +674,29 @@ export default function SubjectDetail() {
           )}
         </View>
       </ScrollView>
+
+      {/* Session History Modal */}
+      <SessionHistoryModal
+        visible={historyModalVisible}
+        onClose={() => {
+          setHistoryModalVisible(false);
+          setSelectedSession(null);
+        }}
+        sessionNumber={selectedSession?.sessionNumber || 0}
+        mode={selectedSession?.mode || 'practice'}
+        subjectName={subjectName}
+        attempts={(sessionHistory || []).map((session: any) => ({
+          id: session.id,
+          completed_at: session.completed_at,
+          accuracy: session.accuracy,
+          correct_count: session.correct_count,
+          total_questions: session.total_questions,
+          time_taken_seconds: session.time_taken_seconds,
+        }))}
+        loading={historyLoading}
+        onStartNew={handleStartNew}
+        onViewAttempt={handleViewAttempt}
+      />
     </LinearGradient>
   );
 }

@@ -37,9 +37,13 @@ export function useTestTimer({ initialSeconds, onTimeUp, enabled = true }: UseTe
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Calculate elapsed time
+  const elapsedSeconds = initialSeconds - timeRemaining;
+
   return {
     timeRemaining,
     formattedTime: formatTime(timeRemaining),
     isLowTime: timeRemaining <= 60, // Last minute warning
+    elapsedSeconds, // How much time has passed
   };
 }

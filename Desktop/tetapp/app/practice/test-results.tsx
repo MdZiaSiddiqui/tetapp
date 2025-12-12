@@ -315,20 +315,28 @@ export default function TestResults() {
 
               <View className="flex-row justify-around">
                 <View className="items-center flex-1">
-                  <Text className="text-sm font-semibold text-gray-600 mb-2">
-                    Correct
-                  </Text>
-                  <Text className="text-4xl font-bold text-purple-700">
+                  <Text className="text-3xl font-bold text-green-500">
                     {correctCount}
                   </Text>
+                  <Text className="text-gray-600 text-xs mt-1 font-medium">Correct</Text>
                 </View>
+
+                <View className="w-px bg-gray-200" />
+
                 <View className="items-center flex-1">
-                  <Text className="text-sm font-semibold text-gray-600 mb-2">
-                    Incorrect
-                  </Text>
-                  <Text className="text-4xl font-bold text-purple-700">
+                  <Text className="text-3xl font-bold text-red-500">
                     {incorrectCount}
                   </Text>
+                  <Text className="text-gray-600 text-xs mt-1 font-medium">Incorrect</Text>
+                </View>
+
+                <View className="w-px bg-gray-200" />
+
+                <View className="items-center flex-1">
+                  <Text className="text-3xl font-bold text-yellow-500">
+                    {skippedCount}
+                  </Text>
+                  <Text className="text-gray-600 text-xs mt-1 font-medium">Skipped</Text>
                 </View>
               </View>
             </View>

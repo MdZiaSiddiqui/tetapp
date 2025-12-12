@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
@@ -28,6 +28,8 @@ import { QuestionGrid } from '../../components/test-session/QuestionGrid';
 import MathText from '../../components/MathText';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GestureDetector, Gesture, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { saveSession, getSessionById } from '../../lib/api/sessions';
+import { saveLocalSession, getLocalSessionById } from '../../lib/storage/session-storage';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -63,6 +65,7 @@ export default function TestSession() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const { hasPaper1Access, hasPaper2Access, loading: proLoading } = useProAccess();
 
   // Determine which paper access to check based on params
@@ -86,14 +89,39 @@ export default function TestSession() {
   // Submit test confirmation modal
   const [showSubmitModal, setShowSubmitModal] = useState(false);
 
+  // Check if this is a reattempt of a saved session
+  const reattemptSessionId = params.reattemptSessionId as string | undefined;
+
   // Fetch questions
   const {
     data: questions,
     isLoading,
     error: questionsError,
   } = useQuery({
-    queryKey: ['test-questions', params],
+    queryKey: ['test-questions', params, reattemptSessionId],
     queryFn: async () => {
+      // If reattempting a saved session, fetch questions from that session
+      if (reattemptSessionId) {
+        // Check if it's a local session (starts with 'local_')
+        if (reattemptSessionId.startsWith('local_')) {
+          const { data: savedSession, error: sessionError } = await getLocalSessionById(reattemptSessionId);
+          if (sessionError || !savedSession) {
+            throw new Error('Failed to load saved session');
+          }
+          // Return the questions from the saved session (same order)
+          return savedSession.questions as Question[];
+        } else {
+          // Cloud session
+          const { data: savedSession, error: sessionError } = await getSessionById(reattemptSessionId);
+          if (sessionError || !savedSession) {
+            throw new Error('Failed to load saved session');
+          }
+          // Return the questions from the saved session (same order)
+          return savedSession.questions as Question[];
+        }
+      }
+
+      // Normal flow - fetch from database
       let query = supabase
         .from('questions')
         .select('*')
@@ -261,9 +289,11 @@ export default function TestSession() {
     },
   });
 
-  // Timer
-  const { formattedTime, isLowTime } = useTestTimer({
-    initialSeconds: (parseInt(params.timerMinutes as string) || 30) * 60,
+  // Timer - calculate initial seconds for saving
+  const initialTimerSeconds = (parseInt(params.timerMinutes as string) || 30) * 60;
+
+  const { formattedTime, isLowTime, elapsedSeconds } = useTestTimer({
+    initialSeconds: initialTimerSeconds,
     onTimeUp: async () => {
       // Calculate correct answers count
       const correctCount = calculateCorrectCount(answeredQuestions);
@@ -290,6 +320,51 @@ export default function TestSession() {
           markedForReviewIndices.push(parseInt(index));
         }
       });
+
+      // Calculate accuracy
+      const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+
+      // Save session to database or local storage
+      const sessionData = {
+        subjectId: subjectId || '',
+        sessionNumber: sessionNumber,
+        mode: 'test' as const,
+        paper: (params.paper as 'Paper 1' | 'Paper 2') || 'Paper 1',
+        language: (params.language as 'English' | 'Telugu' | 'Urdu') || 'English',
+        questions: questions || [],
+        answers: userAnswersMap,
+        markedForReview: markedForReviewIndices,
+        totalQuestions: totalQuestions,
+        answeredCount: answeredCount,
+        correctCount: correctCount,
+        incorrectCount: incorrectCount,
+        skippedCount: skippedCount,
+        accuracy: accuracy,
+        timeTakenSeconds: initialTimerSeconds, // Full timer when time ran out
+      };
+
+      // Save based on auth state
+      try {
+        if (user) {
+          const { error } = await saveSession({ ...sessionData, userId: user.id });
+          if (error) {
+            console.error('[test-session] Failed to save session to cloud:', error);
+          } else {
+            console.log('[test-session] Session saved to cloud successfully (time up)');
+            queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+          }
+        } else {
+          const { error } = await saveLocalSession(sessionData);
+          if (error) {
+            console.error('[test-session] Failed to save session locally:', error);
+          } else {
+            console.log('[test-session] Session saved locally successfully (time up)');
+            queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+          }
+        }
+      } catch (err) {
+        console.error('[test-session] Unexpected error saving session:', err);
+      }
 
       // Navigate to test results with questions and answers data
       router.replace({
@@ -335,7 +410,7 @@ export default function TestSession() {
   }, [questions]);
 
   // Actually submit the test after confirmation
-  const handleConfirmSubmit = useCallback(() => {
+  const handleConfirmSubmit = useCallback(async () => {
     if (!questions) return;
     setShowSubmitModal(false);
 
@@ -365,6 +440,54 @@ export default function TestSession() {
       }
     });
 
+    // Calculate accuracy
+    const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+
+    // Calculate elapsed time (time taken to complete)
+    const timeTakenSeconds = elapsedSeconds || initialTimerSeconds;
+
+    // Save session to database or local storage
+    const sessionData = {
+      subjectId: subjectId || '',
+      sessionNumber: sessionNumber,
+      mode: 'test' as const,
+      paper: (params.paper as 'Paper 1' | 'Paper 2') || 'Paper 1',
+      language: (params.language as 'English' | 'Telugu' | 'Urdu') || 'English',
+      questions: questions,
+      answers: userAnswersMap,
+      markedForReview: markedForReviewIndices,
+      totalQuestions: totalQuestions,
+      answeredCount: answeredCount,
+      correctCount: correctCount,
+      incorrectCount: incorrectCount,
+      skippedCount: skippedCount,
+      accuracy: accuracy,
+      timeTakenSeconds: timeTakenSeconds,
+    };
+
+    // Save based on auth state
+    try {
+      if (user) {
+        const { error } = await saveSession({ ...sessionData, userId: user.id });
+        if (error) {
+          console.error('[test-session] Failed to save session to cloud:', error);
+        } else {
+          console.log('[test-session] Session saved to cloud successfully');
+          queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+        }
+      } else {
+        const { error } = await saveLocalSession(sessionData);
+        if (error) {
+          console.error('[test-session] Failed to save session locally:', error);
+        } else {
+          console.log('[test-session] Session saved locally successfully');
+          queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+        }
+      }
+    } catch (err) {
+      console.error('[test-session] Unexpected error saving session:', err);
+    }
+
     // Navigate to test results with questions and answers data
     router.replace({
       pathname: '/practice/test-results',
@@ -381,7 +504,7 @@ export default function TestSession() {
         subjectName: subjectName || '',
       },
     });
-  }, [questions, answeredQuestions, calculateCorrectCount, router, questionStatus, subjectId, subjectName]);
+  }, [questions, answeredQuestions, calculateCorrectCount, router, questionStatus, subjectId, subjectName, user, sessionNumber, params.paper, params.language, elapsedSeconds, initialTimerSeconds, queryClient]);
 
   // Handle hardware back button - show exit confirmation
   useFocusEffect(

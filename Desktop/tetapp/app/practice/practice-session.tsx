@@ -16,6 +16,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
 import { useProAccess } from '../../hooks/useProAccess';
+import { saveSession, getSessionById } from '../../lib/api/sessions';
+import { saveLocalSession, getLocalSessionById } from '../../lib/storage/session-storage';
 import UpgradePrompt from '../../components/premium/UpgradePrompt';
 import ExitConfirmationModal from '../../components/ExitConfirmationModal';
 import LoadingBar from '../../components/LoadingBar';
@@ -111,10 +113,35 @@ export default function PracticeSession() {
   const translateX = useSharedValue(0);
   const opacity = useSharedValue(1);
 
-  // Fetch questions based on params
+  // Check if this is a reattempt of a saved session
+  const reattemptSessionId = params.reattemptSessionId as string | undefined;
+
+  // Fetch questions based on params (or from saved session for reattempts)
   const { data: questions, isLoading, error } = useQuery({
-    queryKey: ['practice-questions', params],
+    queryKey: ['practice-questions', params, reattemptSessionId],
     queryFn: async () => {
+      // If reattempting a saved session, fetch questions from that session
+      if (reattemptSessionId) {
+        // Check if it's a local session (starts with 'local_')
+        if (reattemptSessionId.startsWith('local_')) {
+          const { data: savedSession, error: sessionError } = await getLocalSessionById(reattemptSessionId);
+          if (sessionError || !savedSession) {
+            throw new Error('Failed to load saved session');
+          }
+          // Return the questions from the saved session (same order)
+          return savedSession.questions as Question[];
+        } else {
+          // Cloud session
+          const { data: savedSession, error: sessionError } = await getSessionById(reattemptSessionId);
+          if (sessionError || !savedSession) {
+            throw new Error('Failed to load saved session');
+          }
+          // Return the questions from the saved session (same order)
+          return savedSession.questions as Question[];
+        }
+      }
+
+      // Normal flow - fetch from database
       let query = supabase
         .from('questions')
         .select('*')
@@ -280,7 +307,7 @@ export default function PracticeSession() {
   };
 
   // Finish session and navigate to results
-  const handleFinishSession = () => {
+  const handleFinishSession = async () => {
     if (!questions) return;
 
     // Calculate correct answers from questionAnswers (which tracks all answered questions)
@@ -307,6 +334,53 @@ export default function PracticeSession() {
 
     // Incorrect count includes both wrong answers and skipped questions
     const incorrectCount = (answeredCount - correctCount) + skippedCount;
+
+    // Calculate accuracy
+    const accuracy = questions.length > 0 ? (correctCount / questions.length) * 100 : 0;
+
+    // Save session to database or local storage
+    const sessionData = {
+      subjectId: subjectId || '',
+      sessionNumber: sessionNumber,
+      mode: 'practice' as const,
+      paper: (params.paper as 'Paper 1' | 'Paper 2') || 'Paper 1',
+      language: (params.language as 'English' | 'Telugu' | 'Urdu') || 'English',
+      questions: questions,
+      answers: questionAnswers,
+      totalQuestions: questions.length,
+      answeredCount: answeredCount,
+      correctCount: correctCount,
+      incorrectCount: incorrectCount,
+      skippedCount: skippedCount,
+      accuracy: accuracy,
+    };
+
+    // Save based on auth state
+    try {
+      if (user) {
+        // Signed-in user - save to Supabase
+        const { error } = await saveSession({ ...sessionData, userId: user.id });
+        if (error) {
+          console.error('[practice-session] Failed to save session to cloud:', error);
+        } else {
+          console.log('[practice-session] Session saved to cloud successfully');
+          // Invalidate the session stats query so cards refresh
+          queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+        }
+      } else {
+        // Guest user - save locally
+        const { error } = await saveLocalSession(sessionData);
+        if (error) {
+          console.error('[practice-session] Failed to save session locally:', error);
+        } else {
+          console.log('[practice-session] Session saved locally successfully');
+          // Invalidate the session stats query so cards refresh
+          queryClient.invalidateQueries({ queryKey: ['subject-session-stats', subjectId] });
+        }
+      }
+    } catch (err) {
+      console.error('[practice-session] Unexpected error saving session:', err);
+    }
 
     router.replace({
       pathname: '/practice/results',

@@ -14,6 +14,7 @@ export default function PracticeLayout() {
       <Stack.Screen name="test-session" />
       <Stack.Screen name="results" />
       <Stack.Screen name="test-results" />
+      <Stack.Screen name="session-history" />
     </Stack>
   );
 }

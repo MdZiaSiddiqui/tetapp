@@ -414,44 +414,35 @@ export async function getQuestionStats(subjectId: string): Promise<{
 }
 
 /**
- * Get random questions for a subject by mode (Practice, Test, or Notes)
+ * Get questions for a subject by mode (Practice, Test, or Notes)
+ * Uses fixed question sets based on session number for consistent test experiences
  * @param subjectId - Subject ID
  * @param language - Language filter (English, Telugu, or Urdu)
  * @param paper - Paper filter ('Paper 1' or 'Paper 2')
  * @param mode - Mode type ('practice', 'test', or 'notes')
  * @param count - Number of questions to fetch (default: 30, social subject gets 60)
- * @returns Random questions for the subject
+ * @param sessionNumber - Session number (1-50) to determine which question set to fetch
+ * @returns Fixed set of questions for the specified session
  */
 export async function getQuestionsBySubjectAndMode(
   subjectId: string,
   language: 'English' | 'Telugu' | 'Urdu',
   paper: 'Paper 1' | 'Paper 2',
   mode: 'practice' | 'test' | 'notes',
-  count: number = 30
+  count: number = 30,
+  sessionNumber: number = 1
 ): Promise<{ data: Question[] | null; error: Error | null }> {
   try {
-    console.log('🔍 [getQuestionsBySubjectAndMode] Query params:', { subjectId, language, paper, mode, count });
+    console.log('🔍 [getQuestionsBySubjectAndMode] Query params:', { subjectId, language, paper, mode, count, sessionNumber });
 
-    // First, let's check what actually exists in the database for this subject
-    const { data: debugData, error: debugError } = await supabase
-      .from('questions')
-      .select('subject_id, language, paper')
-      .eq('subject_id', subjectId)
-      .limit(5);
-
-    console.log('📊 [DEBUG] Sample questions for subject:', {
-      subjectId,
-      sampleCount: debugData?.length || 0,
-      samples: debugData?.slice(0, 3).map(q => ({ subject_id: q.subject_id, language: q.language, paper: q.paper }))
-    });
-
-    // Fetch all questions for this subject, language, and paper
+    // Fetch all questions for this subject, language, and paper ordered by question_number
     let query = supabase
       .from('questions')
       .select('*')
       .eq('subject_id', subjectId)
       .eq('language', language)
-      .eq('paper', paper);
+      .eq('paper', paper)
+      .order('question_number', { ascending: true });
 
     const { data: allQuestions, error } = await query;
 
@@ -489,15 +480,25 @@ export async function getQuestionsBySubjectAndMode(
       return { data: null, error };
     }
 
-    // Shuffle using Fisher-Yates algorithm
-    const shuffled = [...allQuestions];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    // Calculate the question range for this session
+    // Session 1: questions 0-29, Session 2: questions 30-59, etc.
+    const totalQuestions = allQuestions.length;
+    const startIndex = ((sessionNumber - 1) * count) % totalQuestions;
+
+    // Select questions for this session with wrap-around
+    const selected: Question[] = [];
+    for (let i = 0; i < count && i < totalQuestions; i++) {
+      const index = (startIndex + i) % totalQuestions;
+      selected.push(allQuestions[index]);
     }
 
-    // Take the specified number of questions (or all available if less than count)
-    const selected = shuffled.slice(0, Math.min(count, shuffled.length));
+    console.log('📋 [getQuestionsBySubjectAndMode] Selected questions:', {
+      sessionNumber,
+      startIndex,
+      totalAvailable: totalQuestions,
+      selectedCount: selected.length,
+      questionRange: `${startIndex + 1} to ${((startIndex + selected.length - 1) % totalQuestions) + 1}`
+    });
 
     return { data: selected, error: null };
   } catch (error) {
