@@ -19,7 +19,7 @@ interface OTPInputProps {
 export default function OTPInput({
   value,
   onChange,
-  length = 6,
+  length = 4,
   error,
   disabled = false,
   autoFocus = false,
@@ -172,7 +172,7 @@ export default function OTPInput({
       {!error && (
         <View className="mt-3">
           <Text className="text-gray-500 text-sm text-center">
-            Enter the 6-digit code sent to your phone
+            Enter the {length}-digit code sent to your WhatsApp
           </Text>
         </View>
       )}

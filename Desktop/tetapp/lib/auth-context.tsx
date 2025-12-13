@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 import Constants from 'expo-constants';
+import { sendOTP, verifyOTP } from './api/whatsapp-otp';
+import { initiateHandshake } from './native/whatsapp-otp';
 
 // Conditionally import Google Sign-In (only works in development/production builds, not Expo Go)
 let GoogleSignin: any = null;
@@ -38,6 +40,8 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   signInAsGuest: () => void;
+  sendPhoneOTP: (phone: string) => Promise<{ success: boolean; error?: string }>;
+  verifyPhoneOTP: (phone: string, otp: string) => Promise<{ success: boolean; isNewUser?: boolean; error?: string }>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -49,6 +53,8 @@ const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
   signInWithGoogle: async () => ({ success: false }),
   signInAsGuest: () => {},
+  sendPhoneOTP: async () => ({ success: false }),
+  verifyPhoneOTP: async () => ({ success: false }),
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -122,6 +128,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log('Signing in as guest...');
     setIsGuest(true);
     console.log('Guest sign in successful');
+  };
+
+  // WhatsApp OTP Methods
+  const sendPhoneOTP = async (phone: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      console.log('Sending OTP to:', phone);
+
+      // Initiate WhatsApp handshake for zero-tap (Android only)
+      initiateHandshake();
+
+      // Send OTP via edge function
+      const result = await sendOTP(phone);
+
+      if (result.success) {
+        console.log('OTP sent successfully');
+        return { success: true };
+      } else {
+        console.error('Failed to send OTP:', result.error);
+        return { success: false, error: result.error };
+      }
+    } catch (error: any) {
+      console.error('Send OTP error:', error);
+      return { success: false, error: error.message || 'Failed to send OTP' };
+    }
+  };
+
+  const verifyPhoneOTP = async (
+    phone: string,
+    otp: string
+  ): Promise<{ success: boolean; isNewUser?: boolean; error?: string }> => {
+    try {
+      console.log('Verifying OTP for:', phone);
+
+      // Verify OTP via edge function
+      const result = await verifyOTP(phone, otp);
+
+      if (result.success) {
+        console.log('OTP verified successfully, isNewUser:', result.is_new_user);
+
+        // Refresh the session to get the newly created user
+        const { data: { session: newSession }, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          console.warn('Error refreshing session:', sessionError);
+        }
+
+        if (newSession) {
+          setSession(newSession);
+          setUser(newSession.user);
+        }
+
+        return {
+          success: true,
+          isNewUser: result.is_new_user,
+        };
+      } else {
+        console.error('Failed to verify OTP:', result.error);
+        return {
+          success: false,
+          error: result.error,
+        };
+      }
+    } catch (error: any) {
+      console.error('Verify OTP error:', error);
+      return { success: false, error: error.message || 'Failed to verify OTP' };
+    }
   };
 
   const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
@@ -222,7 +294,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isGuest, isGoogleSignInAvailable, signOut, signInWithGoogle, signInAsGuest }}>
+    <AuthContext.Provider value={{ user, session, loading, isGuest, isGoogleSignInAvailable, signOut, signInWithGoogle, signInAsGuest, sendPhoneOTP, verifyPhoneOTP }}>
       {children}
     </AuthContext.Provider>
   );
