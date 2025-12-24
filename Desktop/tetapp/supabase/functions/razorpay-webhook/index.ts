@@ -119,6 +119,25 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    // Generate webhook event ID for deduplication
+    const webhookEventId = `${payload.event}_${payload.created_at}`
+
+    // Check if this webhook event was already processed (idempotency)
+    // This prevents duplicate processing when Razorpay retries webhooks
+    const { data: existingEvent } = await supabaseAdmin
+      .from('payments')
+      .select('id, webhook_event_id')
+      .eq('webhook_event_id', webhookEventId)
+      .maybeSingle()
+
+    if (existingEvent) {
+      console.log(`Webhook event already processed: ${webhookEventId}`)
+      return new Response(
+        JSON.stringify({ success: true, message: 'Webhook event already processed' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+
     // Handle different event types
     switch (payload.event) {
       case 'payment.captured': {

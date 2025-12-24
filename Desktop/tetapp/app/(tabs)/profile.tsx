@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useProAccess } from '../../hooks/useProAccess';
 import { TIER_NAMES } from '../../lib/pricing-config';
 import { useState } from 'react';
+import { useLanguagePreference, LanguagePreference } from '../../hooks/useLanguagePreference';
 
 export default function Profile() {
   const router = useRouter();
@@ -19,6 +20,10 @@ export default function Profile() {
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [phoneValue, setPhoneValue] = useState('');
   const [isSavingPhone, setIsSavingPhone] = useState(false);
+
+  // Language preference
+  const { language: selectedLanguage, setLanguage: setSelectedLanguage } = useLanguagePreference();
+  const availableLanguages: LanguagePreference[] = ['English', 'Telugu', 'Urdu'];
 
   // Fetch user profile
   const { data: profile, refetch: refetchProfile } = useQuery({
@@ -68,20 +73,6 @@ export default function Profile() {
         },
       ]
     );
-  };
-
-  const handleWhatsAppPress = () => {
-    const phoneNumber = '916304102415';
-    const url = `whatsapp://send?phone=${phoneNumber}`;
-    Linking.canOpenURL(url)
-      .then((supported) => {
-        if (supported) {
-          return Linking.openURL(url);
-        } else {
-          Alert.alert('Error', 'WhatsApp is not installed on your device');
-        }
-      })
-      .catch((err) => console.error('Error opening WhatsApp:', err));
   };
 
   const handleEmailPress = () => {
@@ -322,22 +313,6 @@ export default function Profile() {
         <View className="bg-white mx-6 mt-6 rounded-3xl p-6 border border-gray-100">
           <Text className="text-xs text-gray-400 mb-4">Contact Support</Text>
 
-          {/* WhatsApp */}
-          <TouchableOpacity
-            onPress={handleWhatsAppPress}
-            className="flex-row items-center py-3 border-b border-gray-100"
-            activeOpacity={1}
-          >
-            <View className="w-10 h-10 bg-green-500 rounded-full items-center justify-center mr-3">
-              <Ionicons name="logo-whatsapp" size={20} color="white" />
-            </View>
-            <View className="flex-1">
-              <Text className="text-gray-900 text-base font-medium">WhatsApp</Text>
-              <Text className="text-gray-500 text-xs">+91 6304102415</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-          </TouchableOpacity>
-
           {/* Email */}
           <TouchableOpacity
             onPress={handleEmailPress}
@@ -353,6 +328,36 @@ export default function Profile() {
             </View>
             <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
           </TouchableOpacity>
+        </View>
+
+        {/* Language Preference Section */}
+        <View className="bg-white mx-6 mt-6 rounded-3xl p-6 border border-gray-100">
+          <Text className="text-xs text-gray-400 mb-2">Question Language</Text>
+          <Text className="text-gray-500 text-xs mb-4">
+            Select your preferred language for practice questions
+          </Text>
+          <View className="flex-row gap-2">
+            {availableLanguages.map((lang) => (
+              <TouchableOpacity
+                key={lang}
+                onPress={() => setSelectedLanguage(lang)}
+                className={`flex-1 py-3 px-3 rounded-xl border-2 ${
+                  selectedLanguage === lang
+                    ? 'bg-purple-600 border-purple-600'
+                    : 'bg-gray-50 border-gray-200'
+                }`}
+                activeOpacity={0.8}
+              >
+                <Text
+                  className={`text-center font-semibold text-sm ${
+                    selectedLanguage === lang ? 'text-white' : 'text-gray-700'
+                  }`}
+                >
+                  {lang}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Links Section - Ultra Minimal */}

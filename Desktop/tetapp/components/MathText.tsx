@@ -580,14 +580,17 @@ const MathText: React.FC<MathTextProps> = ({
             // Show content immediately - no delay
             document.documentElement.style.opacity = '1';
 
+            // Initialize error counter
+            window.mathJaxErrorCount = 0;
+
             // Custom error handler that suppresses errors completely
             window.MathJax = {
               tex: {
                 inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
                 displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
-                packages: { '[+]': ['textmacros'] },
+                packages: { '[+]': ['ams', 'newcommand', 'configmacros'] },
                 macros: {
-                  currency: ['\\text{#1}', 1],
+                  currency: ['\\\\text{#1}', 1],
                 },
                 processEscapes: true,
                 processEnvironments: true,
@@ -595,6 +598,8 @@ const MathText: React.FC<MathTextProps> = ({
                   // Log MathJax errors prominently
                   console.error('MathJax rendering error:', err.message);
                   console.error('Failed LaTeX:', jax?.math?.toString() || 'unknown');
+                  // Track error count for fallback detection
+                  window.mathJaxErrorCount = (window.mathJaxErrorCount || 0) + 1;
                   // Return empty string to suppress error display in UI
                   return '';
                 }
@@ -618,9 +623,14 @@ const MathText: React.FC<MathTextProps> = ({
                 typeset: true,
                 pageReady: () => {
                   return MathJax.startup.defaultPageReady().then(() => {
-                    // Remove any error elements that might have been created
+                    // Count and remove any error elements that might have been created
                     const errors = document.querySelectorAll('merror, .mjx-merror, [data-mjx-error], mjx-merror');
+                    const domErrors = errors.length;
                     errors.forEach(el => el.remove());
+
+                    // Combine DOM errors with tracked formatError calls
+                    const formatErrors = window.mathJaxErrorCount || 0;
+                    const mathErrors = domErrors + formatErrors;
 
                     // Immediately calculate and send height (no delays)
                     const content = document.getElementById('content');
@@ -632,17 +642,30 @@ const MathText: React.FC<MathTextProps> = ({
 
                     const textContent = content.textContent || '';
                     const hasVisibleContent = textContent.trim().length > 0;
+                    const textLength = textContent.trim().length;
+
+                    // Log for debugging
+                    if (mathErrors > 0) {
+                      console.warn('MathJax had ' + mathErrors + ' rendering errors (DOM: ' + domErrors + ', formatError: ' + formatErrors + ')');
+                    }
 
                     window.ReactNativeWebView.postMessage(JSON.stringify({
                       height,
-                      isEmpty: !hasVisibleContent
+                      isEmpty: !hasVisibleContent,
+                      textLength,
+                      mathErrors
                     }));
                   }).catch((err) => {
-                    console.error('MathJax error:', err);
+                    console.error('MathJax critical error:', err);
 
                     // Remove any error elements
                     const errors = document.querySelectorAll('merror, .mjx-merror, [data-mjx-error], mjx-merror');
+                    const domErrors = errors.length;
                     errors.forEach(el => el.remove());
+
+                    // Combine DOM errors with tracked formatError calls
+                    const formatErrors = window.mathJaxErrorCount || 0;
+                    const mathErrors = domErrors + formatErrors + 1; // +1 for this catch error
 
                     // Send height even on error (no delays)
                     const content = document.getElementById('content');
@@ -654,10 +677,16 @@ const MathText: React.FC<MathTextProps> = ({
 
                     const textContent = content.textContent || '';
                     const hasVisibleContent = textContent.trim().length > 0;
+                    const textLength = textContent.trim().length;
+
+                    console.warn('MathJax critical failure, will fallback. Errors: ' + mathErrors);
 
                     window.ReactNativeWebView.postMessage(JSON.stringify({
                       height,
-                      isEmpty: !hasVisibleContent
+                      isEmpty: !hasVisibleContent,
+                      textLength,
+                      mathErrors,
+                      hadError: true
                     }));
                   });
                 }
@@ -694,6 +723,33 @@ const MathText: React.FC<MathTextProps> = ({
         // Check if WebView rendered but content is empty
         if (data.isEmpty === true) {
           console.warn('MathText: WebView rendered empty content, falling back to plain text');
+          setWebViewFailed(true);
+          setIsRendering(false);
+          if (fallbackTimerRef.current) {
+            clearTimeout(fallbackTimerRef.current);
+            fallbackTimerRef.current = null;
+          }
+          return;
+        }
+
+        // NEW: Check for MathJax errors or suspiciously large height with little visible text
+        // This catches cases where MathJax fails silently and creates broken SVG elements
+        const textLength = data.textLength || 0;
+        const heightPerChar = textLength > 0 ? data.height / textLength : Infinity;
+        const mathErrors = data.mathErrors || 0;
+
+        // Fall back to plain text if:
+        // 1. MathJax had rendering errors, OR
+        // 2. Height is suspiciously large relative to text content, OR
+        // 3. MathJax caught an error (hadError flag)
+        if (mathErrors > 0 || data.hadError || (data.height > 300 && heightPerChar > 10)) {
+          console.warn('MathText: MathJax rendering issue detected, falling back to plain text', {
+            height: data.height,
+            textLength,
+            heightPerChar,
+            mathErrors,
+            hadError: data.hadError
+          });
           setWebViewFailed(true);
           setIsRendering(false);
           if (fallbackTimerRef.current) {

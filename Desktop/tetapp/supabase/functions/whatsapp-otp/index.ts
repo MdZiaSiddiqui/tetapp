@@ -325,7 +325,7 @@ serve(async (req) => {
         .delete()
         .eq('id', otpRecord.id)
 
-      // Check if user exists with this phone
+      // Check if user exists with this phone in user_profiles
       const { data: existingProfile } = await supabaseAdmin
         .from('user_profiles')
         .select('id, phone')
@@ -334,19 +334,20 @@ serve(async (req) => {
 
       let userId: string
       let isNewUser = false
+      const userEmail = `${cleanPhone}@phone.tgtet.app`
 
       if (existingProfile) {
-        // User exists - get their ID
+        // User exists in profiles - use their ID
         userId = existingProfile.id
-        console.log('Existing user found:', userId)
+        console.log('Existing user found in profiles:', userId)
       } else {
-        // Create new user via Supabase Auth
-        const email = `${cleanPhone}@phone.tgtet.app` // Placeholder email
-        const password = crypto.randomUUID() // Random password (user won't use it)
+        // No profile found - check if auth user exists (might have been created but profile insert failed)
+        console.log('No profile found, checking auth for email:', userEmail)
 
+        // Try to create new user
         const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-          email,
-          password,
+          email: userEmail,
+          password: crypto.randomUUID(),
           email_confirm: true,
           phone: `+91${cleanPhone}`,
           phone_confirm: true,
@@ -357,53 +358,130 @@ serve(async (req) => {
         })
 
         if (authError) {
-          console.error('Failed to create user:', authError)
-          return new Response(
-            JSON.stringify({ error: 'Failed to create account. Please try again.' }),
-            { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
-          )
+          console.log('Create user error:', authError.message)
+
+          // If user already exists in auth, find them by listing users
+          if (authError.message?.toLowerCase().includes('already') ||
+              authError.message?.toLowerCase().includes('exists') ||
+              authError.message?.toLowerCase().includes('duplicate') ||
+              authError.message?.toLowerCase().includes('unique')) {
+
+            console.log('User already exists in auth, searching...')
+
+            // List users and find by email or phone
+            const { data: listData, error: listError } = await supabaseAdmin.auth.admin.listUsers()
+
+            if (listError) {
+              console.error('Failed to list users:', listError)
+              return new Response(
+                JSON.stringify({ error: 'Failed to verify account. Please try again.' }),
+                { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+              )
+            }
+
+            const existingAuthUser = listData.users.find(
+              u => u.email === userEmail || u.phone === `+91${cleanPhone}`
+            )
+
+            if (existingAuthUser) {
+              userId = existingAuthUser.id
+              isNewUser = false
+              console.log('Found existing auth user:', userId)
+
+              // Create/update their profile
+              const { error: profileError } = await supabaseAdmin
+                .from('user_profiles')
+                .upsert({
+                  id: userId,
+                  phone: cleanPhone,
+                  updated_at: new Date().toISOString(),
+                })
+
+              if (profileError) {
+                console.error('Failed to upsert profile:', profileError)
+              }
+            } else {
+              console.error('User exists error but could not find user')
+              return new Response(
+                JSON.stringify({ error: 'Account verification failed. Please contact support.' }),
+                { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+              )
+            }
+          } else {
+            // Some other error
+            console.error('Failed to create user:', authError)
+            return new Response(
+              JSON.stringify({ error: 'Failed to create account. Please try again.' }),
+              { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+            )
+          }
+        } else {
+          // New user created successfully
+          userId = authData.user.id
+          isNewUser = true
+          console.log('New user created:', userId)
+
+          // Create user profile
+          const { error: profileError } = await supabaseAdmin
+            .from('user_profiles')
+            .upsert({
+              id: userId,
+              phone: cleanPhone,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            })
+
+          if (profileError) {
+            console.error('Failed to create profile:', profileError)
+            // Continue anyway - user is created in auth
+          }
         }
-
-        userId = authData.user.id
-        isNewUser = true
-        console.log('New user created:', userId)
-
-        // Create user profile
-        await supabaseAdmin
-          .from('user_profiles')
-          .upsert({
-            id: userId,
-            phone: cleanPhone,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          })
       }
 
-      // Generate access token for the user
-      // We'll use a custom token approach - generate a magic link token
-      const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.admin.generateLink({
+      // OTP verified successfully - Generate magic link token for session establishment
+      console.log('Generating magic link for user:', userEmail)
+
+      const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
         type: 'magiclink',
-        email: `${cleanPhone}@phone.tgtet.app`,
+        email: userEmail,
       })
 
-      if (sessionError) {
-        console.error('Failed to generate session:', sessionError)
-        // Try alternative: Create a session directly
-        const { data: signInData, error: signInError } = await supabaseAdmin.auth.admin.createUser({
-          email: `${cleanPhone}@phone.tgtet.app`,
-          email_confirm: true,
-        })
+      if (linkError) {
+        console.error('Failed to generate session link:', linkError)
+        return new Response(
+          JSON.stringify({
+            error: 'Failed to create session. Please try again.',
+            details: linkError.message
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+        )
+      }
 
-        if (signInError && !signInError.message.includes('already been registered')) {
-          return new Response(
-            JSON.stringify({ error: 'Failed to create session. Please try again.' }),
-            { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
-          )
+      // Extract hashed_token from the response (this is what verifyOtp expects)
+      let tokenHash = linkData.properties?.hashed_token
+
+      // Fallback: try to extract from action_link URL if hashed_token not present
+      if (!tokenHash) {
+        const actionLink = linkData.properties?.action_link
+        console.log('No hashed_token in response, trying action_link:', actionLink)
+
+        if (actionLink) {
+          const url = new URL(actionLink)
+          tokenHash = url.searchParams.get('token_hash') || url.searchParams.get('token')
+          console.log('Extracted token from URL:', tokenHash ? tokenHash.substring(0, 20) + '...' : 'null')
         }
       }
 
-      // Return success with user info
-      // The client will use the magic link or handle session differently
+      if (!tokenHash) {
+        console.error('Could not extract token. linkData.properties:', JSON.stringify(linkData.properties, null, 2))
+        return new Response(
+          JSON.stringify({ error: 'Failed to generate authentication token' }),
+          { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
+        )
+      }
+
+      console.log('Magic link generated successfully for:', userEmail)
+
       return new Response(
         JSON.stringify({
           success: true,
@@ -411,9 +489,8 @@ serve(async (req) => {
           user_id: userId,
           phone: cleanPhone,
           is_new_user: isNewUser,
-          // If we have a magic link, include the token
-          magic_link: sessionData?.properties?.hashed_token || null,
-          action_link: sessionData?.properties?.action_link || null,
+          token_hash: tokenHash,
+          email: userEmail,
         }),
         {
           status: 200,
@@ -426,10 +503,11 @@ serve(async (req) => {
       JSON.stringify({ error: 'Invalid action' }),
       { status: 400, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     )
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error in whatsapp-otp:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: error.message }),
+      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
       { status: 500, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
     )
   }

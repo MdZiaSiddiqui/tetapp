@@ -20,10 +20,10 @@ interface VerifyOTPResponse {
   user_id?: string;
   phone?: string;
   is_new_user?: boolean;
-  magic_link?: string | null;
-  action_link?: string | null;
   error?: string;
   remaining_attempts?: number;
+  token_hash?: string;
+  email?: string;
 }
 
 /**
@@ -111,34 +111,7 @@ export async function verifyOTP(
       };
     }
 
-    const response = data as VerifyOTPResponse;
-
-    // If verification successful and we have an action link, use it to sign in
-    if (response.success && response.action_link) {
-      try {
-        // Extract the token from the action link
-        const url = new URL(response.action_link);
-        const token = url.searchParams.get('token');
-        const type = url.searchParams.get('type');
-
-        if (token && type === 'magiclink') {
-          // Verify the OTP token to create session
-          const { error: verifyError } = await supabase.auth.verifyOtp({
-            token_hash: token,
-            type: 'magiclink',
-          });
-
-          if (verifyError) {
-            console.warn('Magic link verification failed:', verifyError);
-            // Continue anyway - user is created, they can try again
-          }
-        }
-      } catch (linkError) {
-        console.warn('Failed to process action link:', linkError);
-      }
-    }
-
-    return response;
+    return data as VerifyOTPResponse;
   } catch (err: any) {
     console.error('Verify OTP exception:', err);
     return {

@@ -167,16 +167,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (result.success) {
         console.log('OTP verified successfully, isNewUser:', result.is_new_user);
 
-        // Refresh the session to get the newly created user
-        const { data: { session: newSession }, error: sessionError } = await supabase.auth.getSession();
+        // Use the magic link token to establish a session
+        if (result.token_hash) {
+          console.log('Using magic link token to establish session...');
 
-        if (sessionError) {
-          console.warn('Error refreshing session:', sessionError);
-        }
+          const { data: sessionData, error: sessionError } = await supabase.auth.verifyOtp({
+            token_hash: result.token_hash,
+            type: 'magiclink',
+          });
 
-        if (newSession) {
-          setSession(newSession);
-          setUser(newSession.user);
+          if (sessionError) {
+            console.error('Failed to establish session:', sessionError);
+            return {
+              success: false,
+              error: 'Failed to establish session. Please try again.',
+            };
+          }
+
+          if (sessionData.session) {
+            console.log('Session established successfully for user:', sessionData.session.user?.email);
+            setSession(sessionData.session);
+            setUser(sessionData.session.user);
+          } else {
+            console.warn('No session in verifyOtp response');
+          }
+        } else {
+          console.warn('No token_hash in OTP verification response, trying getSession fallback...');
+          // Fallback: try to get existing session (may not work)
+          const { data: { session: newSession } } = await supabase.auth.getSession();
+          if (newSession) {
+            setSession(newSession);
+            setUser(newSession.user);
+          }
         }
 
         return {

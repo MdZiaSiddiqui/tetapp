@@ -10,6 +10,7 @@ import { useProAccess } from '../../hooks/useProAccess';
 import { useSubjectSessionStats, getSessionStatsForCard, useSessionHistory } from '../../hooks/useSessionStats';
 import SessionHistoryModal from '../../components/SessionHistoryModal';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLanguagePreference } from '../../hooks/useLanguagePreference';
 
 // Language subjects that don't need language toggle
 const LANGUAGE_SUBJECTS = ['english', 'hindi', 'telugu', 'urdu'];
@@ -86,8 +87,13 @@ export default function SubjectDetail() {
     availableLanguages = ['English', 'Urdu'];
   }
 
-  // State for language selection (only for non-language subjects)
-  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Telugu' | 'Urdu' | 'Hindi'>(defaultLanguage);
+  // Get stored language preference (for non-language subjects)
+  const { language: storedLanguage } = useLanguagePreference();
+
+  // Use stored preference or default based on paper type
+  const selectedLanguage = isHindiPaper ? 'Hindi' :
+    (availableLanguages.includes(storedLanguage as any) ? storedLanguage : defaultLanguage);
+
   const [fetchingQuestions, setFetchingQuestions] = useState(false);
 
   // Session history state
@@ -113,9 +119,6 @@ export default function SubjectDetail() {
 
   // Check if this is a language subject
   const isLanguageSubject = LANGUAGE_SUBJECTS.includes(subjectId.toLowerCase());
-
-  // Show language selector only for non-language subjects and non-Hindi papers
-  const showLanguageSelector = !isLanguageSubject && !isHindiPaper;
 
   // Determine which paper to show based on selection
   const showPaper1 = selectedPaperParam?.includes('Paper-1');
@@ -450,37 +453,6 @@ export default function SubjectDetail() {
               </View>
             );
           })()}
-
-          {/* Language Toggle (only for non-language subjects and non-Hindi papers) */}
-          {showLanguageSelector && (
-            <View className="mb-6">
-              <Text className="text-gray-700 font-semibold text-base mb-3">
-                Select Language
-              </Text>
-              <View className="flex-row gap-3">
-                {availableLanguages.map((lang) => (
-                  <TouchableOpacity
-                    key={lang}
-                    onPress={() => setSelectedLanguage(lang)}
-                    className={`flex-1 py-2.5 px-3 rounded-lg border-2 ${
-                      selectedLanguage === lang
-                        ? 'bg-purple-600 border-purple-600'
-                        : 'bg-white border-gray-300'
-                    }`}
-                    activeOpacity={1}
-                  >
-                    <Text
-                      className={`text-center font-semibold text-sm ${
-                        selectedLanguage === lang ? 'text-white' : 'text-gray-700'
-                      }`}
-                    >
-                      {lang}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
 
           {/* Practice & Test Sessions Grid */}
           <View className="mb-6">
